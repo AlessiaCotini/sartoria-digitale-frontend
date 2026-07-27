@@ -1,0 +1,58 @@
+const catalogo = [
+  {
+    id: 1,
+    nome: "Abito Milano",
+    categoria: "Uomo",
+    descrizione: "Taglio slim, lana pettinata",
+    prezzoDa: 420,
+    inEvidenza: true,
+    immagine: "/images/abito-milano.jpg",
+  },
+  {
+    id: 2,
+    nome: "Tailleur Torino",
+    categoria: "Donna",
+    descrizione: "Taglio regular, cotone premium",
+    prezzoDa: 380,
+    inEvidenza: true,
+    immagine: "/images/tailleur-torino.jpg",
+  },
+  {
+    id: 3,
+    nome: "Camicia Como",
+    categoria: "Unisex",
+    descrizione: "Taglio classic, lino",
+    prezzoDa: 120,
+    inEvidenza: true,
+    immagine: "/images/camicia-como.jpg",
+  },
+  {
+    id: 4,
+    nome: "Blazer Firenze",
+    categoria: "Donna",
+    descrizione: "Taglio slim, cashmere blend",
+    prezzoDa: 340,
+    inEvidenza: false,
+    immagine: "/images/blazer-firenze.jpg",
+  },
+  {
+    id: 5,
+    nome: "Smoking Venezia",
+    categoria: "Cerimonia",
+    descrizione: "Taglio classic, lana pettinata",
+    prezzoDa: 650,
+    inEvidenza: false,
+    immagine: "/images/smoking-venezia.jpg",
+  },
+  {
+    id: 6,
+    nome: "Camicia Roma",
+    categoria: "Uomo",
+    descrizione: "Taglio regular, cotone premium",
+    prezzoDa: 110,
+    inEvidenza: false,
+    immagine: "/images/camicia-roma.jpg",
+  },
+];
+
+export default catalogo;

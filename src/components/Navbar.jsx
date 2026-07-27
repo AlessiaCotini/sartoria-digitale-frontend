@@ -7,13 +7,12 @@ import {
 } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
 
-function NavbarSartoria() {
+function Navbar() {
   return (
-    <BsNavbar expand="lg" className="navbar-sartoria" variant="dark">
+    <BsNavbar expand="lg" className="navbar-sartoria" variant="light">
       <Container>
         <BsNavbar.Brand as={Link} to="/">
-          <span className="monogram">SB</span>Sartoria
-          <span>Bellariva</span>
+          Bellariva
         </BsNavbar.Brand>
         <BsNavbar.Toggle aria-controls="offcanvasNavbar" />
         <BsNavbar.Offcanvas
@@ -21,10 +20,8 @@ function NavbarSartoria() {
           placement="end"
           className="offcanvas-sartoria"
         >
-          <Offcanvas.Header closeButton closeVariant="white">
-            <Offcanvas.Title className="brand-font text-white">
-              <span className="monogram">SD</span> Alta Sartoria
-            </Offcanvas.Title>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title className="brand-font">Bellariva</Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body className="d-flex flex-column flex-lg-row align-items-lg-center">
             <Nav className="flex-column flex-lg-row mx-lg-auto gap-2 gap-lg-0">
@@ -32,10 +29,10 @@ function NavbarSartoria() {
                 Home
               </Nav.Link>
               <Nav.Link as={NavLink} to="/catalogo">
-                Catalogo
+                Collezione
               </Nav.Link>
               <Nav.Link as={NavLink} to="/configuratore">
-                Crea
+                Costruzione
               </Nav.Link>
               <Nav.Link as={NavLink} to="/profilo">
                 Profilo &amp; Misure
@@ -60,4 +57,4 @@ function NavbarSartoria() {
   );
 }
 
-export default NavbarSartoria;
+export default Navbar;
