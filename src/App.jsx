@@ -9,6 +9,7 @@ import Preventivo from "./pages/Preventivo";
 import NavbarSartoria from "./components/Navbar";
 import Footer from "./components/Footer";
 import Catalogo from "./pages/Catalogo";
+import Dettaglio from "./pages/Dettaglio";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/catalogo" element={<Catalogo />} />
+        <Route path="/catalogo/:id" element={<Dettaglio />} />
         <Route path="/configuratore" element={<Configuratore />} />
         <Route path="/profilo" element={<Profilo />} />
         <Route path="/preventivo" element={<Preventivo />} />

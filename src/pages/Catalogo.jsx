@@ -14,7 +14,7 @@ function Catalogo() {
   const [categoria, setCategoria] = useState("Tutte");
   const [tessuto, setTessuto] = useState("Tutti");
 
-  // categorie disponibili in base al genere scelto (es. "Gonne" compare solo se Donna/Tutti)
+  // categorie disponibili in base al genere scelto
   const categorieDisponibili = [
     ...new Set(
       catalogo
@@ -106,18 +106,27 @@ function Catalogo() {
           {capiFiltrati.map((capo) => (
             <div className="col-md-4" key={capo.id}>
               <div className="product-card">
-                <div className="product-thumb">
-                  {capo.immagine ? (
-                    <img src={capo.immagine} alt={capo.nome} />
-                  ) : (
-                    <span className="small">{capo.nome} — foto in arrivo</span>
-                  )}
-                </div>
+                <Link to={`/catalogo/${capo.id}`}>
+                  <div className="product-thumb">
+                    {capo.immagine ? (
+                      <img src={capo.immagine} alt={capo.nome} />
+                    ) : (
+                      <span className="small">
+                        {capo.nome} — foto in arrivo
+                      </span>
+                    )}
+                  </div>
+                </Link>
                 <div className="product-body">
                   <span className="badge-soft">
                     {capo.genere} · {capo.categoria}
                   </span>
-                  <h5 className="mt-2 mb-1">{capo.nome}</h5>
+                  <Link
+                    to={`/catalogo/${capo.id}`}
+                    style={{ color: "inherit" }}
+                  >
+                    <h5 className="mt-2 mb-1">{capo.nome}</h5>
+                  </Link>
                   <p className="text-muted small mb-2">{capo.tessuto}</p>
                   <div className="d-flex justify-content-between align-items-center">
                     <div className="product-price">da € {capo.prezzoDa}</div>
