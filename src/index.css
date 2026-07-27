@@ -474,3 +474,39 @@ a { text-decoration: none; }
   background-color: var(--color-gold);
   margin: 1rem 0 1.6rem;
 }
+.social-icons {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.social-icons a {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.65);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.social-icons a:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+  font-size: 0.85rem;
+}
+
+.footer-contact-item svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  color: var(--color-gold);
+}

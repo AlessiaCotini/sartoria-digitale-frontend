@@ -8,6 +8,7 @@ import Configuratore from "./pages/Configuratore";
 import Profilo from "./pages/Profilo";
 import Preventivo from "./pages/Preventivo";
 import NavbarSartoria from "./components/Navbar";
+import FooterSartoria from "./components/FooterSartoria";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/profilo" element={<Profilo />} />
         <Route path="/preventivo" element={<Preventivo />} />
       </Routes>
+      <FooterSartoria />
     </BrowserRouter>
   );
 }
