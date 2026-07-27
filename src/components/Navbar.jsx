@@ -5,9 +5,20 @@ import {
   Button,
   Offcanvas,
 } from "react-bootstrap";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../store/authSlice";
 
 function Navbar() {
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    dispatch(logout());
+    navigate("/");
+  }
+
   return (
     <BsNavbar expand="lg" className="navbar-sartoria" variant="light">
       <Container>
@@ -34,21 +45,35 @@ function Navbar() {
               <Nav.Link as={NavLink} to="/configuratore">
                 Costruzione
               </Nav.Link>
-              <Nav.Link as={NavLink} to="/profilo">
-                Profilo &amp; Misure
-              </Nav.Link>
+              {isLoggedIn && (
+                <Nav.Link as={NavLink} to="/profilo">
+                  Profilo &amp; Misure
+                </Nav.Link>
+              )}
             </Nav>
             <div className="d-flex flex-column flex-lg-row gap-2 mt-4 mt-lg-0">
-              <Button
-                as={Link}
-                to="/login"
-                className="btn-outline-cream btn-sm"
-              >
-                Accedi
-              </Button>
-              <Button as={Link} to="/register" className="btn-gold btn-sm">
-                Registrati
-              </Button>
+              {isLoggedIn ? (
+                <Button
+                  type="button"
+                  className="btn-outline-cream btn-sm"
+                  onClick={handleLogout}
+                >
+                  Esci
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    as={Link}
+                    to="/login"
+                    className="btn-outline-cream btn-sm"
+                  >
+                    Accedi
+                  </Button>
+                  <Button as={Link} to="/register" className="btn-gold btn-sm">
+                    Registrati
+                  </Button>
+                </>
+              )}
             </div>
           </Offcanvas.Body>
         </BsNavbar.Offcanvas>

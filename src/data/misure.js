@@ -1,0 +1,17 @@
+export const CAMPI_MISURE = [
+  { chiave: "altezza", label: "Altezza (cm)" },
+  { chiave: "peso", label: "Peso (kg)" },
+  { chiave: "torace", label: "Torace (cm)" },
+  { chiave: "vita", label: "Vita (cm)" },
+  { chiave: "fianchi", label: "Fianchi (cm)" },
+  { chiave: "spalle", label: "Spalle (cm)" },
+  { chiave: "manica", label: "Manica (cm)" },
+  { chiave: "gamba", label: "Gamba (cm)" },
+  { chiave: "collo", label: "Collo (cm)" },
+  { chiave: "bicipite", label: "Bicipite (cm)" },
+  { chiave: "polso", label: "Polso (cm)" },
+  { chiave: "busto", label: "Busto (cm)" },
+  { chiave: "coscia", label: "Coscia (cm)" },
+  { chiave: "ginocchio", label: "Ginocchio (cm)" },
+  { chiave: "caviglia", label: "Caviglia (cm)" },
+];
