@@ -1,0 +1,14 @@
+<svg viewBox="0 0 160 300" xmlns="http://www.w3.org/2000/svg">
+  <defs><filter id="c1" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="150" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+  <g fill="none" stroke="#4a453e" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" filter="url(#c1)" opacity="0.9">
+    <path d="M58,20 Q66,40 76,38" /><path d="M102,20 Q94,40 84,40" />
+    <path d="M76,38 L80,42" />
+    <path d="M58,20 Q46,30 40,40 Q34,50 38,58 Q42,80 40,102 Q40,120 44,135 L116,135 Q120,120 120,102 Q118,80 122,58 Q126,50 120,40 Q114,30 102,20 Z" />
+    <path d="M40,40 Q24,46 16,54 Q19,95 24,130 Q33,127 41,120 Z" />
+    <path d="M120,40 Q136,46 144,54 Q141,95 136,130 Q127,127 119,120 Z" />
+    <circle cx="80" cy="112" r="2.2" fill="#4a453e" />
+    <path d="M48,135 Q46,190 44,260 L64,260 Q66,200 66,150" />
+    <path d="M96,150 Q94,200 96,260 L116,260 Q114,190 112,135" />
+    <path d="M56,150 L56,255" opacity="0.4" /><path d="M104,150 L104,255" opacity="0.4" />
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+<svg viewBox="0 0 160 260" xmlns="http://www.w3.org/2000/svg">
+  <defs><filter id="j4" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="103" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+  <g fill="none" stroke="#4a453e" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" filter="url(#j4)" opacity="0.9">
+    <path d="M62,26 Q80,36 98,26" />
+    <path d="M62,26 Q48,34 42,44 Q36,56 40,62 Q44,90 42,118 Q38,148 40,175 Q44,195 42,212 L70,212 Q69,195 68,175 M92,212 L118,212 Q116,195 118,175 Q120,148 118,118 Q120,90 118,62 Q122,56 116,44 Q112,34 98,26" />
+    <path d="M42,44 Q26,50 18,60 Q20,115 24,168 Q34,164 41,156 Z" />
+    <path d="M118,44 Q134,50 142,60 Q140,115 136,168 Q126,164 119,156 Z" />
+    <path d="M80,32 L80,208" stroke-dasharray="2 4" opacity="0.5" />
+    <circle cx="80" cy="55" r="2" fill="#4a453e" /><circle cx="80" cy="90" r="2" fill="#4a453e" />
+    <circle cx="80" cy="125" r="2" fill="#4a453e" /><circle cx="80" cy="160" r="2" fill="#4a453e" />
+    <circle cx="80" cy="195" r="2" fill="#4a453e" />
+    <path d="M46,80 L114,80" opacity="0.4" /><path d="M44,110 L118,110" opacity="0.4" />
+    <path d="M42,140 L118,140" opacity="0.4" /><path d="M42,170 L118,170" opacity="0.4" />
+  </g>
+</svg>

@@ -1,0 +1,8 @@
+<svg viewBox="0 0 160 300" xmlns="http://www.w3.org/2000/svg">
+  <defs><filter id="q1" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="80" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+  <g fill="none" stroke="#4a453e" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" filter="url(#q1)" opacity="0.9">
+    <rect x="50" y="20" width="60" height="20" />
+    <path d="M52,40 Q45,120 47,200 Q45,250 49,290 L67,290 Q69,240 71,200 Q74,160 78,148 Q82,160 85,200 Q87,240 89,290 L107,290 Q111,250 109,200 Q111,120 104,40 Z" />
+    <path d="M80,40 Q79,95 78,148" stroke-dasharray="2 4" opacity="0.55" />
+  </g>
+</svg>

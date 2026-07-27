@@ -66,7 +66,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 115,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/camicia-donna-classica.svg",
   },
   {
     id: 7,
@@ -77,7 +77,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 120,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/camicia-donna-denim.svg",
   },
   {
     id: 8,
@@ -88,7 +88,7 @@ const catalogo = [
     tessuto: "Lino pregiato",
     prezzoDa: 125,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/camicia-donna-cubana.svg",
   },
   {
     id: 9,
@@ -99,7 +99,7 @@ const catalogo = [
     tessuto: "Lino pregiato",
     prezzoDa: 105,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/camicia-donna-smanicata.svg",
   },
   {
     id: 10,
@@ -110,7 +110,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 110,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/camicia-donna-oversize.svg",
   },
 
   // Magliette — Donna
@@ -123,7 +123,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 58,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/maglietta-donna-girocollo.svg",
   },
   {
     id: 12,
@@ -134,7 +134,7 @@ const catalogo = [
     tessuto: "Lino pregiato",
     prezzoDa: 65,
     inEvidenza: true,
-    immagine: "",
+    immagine: "/sketches/maglietta-donna-polo.svg",
   },
   {
     id: 13,
@@ -145,7 +145,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 62,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/maglietta-donna-oversize.svg",
   },
   {
     id: 14,
@@ -156,7 +156,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 50,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/maglietta-donna-canotta.svg",
   },
   {
     id: 15,
@@ -167,7 +167,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 60,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/maglietta-donna-righe-bretone.svg",
   },
 
   // Gonne — solo Donna
@@ -180,7 +180,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 135,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/gonna-a-matita.svg",
   },
   {
     id: 17,
@@ -191,7 +191,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 125,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/gonna-a-trapezio.svg",
   },
   {
     id: 18,
@@ -202,7 +202,7 @@ const catalogo = [
     tessuto: "Lino pregiato",
     prezzoDa: 150,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/gonna-plissettata.svg",
   },
   {
     id: 19,
@@ -213,7 +213,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 155,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/gonna-longuette-portafoglio.svg",
   },
   {
     id: 20,
@@ -224,7 +224,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 120,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/gonna-mini-spacco.svg",
   },
 
   // Pantaloni — Donna
@@ -237,7 +237,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 150,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/pantalone-donna-skinny.svg",
   },
   {
     id: 22,
@@ -248,7 +248,7 @@ const catalogo = [
     tessuto: "Lino pregiato",
     prezzoDa: 170,
     inEvidenza: true,
-    immagine: "",
+    immagine: "/sketches/pantalone-donna-palazzo.svg",
   },
   {
     id: 23,
@@ -259,7 +259,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 140,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/pantalone-donna-chino.svg",
   },
   {
     id: 24,
@@ -270,7 +270,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 160,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/pantalone-donna-cargo.svg",
   },
   {
     id: 25,
@@ -281,7 +281,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 175,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/pantalone-donna-a-zampa.svg",
   },
 
   // Cardigan — Donna
@@ -294,7 +294,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 195,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/cardigan-donna-corto-costine.svg",
   },
   {
     id: 27,
@@ -305,7 +305,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 220,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/cardigan-donna-lungo-aperto.svg",
   },
   {
     id: 28,
@@ -316,7 +316,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 210,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/cardigan-donna-oversize-tasche.svg",
   },
   {
     id: 29,
@@ -327,7 +327,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 235,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/cardigan-donna-aderente-bottoni.svg",
   },
   {
     id: 30,
@@ -338,7 +338,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 205,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/cardigan-donna-zip-bomber.svg",
   },
 
   // Giacche — Donna
@@ -351,7 +351,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 325,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/giacca-donna-slim-monopetto.svg",
   },
   {
     id: 32,
@@ -362,7 +362,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 345,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/giacca-donna-doppiopetto.svg",
   },
   {
     id: 33,
@@ -373,7 +373,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 355,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/giacca-donna-oversize.svg",
   },
   {
     id: 34,
@@ -384,7 +384,7 @@ const catalogo = [
     tessuto: "Lino pregiato",
     prezzoDa: 320,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/giacca-donna-blazer-crociera.svg",
   },
   {
     id: 35,
@@ -395,7 +395,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 365,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/giacca-donna-chester.svg",
   },
 
   // Camicie — Uomo
@@ -408,7 +408,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 115,
     inEvidenza: true,
-    immagine: "",
+    immagine: "/sketches/camicia-uomo-classica.svg",
   },
   {
     id: 37,
@@ -419,7 +419,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 120,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/camicia-uomo-denim.svg",
   },
   {
     id: 38,
@@ -430,7 +430,7 @@ const catalogo = [
     tessuto: "Lino pregiato",
     prezzoDa: 125,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/camicia-uomo-cubana.svg",
   },
   {
     id: 39,
@@ -441,7 +441,7 @@ const catalogo = [
     tessuto: "Lino pregiato",
     prezzoDa: 105,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/camicia-uomo-smanicata.svg",
   },
   {
     id: 40,
@@ -452,7 +452,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 110,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/camicia-uomo-oversize.svg",
   },
 
   // Magliette — Uomo
@@ -465,7 +465,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 58,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/maglietta-uomo-girocollo.svg",
   },
   {
     id: 42,
@@ -476,7 +476,7 @@ const catalogo = [
     tessuto: "Lino pregiato",
     prezzoDa: 65,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/maglietta-uomo-polo.svg",
   },
   {
     id: 43,
@@ -487,7 +487,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 62,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/maglietta-uomo-oversize.svg",
   },
   {
     id: 44,
@@ -498,7 +498,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 50,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/maglietta-uomo-canotta.svg",
   },
   {
     id: 45,
@@ -509,7 +509,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 60,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/maglietta-uomo-righe-bretone.svg",
   },
 
   // Abiti — Uomo (cerimonia/formale)
@@ -522,7 +522,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 480,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/abito-uomo-smoking-classico.svg",
   },
   {
     id: 47,
@@ -533,7 +533,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 520,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/abito-uomo-tight-cerimonia.svg",
   },
   {
     id: 48,
@@ -544,7 +544,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 500,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/abito-uomo-redingote.svg",
   },
   {
     id: 49,
@@ -555,7 +555,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 460,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/abito-uomo-blazer-damascato.svg",
   },
   {
     id: 50,
@@ -566,7 +566,7 @@ const catalogo = [
     tessuto: "Lino pregiato",
     prezzoDa: 420,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/abito-uomo-destrutturato.svg",
   },
 
   // Completi — solo Uomo (business)
@@ -579,7 +579,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 560,
     inEvidenza: true,
-    immagine: "",
+    immagine: "/sketches/completo-slim-monopetto.svg",
   },
   {
     id: 52,
@@ -590,7 +590,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 580,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/completo-regular-classico.svg",
   },
   {
     id: 53,
@@ -601,7 +601,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 610,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/completo-doppiopetto.svg",
   },
   {
     id: 54,
@@ -612,7 +612,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 600,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/completo-gessato.svg",
   },
   {
     id: 55,
@@ -623,7 +623,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 650,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/completo-principe-di-galles.svg",
   },
 
   // Pantaloni — Uomo
@@ -636,7 +636,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 150,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/pantalone-uomo-skinny.svg",
   },
   {
     id: 57,
@@ -647,7 +647,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 175,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/pantalone-uomo-sartoriale-pince.svg",
   },
   {
     id: 58,
@@ -658,7 +658,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 140,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/pantalone-uomo-chino.svg",
   },
   {
     id: 59,
@@ -669,7 +669,7 @@ const catalogo = [
     tessuto: "Cotone premium",
     prezzoDa: 160,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/pantalone-uomo-cargo.svg",
   },
   {
     id: 60,
@@ -680,7 +680,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 170,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/pantalone-uomo-a-zampa.svg",
   },
 
   // Cardigan — Uomo
@@ -693,7 +693,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 195,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/cardigan-uomo-corto-costine.svg",
   },
   {
     id: 62,
@@ -704,7 +704,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 220,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/cardigan-uomo-lungo-aperto.svg",
   },
   {
     id: 63,
@@ -715,7 +715,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 210,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/cardigan-uomo-oversize-tasche.svg",
   },
   {
     id: 64,
@@ -726,7 +726,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 225,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/cardigan-uomo-aderente-righe.svg",
   },
   {
     id: 65,
@@ -737,7 +737,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 205,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/cardigan-uomo-zip-bomber.svg",
   },
 
   // Giacche — Uomo
@@ -750,7 +750,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 325,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/giacca-uomo-slim-monopetto.svg",
   },
   {
     id: 67,
@@ -761,7 +761,7 @@ const catalogo = [
     tessuto: "Lana pettinata",
     prezzoDa: 345,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/giacca-uomo-doppiopetto.svg",
   },
   {
     id: 68,
@@ -772,7 +772,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 355,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/giacca-uomo-oversize.svg",
   },
   {
     id: 69,
@@ -783,7 +783,7 @@ const catalogo = [
     tessuto: "Lino pregiato",
     prezzoDa: 320,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/giacca-uomo-blazer-nautico.svg",
   },
   {
     id: 70,
@@ -794,7 +794,7 @@ const catalogo = [
     tessuto: "Cashmere blend",
     prezzoDa: 365,
     inEvidenza: false,
-    immagine: "",
+    immagine: "/sketches/giacca-uomo-chester.svg",
   },
 ];
 
