@@ -33,7 +33,7 @@ function Catalogo() {
 
   function cambiaGenere(nuovoGenere) {
     setGenere(nuovoGenere);
-    setCategoria("Tutte"); // reset categoria quando cambio genere, per evitare filtri "orfani" (es. Gonne selezionata passando a Uomo)
+    setCategoria("Tutte");
   }
 
   return (
@@ -45,14 +45,14 @@ function Catalogo() {
           <div className="divider-gold"></div>
         </div>
 
-        <div className="mb-3">
+        <div className="mb-3 text-left">
           <p className="step-label mb-2">Genere</p>
-          <div className="d-flex flex-wrap gap-2">
+          <div className="filter-group justify-content-start">
             {["Tutti", "Donna", "Uomo"].map((g) => (
               <button
                 key={g}
                 type="button"
-                className={`btn btn-sm ${genere === g ? "btn-gold" : "btn-outline-dark-luxury"}`}
+                className={`filter-tab ${genere === g ? "active" : ""}`}
                 onClick={() => cambiaGenere(g)}
               >
                 {g}
@@ -61,12 +61,12 @@ function Catalogo() {
           </div>
         </div>
 
-        <div className="mb-3">
+        <div className="mb-4 text-left">
           <p className="step-label mb-2">Categoria</p>
-          <div className="d-flex flex-wrap gap-2">
+          <div className="filter-group justify-content-start">
             <button
               type="button"
-              className={`btn btn-sm ${categoria === "Tutte" ? "btn-gold" : "btn-outline-dark-luxury"}`}
+              className={`filter-tab ${categoria === "Tutte" ? "active" : ""}`}
               onClick={() => setCategoria("Tutte")}
             >
               Tutte
@@ -75,7 +75,7 @@ function Catalogo() {
               <button
                 key={cat}
                 type="button"
-                className={`btn btn-sm ${categoria === cat ? "btn-gold" : "btn-outline-dark-luxury"}`}
+                className={`filter-tab ${categoria === cat ? "active" : ""}`}
                 onClick={() => setCategoria(cat)}
               >
                 {cat}
@@ -102,9 +102,9 @@ function Catalogo() {
           {capiFiltrati.length} capi trovati
         </p>
 
-        <div className="row g-4">
+        <div className="row g-3">
           {capiFiltrati.map((capo) => (
-            <div className="col-md-4" key={capo.id}>
+            <div className="col-6 col-md-4 col-lg-3" key={capo.id}>
               <div className="product-card">
                 <Link to={`/catalogo/${capo.id}`}>
                   <div className="product-thumb">

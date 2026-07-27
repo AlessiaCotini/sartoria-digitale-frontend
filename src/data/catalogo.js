@@ -8,7 +8,7 @@ const catalogo = [
     modello: "Tubino",
     tessuto: "Cotone premium",
     prezzoDa: 320,
-    inEvidenza: true,
+    inEvidenza: false,
     immagine: "/sketches/abito-tubino.svg",
   },
   {
@@ -19,7 +19,7 @@ const catalogo = [
     modello: "A trapezio",
     tessuto: "Lino pregiato",
     prezzoDa: 300,
-    inEvidenza: true,
+    inEvidenza: false,
     immagine: "/sketches/abito-a-trapezio.svg",
   },
   {
@@ -30,7 +30,7 @@ const catalogo = [
     modello: "Camicia",
     tessuto: "Cotone premium",
     prezzoDa: 290,
-    inEvidenza: true,
+    inEvidenza: false,
     immagine: "/sketches/abito-camicia.svg",
   },
   {
@@ -133,7 +133,7 @@ const catalogo = [
     modello: "Polo",
     tessuto: "Lino pregiato",
     prezzoDa: 65,
-    inEvidenza: true,
+    inEvidenza: false,
     immagine: "/sketches/maglietta-donna-polo.svg",
   },
   {

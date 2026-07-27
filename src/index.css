@@ -296,3 +296,73 @@ a { text-decoration: none; color: inherit; }
 .footer-contact-item svg { flex-shrink: 0; margin-top: 0.15rem; color: var(--color-accent); }
 
 .divider-gold { width: 56px; height: 1px; background-color: var(--color-accent); margin: 1rem 0 1.6rem; }
+
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.8rem;
+  justify-content: center;
+}
+
+.filter-tab {
+  background: none;
+  border: none;
+  padding: 0 0 0.4rem;
+  font-family: "Jost", sans-serif;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.filter-tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: transparent;
+  transition: background 0.2s ease;
+}
+
+.filter-tab:hover {
+  color: var(--color-ink);
+}
+
+.filter-tab.active {
+  color: var(--color-ink);
+}
+
+.filter-tab.active::after {
+  background: var(--color-accent);
+}
+.form-select {
+  font-family: "Jost", sans-serif;
+  font-size: 0.85rem;
+  color: var(--color-ink);
+  background-color: var(--color-page-alt);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  padding: 0.55rem 2.2rem 0.55rem 0.9rem;
+  box-shadow: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%236b6155' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  background-size: 12px 12px;
+  transition: border-color 0.2s ease;
+}
+
+.form-select:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(156, 133, 99, 0.15);
+  outline: none;
+}
+
+.form-select option {
+  font-family: "Jost", sans-serif;
+  color: var(--color-ink);
+}
