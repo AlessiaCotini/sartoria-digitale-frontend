@@ -7,7 +7,7 @@ function FooterSartoria() {
     <footer className="footer-sartoria">
       <div className="container">
         <div className="row g-4">
-          <div className="col-md-3">
+          <div className="col-sm-6 col-md-3">
             <div className="brand-font text-white h5">
               Alta Sartoria
               <span style={{ color: "var(--color-gold)" }}>Digitale</span>
@@ -17,7 +17,7 @@ function FooterSartoria() {
             </p>
           </div>
 
-          <div className="col-md-3">
+          <div className="col-sm-6 col-md-3">
             <h6 className="text-white-50 text-uppercase small mb-3">
               Navigazione
             </h6>
@@ -34,7 +34,7 @@ function FooterSartoria() {
             </ul>
           </div>
 
-          <div className="col-md-3">
+          <div className="col-sm-6 col-md-3">
             <h6 className="text-white-50 text-uppercase small mb-3">Account</h6>
             <ul className="list-unstyled small">
               <li className="mb-2">
@@ -46,7 +46,7 @@ function FooterSartoria() {
             </ul>
           </div>
 
-          <div className="col-md-3">
+          <div className="col-sm-6 col-md-3">
             <h6 className="text-white-50 text-uppercase small mb-3">
               Contatti
             </h6>
