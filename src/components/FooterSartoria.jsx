@@ -9,8 +9,8 @@ function FooterSartoria() {
         <div className="row g-4">
           <div className="col-sm-6 col-md-3">
             <div className="brand-font text-white h5">
-              Alta Sartoria
-              <span style={{ color: "var(--color-gold)" }}>Digitale</span>
+              Sartoria
+              <span style={{ color: "var(--color-gold)" }}>Bellariva</span>
             </div>
             <p className="small mb-0">
               Sartoria di alta gamma, esperienza interamente digitale.
@@ -26,7 +26,7 @@ function FooterSartoria() {
                 <Link to="/catalogo">Catalogo</Link>
               </li>
               <li className="mb-2">
-                <Link to="/configuratore">Configuratore</Link>
+                <Link to="/configuratore">Crea</Link>
               </li>
               <li className="mb-2">
                 <Link to="/profilo">Profilo &amp; Misure</Link>

@@ -510,3 +510,21 @@ a { text-decoration: none; }
   margin-top: 0.15rem;
   color: var(--color-gold);
 }
+
+.offcanvas-sartoria {
+  --bs-offcanvas-width: 300px;
+  background-color: var(--color-navy);
+}
+
+.offcanvas-sartoria .nav-link {
+  color: rgba(255,255,255,0.75);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.6rem 0;
+}
+
+.offcanvas-sartoria .nav-link:hover,
+.offcanvas-sartoria .nav-link.active {
+  color: var(--color-gold);
+}
