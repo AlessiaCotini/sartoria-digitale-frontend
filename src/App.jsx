@@ -3,12 +3,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Catalogo from "./pages/Catalogo";
 import Configuratore from "./pages/Configuratore";
 import Profilo from "./pages/Profilo";
 import Preventivo from "./pages/Preventivo";
 import NavbarSartoria from "./components/Navbar";
 import Footer from "./components/Footer";
+import Catalogo from "./pages/Catalogo";
 
 function App() {
   return (

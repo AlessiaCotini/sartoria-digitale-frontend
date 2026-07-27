@@ -185,7 +185,11 @@ a { text-decoration: none; color: inherit; }
   color: var(--color-ink-soft);
 }
 
-.product-card .product-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.product-card .product-thumb img {  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 1.2rem;
+  display: block;}
 .product-card .product-body { padding: 1.2rem 1.3rem 1.5rem; }
 .product-card .product-price { color: var(--color-accent); font-weight: 600; font-family: "Cormorant Garamond", serif; font-size: 1.25rem; }
 
