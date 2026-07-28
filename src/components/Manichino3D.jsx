@@ -1,26 +1,65 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { coloraSvg } from "../utils/coloraSvg";
+import { fattoreScalaPerAltezza } from "../utils/sagomaCorpo";
 import { creaTessuto, aggiornaTessuto, COLONNE, RIGHE } from "../utils/tessuto";
 
 const ZONE_TESSUTO = {
-  Camicie: { centroY: 0.975, altezza: 0.95 },
-  Magliette: { centroY: 0.975, altezza: 0.8 },
-  Cardigan: { centroY: 0.975, altezza: 1.0 },
-  Giacche: { centroY: 0.975, altezza: 1.0 },
-  Completi: { centroY: 0.975, altezza: 1.0 },
-  Abiti: { centroY: 0.775, altezza: 1.35 },
-  Gonne: { centroY: 0.55, altezza: 0.4 },
+  Camicie: { da: 0.58, a: 0.82 },
+  Magliette: { da: 0.55, a: 0.8 },
+  Cardigan: { da: 0.5, a: 0.84 },
+  Giacche: { da: 0.48, a: 0.84 },
+  Completi: { da: 0.48, a: 0.84 },
+  Abiti: { da: 0.08, a: 0.84 },
+  Gonne: { da: 0.3, a: 0.58 },
 };
 
-const CATEGORIE_GAMBE_COLORATE = ["Pantaloni", "Completi"];
-const CATEGORIE_BACINO_NASCOSTO = ["Abiti", "Gonne"];
-const CATEGORIE_BACINO_COLORATO = ["Completi"];
+// il file è esportato in millimetri, la nostra scena ragiona in "metri"
+const SCALA_MM_A_METRI = 0.001;
 
-function Manichino3D({ proporzioni, coloreHex, immagineCapo, categoria }) {
+function percorsoModello(genere) {
+  return genere === "Uomo"
+    ? "/modelli/manichinoUomo.fbx"
+    : "/modelli/manichino.fbx";
+}
+
+function deformaCorpo(meshCorpo, proporzioni) {
+  const { posizioniOriginali, frazioniAltezza } = meshCorpo.geometry.userData;
+  if (!posizioniOriginali || !frazioniAltezza) {
+    console.warn("deformaCorpo: dati originali mancanti");
+    return;
+  }
+
+  const posAttr = meshCorpo.geometry.attributes.position;
+  const numVertici = posAttr.count;
+
+  for (let i = 0; i < numVertici; i++) {
+    const ox = posizioniOriginali[i * 3];
+    const oy = posizioniOriginali[i * 3 + 1];
+    const oz = posizioniOriginali[i * 3 + 2];
+    const fattore = fattoreScalaPerAltezza(frazioniAltezza[i], proporzioni);
+
+    posAttr.setXYZ(i, ox * fattore, oy, oz * fattore);
+  }
+  posAttr.needsUpdate = true;
+  meshCorpo.geometry.computeVertexNormals();
+}
+
+function Manichino3D({
+  proporzioni,
+  coloreHex,
+  immagineCapo,
+  categoria,
+  genere,
+}) {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
+  const proporzioniRef = useRef(proporzioni);
+  useEffect(() => {
+    proporzioniRef.current = proporzioni;
+  });
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -39,7 +78,7 @@ function Manichino3D({ proporzioni, coloreHex, immagineCapo, categoria }) {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     mount.appendChild(renderer.domElement);
 
-    const luceAmbiente = new THREE.AmbientLight(0xffffff, 0.45);
+    const luceAmbiente = new THREE.AmbientLight(0xffffff, 0.55);
     const luceDirezionale = new THREE.DirectionalLight(0xffffff, 1.0);
     luceDirezionale.position.set(2, 4, 3);
     luceDirezionale.castShadow = true;
@@ -52,68 +91,18 @@ function Manichino3D({ proporzioni, coloreHex, immagineCapo, categoria }) {
     controls.maxDistance = 8;
     controls.target.set(0, 1, 0);
 
-    const materialeCorpo = new THREE.MeshStandardMaterial({
-      color: "#d8c9ad",
-    });
-    const materialeCapo = new THREE.MeshStandardMaterial({
-      color: coloreHex,
-    });
-    const materialeGambe = new THREE.MeshStandardMaterial({
-      color: coloreHex,
-    });
+    // il manichino vero e proprio (FBX) viene caricato dentro questo
+    // gruppo vuoto: così possiamo scalarlo/spostarlo e sostituirlo senza
+    // toccare il resto della scena
+    const gruppoManichino = new THREE.Group();
+    scene.add(gruppoManichino);
+
     const materialeTessuto = new THREE.MeshStandardMaterial({
       color: "#ffffff",
       side: THREE.DoubleSide,
       transparent: true,
     });
 
-    // forme con rastremazione ed estremità arrotondate invece di cilindri
-    // dritti: danno una sagoma molto più simile a un corpo
-    const geoTesta = new THREE.SphereGeometry(1, 24, 24);
-    const geoCollo = new THREE.CylinderGeometry(0.7, 0.65, 1, 16);
-    const geoTorso = new THREE.CylinderGeometry(1, 0.78, 1, 24); // largo alle spalle, stretto in vita
-    const geoBacino = new THREE.CylinderGeometry(1, 0.75, 1, 24); // largo ai fianchi, stretto verso le gambe
-
-    const testa = new THREE.Mesh(geoTesta, materialeCorpo);
-    const collo = new THREE.Mesh(geoCollo, materialeCorpo);
-    const busto = new THREE.Mesh(geoTorso, materialeCapo);
-    const bacino = new THREE.Mesh(geoBacino, materialeCorpo);
-    // braccia e gambe useranno CapsuleGeometry ricostruita a ogni cambio di
-    // misure (per non deformare le estremità arrotondate con uno scale non
-    // uniforme): qui creiamo solo un placeholder minimo
-    const braccioSx = new THREE.Mesh(
-      new THREE.CapsuleGeometry(0.08, 0.4, 8, 16),
-      materialeCapo,
-    );
-    const braccioDx = new THREE.Mesh(
-      new THREE.CapsuleGeometry(0.08, 0.4, 8, 16),
-      materialeCapo,
-    );
-    const gambaSx = new THREE.Mesh(
-      new THREE.CapsuleGeometry(0.1, 0.6, 8, 16),
-      materialeCorpo,
-    );
-    const gambaDx = new THREE.Mesh(
-      new THREE.CapsuleGeometry(0.1, 0.6, 8, 16),
-      materialeCorpo,
-    );
-
-    [
-      testa,
-      collo,
-      busto,
-      bacino,
-      braccioSx,
-      braccioDx,
-      gambaSx,
-      gambaDx,
-    ].forEach((m) => {
-      m.castShadow = true;
-      m.receiveShadow = true;
-    });
-
-    // geometria del tessuto: una griglia di punti che deformeremo ogni
-    // frame con la simulazione fisica
     const geoTessuto = new THREE.BufferGeometry();
     const posizioni = new Float32Array(COLONNE * RIGHE * 3);
     const uv = new Float32Array(COLONNE * RIGHE * 2);
@@ -155,52 +144,25 @@ function Manichino3D({ proporzioni, coloreHex, immagineCapo, categoria }) {
     pavimento.position.y = -0.9;
     pavimento.receiveShadow = true;
 
-    scene.add(
-      pavimento,
-      testa,
-      collo,
-      busto,
-      bacino,
-      braccioSx,
-      braccioDx,
-      gambaSx,
-      gambaDx,
-      meshTessuto,
-    );
+    scene.add(pavimento, meshTessuto);
 
     sceneRef.current = {
-      materialeCorpo,
-      materialeCapo,
-      materialeGambe,
+      gruppoManichino,
+      modelloCorrente: null,
+      genereCaricato: null,
       materialeTessuto,
       geoTessuto,
       meshTessuto,
       tessuto: null,
-      raggioTorace: 0.55,
-      raggioFianchi: 0.5,
+      proporzioni: null,
       altezzaCorrente: 1,
-      mesh: {
-        testa,
-        collo,
-        busto,
-        bacino,
-        braccioSx,
-        braccioDx,
-        gambaSx,
-        gambaDx,
-      },
     };
 
     let frameId;
     function anima() {
       const s = sceneRef.current;
       if (s.tessuto) {
-        aggiornaTessuto(
-          s.tessuto,
-          s.altezzaCorrente,
-          s.raggioTorace,
-          s.raggioFianchi,
-        );
+        aggiornaTessuto(s.tessuto, s.corpo, s.proporzioni);
         const posArray = s.geoTessuto.attributes.position.array;
         s.tessuto.particelle.forEach((p, i) => {
           posArray[i * 3] = p.x;
@@ -234,118 +196,140 @@ function Manichino3D({ proporzioni, coloreHex, immagineCapo, categoria }) {
     };
   }, []);
 
-  // ridimensiona corpo/arti (ricostruendo le capsule di braccia e gambe
-  // per non deformarne le estremità arrotondate) e la zona del tessuto
+  // carica il modello FBX giusto (uomo/donna) quando cambia il genere
   useEffect(() => {
     if (!sceneRef.current) return;
-    const { mesh, meshTessuto } = sceneRef.current;
+    const s = sceneRef.current;
+    const percorso = percorsoModello(genere);
+
+    if (s.genereCaricato === percorso) return;
+
+    const caricatore = new FBXLoader();
+    let annullato = false;
+
+    caricatore.load(
+      percorso,
+      (oggetto) => {
+        if (annullato) return;
+
+        if (s.modelloCorrente) {
+          s.gruppoManichino.remove(s.modelloCorrente);
+        }
+
+        oggetto.traverse((figlio) => {
+          if (figlio.isMesh) {
+            figlio.castShadow = true;
+            figlio.receiveShadow = true;
+          }
+        });
+
+        const bbox = new THREE.Box3().setFromObject(oggetto);
+        const dimensioni = new THREE.Vector3();
+        bbox.getSize(dimensioni);
+
+        oggetto.updateMatrixWorld(true);
+
+        let meshCorpo = null;
+        oggetto.traverse((figlio) => {
+          if (figlio.isMesh && figlio.name === "body") meshCorpo = figlio;
+        });
+
+        if (meshCorpo) {
+          const posAttr = meshCorpo.geometry.attributes.position;
+          const numVertici = posAttr.count;
+          const posizioniOriginali = new Float32Array(numVertici * 3);
+          const frazioniAltezza = new Float32Array(numVertici);
+          const v = new THREE.Vector3();
+
+          for (let i = 0; i < numVertici; i++) {
+            const x = posAttr.getX(i);
+            const y = posAttr.getY(i);
+            const z = posAttr.getZ(i);
+            posizioniOriginali[i * 3] = x;
+            posizioniOriginali[i * 3 + 1] = y;
+            posizioniOriginali[i * 3 + 2] = z;
+
+            v.set(x, y, z);
+            v.applyMatrix4(meshCorpo.matrixWorld);
+            frazioniAltezza[i] = (v.y - bbox.min.y) / dimensioni.y;
+          }
+
+          meshCorpo.geometry.userData.posizioniOriginali = posizioniOriginali;
+          meshCorpo.geometry.userData.frazioniAltezza = frazioniAltezza;
+          s.meshCorpo = meshCorpo;
+          deformaCorpo(meshCorpo, proporzioniRef.current);
+        }
+
+        oggetto.position.y = -bbox.min.y;
+        oggetto.position.x = -(bbox.min.x + bbox.max.x) / 2;
+        oggetto.position.z = -(bbox.min.z + bbox.max.z) / 2;
+
+        s.altezzaNativaMM = dimensioni.y;
+
+        s.gruppoManichino.add(oggetto);
+        s.modelloCorrente = oggetto;
+        s.genereCaricato = percorso;
+      },
+      undefined,
+      (errore) => {
+        console.error("Errore nel caricare il manichino FBX:", errore);
+      },
+    );
+
+    return () => {
+      annullato = true;
+    };
+  }, [genere]);
+
+  // scala/posiziona il manichino e ricrea la zona del tessuto sulle misure
+  useEffect(() => {
+    if (!sceneRef.current) return;
+    const s = sceneRef.current;
 
     const altezza = proporzioni.scalaAltezza;
-    const raggioTorace = (proporzioni.larghezzaTorace / 64) * 0.55;
-    const raggioFianchi = (proporzioni.larghezzaFianchi / 66) * 0.5;
-    const raggioSpalle = proporzioni.larghezzaSpalle / 70;
 
-    mesh.testa.scale.set(0.3, 0.34, 0.3);
-    mesh.testa.position.set(0, 1.55 * altezza, 0);
+    const scalaTotale = SCALA_MM_A_METRI * altezza;
+    s.gruppoManichino.scale.set(scalaTotale, scalaTotale, scalaTotale);
+    s.gruppoManichino.position.set(0, -0.9, 0);
 
-    mesh.collo.scale.set(
-      raggioTorace * 0.4,
-      0.12 * altezza,
-      raggioTorace * 0.4,
-    );
-    mesh.collo.position.set(0, 1.42 * altezza, 0);
+    if (s.meshCorpo) {
+      deformaCorpo(s.meshCorpo, proporzioni);
+    }
 
-    mesh.busto.scale.set(raggioTorace, 0.75 * altezza, raggioTorace);
-    mesh.busto.position.set(0, 1.05 * altezza, 0);
-
-    mesh.bacino.scale.set(raggioFianchi, 0.3 * altezza, raggioFianchi);
-    mesh.bacino.position.set(0, 0.6 * altezza, 0);
-
-    const offsetBraccio = raggioSpalle * 0.75;
-    const raggioBraccio = 0.085 * raggioSpalle;
-    const lunghezzaBraccio = 0.5 * altezza;
-    mesh.braccioSx.geometry.dispose();
-    mesh.braccioSx.geometry = new THREE.CapsuleGeometry(
-      raggioBraccio,
-      lunghezzaBraccio,
-      8,
-      16,
-    );
-    mesh.braccioSx.position.set(-offsetBraccio, 0.95 * altezza, 0);
-    mesh.braccioDx.geometry.dispose();
-    mesh.braccioDx.geometry = new THREE.CapsuleGeometry(
-      raggioBraccio,
-      lunghezzaBraccio,
-      8,
-      16,
-    );
-    mesh.braccioDx.position.set(offsetBraccio, 0.95 * altezza, 0);
-
-    const raggioGamba = 0.11 * (raggioFianchi / 0.5);
-    const lunghezzaGamba = 0.75 * altezza;
-    mesh.gambaSx.geometry.dispose();
-    mesh.gambaSx.geometry = new THREE.CapsuleGeometry(
-      raggioGamba,
-      lunghezzaGamba,
-      8,
-      16,
-    );
-    mesh.gambaSx.position.set(-0.22, -0.05 * altezza, 0);
-    mesh.gambaDx.geometry.dispose();
-    mesh.gambaDx.geometry = new THREE.CapsuleGeometry(
-      raggioGamba,
-      lunghezzaGamba,
-      8,
-      16,
-    );
-    mesh.gambaDx.position.set(0.22, -0.05 * altezza, 0);
+    const yPiedi = -0.9;
+    const altezzaModello =
+      (s.altezzaNativaMM || 1900) * SCALA_MM_A_METRI * altezza;
+    const corpo = { yPiedi, altezzaModello };
 
     const zona = ZONE_TESSUTO[categoria];
     if (zona) {
-      sceneRef.current.tessuto = creaTessuto(
-        zona.altezza * altezza,
-        zona.centroY * altezza,
-        altezza,
-        raggioTorace,
-        raggioFianchi,
+      const yAlto = yPiedi + zona.a * altezzaModello;
+      const yBasso = yPiedi + zona.da * altezzaModello;
+      s.tessuto = creaTessuto(
+        yAlto - yBasso,
+        (yAlto + yBasso) / 2,
+        corpo,
+        proporzioni,
       );
+      s.corpo = corpo;
+      s.proporzioni = proporzioni;
+      s.corpo = corpo;
     } else {
-      sceneRef.current.tessuto = null;
-      meshTessuto.visible = false;
+      s.tessuto = null;
+      s.meshTessuto.visible = false;
     }
 
-    sceneRef.current.raggioTorace = raggioTorace;
-    sceneRef.current.raggioFianchi = raggioFianchi;
-    sceneRef.current.altezzaCorrente = altezza;
+    s.altezzaCorrente = altezza;
   }, [proporzioni, categoria]);
 
-  // carica e colora la bozza scelta, gestisce gambe/bacino in base alla
-  // categoria, oppure torna al cilindro colorato semplice
+  // carica e colora la bozza scelta, la disegna sopra il manichino
   useEffect(() => {
     if (!sceneRef.current) return;
-    const { mesh, meshTessuto, materialeCapo, materialeCorpo, materialeGambe } =
-      sceneRef.current;
-
+    const { meshTessuto } = sceneRef.current;
     const zona = ZONE_TESSUTO[categoria];
-    const gambeColorate = CATEGORIE_GAMBE_COLORATE.includes(categoria);
-    const bacinoNascosto = CATEGORIE_BACINO_NASCOSTO.includes(categoria);
-    const bacinoColorato = CATEGORIE_BACINO_COLORATO.includes(categoria);
-
-    mesh.gambaSx.material = gambeColorate ? materialeGambe : materialeCorpo;
-    mesh.gambaDx.material = gambeColorate ? materialeGambe : materialeCorpo;
-    if (gambeColorate) {
-      materialeGambe.color.set(coloreHex);
-    }
-
-    mesh.bacino.visible = !bacinoNascosto;
-    mesh.bacino.material = bacinoColorato ? materialeGambe : materialeCorpo;
 
     if (!immagineCapo || !zona) {
       meshTessuto.visible = false;
-      mesh.busto.visible = true;
-      mesh.braccioSx.visible = true;
-      mesh.braccioDx.visible = true;
-      materialeCapo.color.set(coloreHex);
       return;
     }
 
@@ -372,9 +356,6 @@ function Manichino3D({ proporzioni, coloreHex, immagineCapo, categoria }) {
           sceneRef.current.materialeTessuto.map = texture;
           sceneRef.current.materialeTessuto.needsUpdate = true;
           sceneRef.current.meshTessuto.visible = true;
-          mesh.busto.visible = false;
-          mesh.braccioSx.visible = false;
-          mesh.braccioDx.visible = false;
         };
         immagine.src =
           "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgColorato);

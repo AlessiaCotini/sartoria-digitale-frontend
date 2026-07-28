@@ -39,7 +39,10 @@ export function calcolaProporzioni(misure) {
 
   return {
     scalaAltezza,
+    scalaSpalle,
     scalaTorace,
+    scalaVita,
+    scalaFianchi,
     larghezzaSpalle: LARGHEZZA_RIFERIMENTO.spalle * scalaSpalle,
     larghezzaTorace: LARGHEZZA_RIFERIMENTO.torace * scalaTorace,
     larghezzaVita: LARGHEZZA_RIFERIMENTO.vita * scalaVita,

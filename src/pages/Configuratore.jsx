@@ -98,6 +98,7 @@ function Configuratore() {
                 coloreHex={colore.hex}
                 immagineCapo={capo?.immagine}
                 categoria={capo?.categoria}
+                genere={capo?.genere}
               />
             </div>
             <p className="text-muted small text-center mt-2">
