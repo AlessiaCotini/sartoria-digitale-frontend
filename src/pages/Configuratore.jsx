@@ -4,6 +4,7 @@ import { MATERIALI } from "../data/materiali";
 import { impostaMateriale, impostaColore } from "../store/configuratoreSlice";
 import { calcolaProporzioni } from "../utils/manichino";
 import Manichino3D from "../components/Manichino3D";
+import catalogo from "../data/catalogo";
 
 function Configuratore() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -13,18 +14,21 @@ function Configuratore() {
   );
   const coloreSelezionato = useSelector((state) => state.configuratore.colore);
   const dispatch = useDispatch();
+  const materiale = MATERIALI.find((m) => m.nome === materialeSelezionato);
+  const colore = materiale.colori.find((c) => c.nome === coloreSelezionato);
+
+  const capoId = useSelector((state) => state.configuratore.capoId);
+  const capo = catalogo.find((c) => c.id === capoId);
+
+  const prezzoBase = capo ? capo.prezzoDa : 250;
+  const nomeCapo = capo ? capo.nome : "un capo su misura";
+  const prezzoTotale = prezzoBase + materiale.prezzoAlMetro * 3;
+
+  const proporzioni = calcolaProporzioni(misure);
 
   if (!isLoggedIn) {
     return <Navigate to="/login" replace />;
   }
-
-  const materiale = MATERIALI.find((m) => m.nome === materialeSelezionato);
-  const colore = materiale.colori.find((c) => c.nome === coloreSelezionato);
-
-  const prezzoBase = 250;
-  const prezzoTotale = prezzoBase + materiale.prezzoAlMetro * 3;
-
-  const proporzioni = calcolaProporzioni(misure);
 
   return (
     <section className="section">
@@ -32,6 +36,7 @@ function Configuratore() {
         <div className="mb-4">
           <div className="section-title-eyebrow">Costruzione</div>
           <h2>Crea il tuo capo</h2>
+          <p className="text-muted small mb-4">Stai configurando: {nomeCapo}</p>
           <div className="divider-gold"></div>
         </div>
 
@@ -88,7 +93,12 @@ function Configuratore() {
           </div>
           <div className="col-lg-7">
             <div className="preview-panel p-0" style={{ overflow: "hidden" }}>
-              <Manichino3D proporzioni={proporzioni} coloreHex={colore.hex} />
+              <Manichino3D
+                proporzioni={proporzioni}
+                coloreHex={colore.hex}
+                immagineCapo={capo?.immagine}
+                categoria={capo?.categoria}
+              />
             </div>
             <p className="text-muted small text-center mt-2">
               Manichino stilizzato (torace {misure.torace || "—"} cm, altezza{" "}

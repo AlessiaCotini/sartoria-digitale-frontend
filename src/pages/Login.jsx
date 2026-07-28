@@ -2,19 +2,19 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
+import { useSelector } from "react-redux";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const capoId = useSelector((state) => state.configuratore.capoId);
 
   function handleSubmit(e) {
     e.preventDefault();
-    // Nessun backend collegato ancora: per ora consideriamo valido
-    // qualsiasi email/password e salviamo solo l'email in Redux.
     dispatch(login({ email }));
-    navigate("/profilo");
+    navigate(capoId ? "/configuratore" : "/profilo");
   }
 
   return (

@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
 import { CAMPI_MISURE } from "../data/misure";
+import { useSelector } from "react-redux";
 
 function Register() {
   const [nome, setNome] = useState("");
@@ -17,6 +18,7 @@ function Register() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const capoId = useSelector((state) => state.configuratore.capoId);
 
   function handleMisuraChange(chiave, valore) {
     setMisure((prev) => ({ ...prev, [chiave]: valore }));
@@ -37,7 +39,7 @@ function Register() {
     }
 
     dispatch(login({ utente: { nome, cognome, email }, misure }));
-    navigate("/profilo");
+    navigate(capoId ? "/configuratore" : "/profilo");
   }
 
   return (

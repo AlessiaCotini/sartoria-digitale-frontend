@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import catalogo from "../data/catalogo";
+import { impostaCapo } from "../store/configuratoreSlice";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 function Catalogo() {
   const [genere, setGenere] = useState("Tutti");
   const [categoria, setCategoria] = useState("Tutte");
   const [tessuto, setTessuto] = useState("Tutti");
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // categorie disponibili in base al genere scelto
   const categorieDisponibili = [
@@ -25,6 +31,11 @@ function Catalogo() {
     const matchTessuto = tessuto === "Tutti" || capo.tessuto === tessuto;
     return matchGenere && matchCategoria && matchTessuto;
   });
+
+  function handleConfigura(capoId) {
+    dispatch(impostaCapo(capoId));
+    navigate(isLoggedIn ? "/configuratore" : "/login");
+  }
 
   function cambiaGenere(nuovoGenere) {
     setGenere(nuovoGenere);
@@ -125,9 +136,13 @@ function Catalogo() {
                   <p className="text-muted small mb-2">{capo.tessuto}</p>
                   <div className="d-flex justify-content-between align-items-center">
                     <div className="product-price">da € {capo.prezzoDa}</div>
-                    <Link to="/login" className="btn btn-sm btn-gold">
-                      Configura
-                    </Link>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-gold"
+                      onClick={() => handleConfigura(capo.id)}
+                    >
+                      Crea
+                    </button>
                   </div>
                 </div>
               </div>

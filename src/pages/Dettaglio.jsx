@@ -1,9 +1,20 @@
 import { useParams, Link } from "react-router-dom";
 import catalogo from "../data/catalogo";
+import { impostaCapo } from "../store/configuratoreSlice";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 function Dettaglio() {
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
   const capo = catalogo.find((c) => c.id === Number(id));
+
+  function handleConfigura(capoId) {
+    dispatch(impostaCapo(capoId));
+    navigate(isLoggedIn ? "/configuratore" : "/login");
+  }
 
   if (!capo) {
     return (
@@ -47,9 +58,13 @@ function Dettaglio() {
               Costruzione su misura.
             </p>
             <div className="preview-price mb-4">da € {capo.prezzoDa}</div>
-            <Link to="/login" className="btn btn-gold btn-lg">
-              Configura questo modello
-            </Link>
+            <button
+              type="button"
+              className="btn btn-sm btn-gold"
+              onClick={() => handleConfigura(capo.id)}
+            >
+              Configura
+            </button>
           </div>
         </div>
       </div>
