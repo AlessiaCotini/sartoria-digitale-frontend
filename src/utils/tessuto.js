@@ -6,11 +6,9 @@ export const RIGHE = 20;
 const GRAVITA = -0.0015;
 const SMORZAMENTO = 0.98;
 const ITERAZIONI_VINCOLI = 4;
-
-// raggio del torace "neutro" (proporzioni 1:1): la sagoma reale si ottiene
-// scalando questo valore con la stessa fattoreScalaPerAltezza usata per
-// deformare il corpo — così il tessuto aderisce sempre alla stessa silhouette
-const RAGGIO_TORACE_NEUTRO = 0.55;
+// raggio ricavato dalla circonferenza toracica di riferimento (96 cm),
+// trattando la sezione del busto come un cerchio: raggio = circonferenza / (2π)
+const RAGGIO_TORACE_NEUTRO = 96 / (2 * Math.PI) / 100;
 function raggioCorpoAFrazione(frazione, proporzioni) {
   return RAGGIO_TORACE_NEUTRO * fattoreScalaPerAltezza(frazione, proporzioni);
 }

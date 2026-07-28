@@ -148,6 +148,7 @@ function Manichino3D({
 
     sceneRef.current = {
       gruppoManichino,
+      controls,
       modelloCorrente: null,
       genereCaricato: null,
       materialeTessuto,
@@ -265,6 +266,11 @@ function Manichino3D({
         oggetto.position.z = -(bbox.min.z + bbox.max.z) / 2;
 
         s.altezzaNativaMM = dimensioni.y;
+        if (s.controls) {
+          const altezzaModelloReale =
+            dimensioni.y * SCALA_MM_A_METRI * s.altezzaCorrente;
+          s.controls.target.set(0, -0.9 + altezzaModelloReale * 0.55, 0);
+        }
 
         s.gruppoManichino.add(oggetto);
         s.modelloCorrente = oggetto;
@@ -300,6 +306,9 @@ function Manichino3D({
     const altezzaModello =
       (s.altezzaNativaMM || 1900) * SCALA_MM_A_METRI * altezza;
     const corpo = { yPiedi, altezzaModello };
+    if (s.controls) {
+      s.controls.target.set(0, yPiedi + altezzaModello * 0.55, 0);
+    }
 
     const zona = ZONE_TESSUTO[categoria];
     if (zona) {
