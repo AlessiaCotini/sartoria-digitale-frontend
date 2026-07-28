@@ -99,6 +99,7 @@ function Configuratore() {
                 immagineCapo={capo?.immagine}
                 categoria={capo?.categoria}
                 genere={capo?.genere}
+                modello={capo?.modello}
               />
             </div>
             <p className="text-muted small text-center mt-2">

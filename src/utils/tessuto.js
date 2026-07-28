@@ -9,7 +9,8 @@ const ITERAZIONI_VINCOLI = 4;
 // raggio ricavato dalla circonferenza toracica di riferimento (96 cm),
 // trattando la sezione del busto come un cerchio: raggio = circonferenza / (2π)
 const RAGGIO_TORACE_NEUTRO = 96 / (2 * Math.PI) / 100;
-function raggioCorpoAFrazione(frazione, proporzioni) {
+
+export function raggioTorace(frazione, proporzioni) {
   return RAGGIO_TORACE_NEUTRO * fattoreScalaPerAltezza(frazione, proporzioni);
 }
 
@@ -26,14 +27,14 @@ export function creaTessuto(altezzaZona, centroY, corpo, proporzioni) {
       corpo.altezzaModello > 0
         ? (y - corpo.yPiedi) / corpo.altezzaModello
         : 0.7;
-    const raggio = raggioCorpoAFrazione(frazione, proporzioni) + margine;
+    const raggio = raggioTorace(frazione, proporzioni) + margine;
 
     for (let colonna = 0; colonna < COLONNE; colonna++) {
       const u = colonna / (COLONNE - 1);
       const angolo = -Math.PI * 0.7 + u * Math.PI * 1.4;
       const x = raggio * Math.sin(angolo);
       const z = raggio * Math.cos(angolo);
-      particelle.push({ x, y, z, px: x, py: y, pz: z, fissa: riga === 0 });
+      particelle.push({ x, y, z, px: x, py: y, pz: z, fissa: riga <= 1 });
     }
   }
 
@@ -108,7 +109,7 @@ export function aggiornaTessuto(tessuto, corpo, proporzioni) {
       corpo.altezzaModello > 0
         ? (p.y - corpo.yPiedi) / corpo.altezzaModello
         : 0.7;
-    const raggio = raggioCorpoAFrazione(frazione, proporzioni) + 0.02;
+    const raggio = raggioTorace(frazione, proporzioni) + 0.02;
     const distanzaAsse = Math.sqrt(p.x * p.x + p.z * p.z) || 0.0001;
 
     const differenza = raggio - distanzaAsse;

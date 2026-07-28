@@ -5,6 +5,7 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { coloraSvg } from "../utils/coloraSvg";
 import { fattoreScalaPerAltezza } from "../utils/sagomaCorpo";
 import { creaTessuto, aggiornaTessuto, COLONNE, RIGHE } from "../utils/tessuto";
+import { lunghezzaManica, creaManica } from "../utils/maniche";
 
 const ZONE_TESSUTO = {
   Camicie: { da: 0.58, a: 0.82 },
@@ -53,6 +54,7 @@ function Manichino3D({
   immagineCapo,
   categoria,
   genere,
+  modello,
 }) {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
@@ -146,6 +148,20 @@ function Manichino3D({
 
     scene.add(pavimento, meshTessuto);
 
+    const meshManicaSx = new THREE.Mesh(
+      new THREE.BufferGeometry(),
+      materialeTessuto,
+    );
+    const meshManicaDx = new THREE.Mesh(
+      new THREE.BufferGeometry(),
+      materialeTessuto,
+    );
+    meshManicaSx.visible = false;
+    meshManicaDx.visible = false;
+    meshManicaSx.castShadow = true;
+    meshManicaDx.castShadow = true;
+    scene.add(meshManicaSx, meshManicaDx);
+
     sceneRef.current = {
       gruppoManichino,
       controls,
@@ -154,6 +170,8 @@ function Manichino3D({
       materialeTessuto,
       geoTessuto,
       meshTessuto,
+      meshManicaSx,
+      meshManicaDx,
       tessuto: null,
       proporzioni: null,
       altezzaCorrente: 1,
@@ -328,8 +346,34 @@ function Manichino3D({
       s.meshTessuto.visible = false;
     }
 
+    const lunghezza = lunghezzaManica(categoria, modello);
+    if (lunghezza !== "nessuna") {
+      [
+        ["sinistra", s.meshManicaSx],
+        ["destra", s.meshManicaDx],
+      ].forEach(([lato, mesh]) => {
+        const { posizioni, uv, indici } = creaManica(
+          corpo,
+          proporzioni,
+          lato,
+          lunghezza,
+        );
+        mesh.geometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(posizioni, 3),
+        );
+        mesh.geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+        mesh.geometry.setIndex(indici);
+        mesh.geometry.computeVertexNormals();
+        mesh.visible = true;
+      });
+    } else {
+      s.meshManicaSx.visible = false;
+      s.meshManicaDx.visible = false;
+    }
+
     s.altezzaCorrente = altezza;
-  }, [proporzioni, categoria]);
+  }, [proporzioni, categoria, modello]);
 
   // carica e colora la bozza scelta, la disegna sopra il manichino
   useEffect(() => {
