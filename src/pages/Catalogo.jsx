@@ -2,13 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import catalogo from "../data/catalogo";
 
-const TESSUTI = [
-  "Lana pettinata",
-  "Cashmere blend",
-  "Lino pregiato",
-  "Cotone premium",
-];
-
 function Catalogo() {
   const [genere, setGenere] = useState("Tutti");
   const [categoria, setCategoria] = useState("Tutte");
@@ -22,6 +15,8 @@ function Catalogo() {
         .map((capo) => capo.categoria),
     ),
   ];
+
+  const tessutiDisponibili = [...new Set(catalogo.map((capo) => capo.tessuto))];
 
   const capiFiltrati = catalogo.filter((capo) => {
     const matchGenere = genere === "Tutti" || capo.genere === genere;
@@ -92,7 +87,7 @@ function Catalogo() {
             onChange={(e) => setTessuto(e.target.value)}
           >
             <option>Tutti</option>
-            {TESSUTI.map((t) => (
+            {tessutiDisponibili.map((t) => (
               <option key={t}>{t}</option>
             ))}
           </select>
