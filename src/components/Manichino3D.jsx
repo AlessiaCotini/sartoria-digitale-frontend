@@ -5,7 +5,12 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { coloraSvg } from "../utils/coloraSvg";
 import { fattoreScalaPerAltezza } from "../utils/sagomaCorpo";
 import { creaTessuto, aggiornaTessuto, COLONNE, RIGHE } from "../utils/tessuto";
-import { lunghezzaManica, creaManica } from "../utils/maniche";
+import {
+  lunghezzaManica,
+  creaManica,
+  FRAZIONE_SPALLA,
+  creaToppaSpalla,
+} from "../utils/maniche";
 
 const ZONE_TESSUTO = {
   Camicie: { da: 0.58, a: 0.82 },
@@ -48,6 +53,78 @@ function deformaCorpo(meshCorpo, proporzioni) {
   meshCorpo.geometry.computeVertexNormals();
 }
 
+function trovaXSpallaReale(meshCorpo, proporzioni) {
+  const { posizioniOriginali, frazioniAltezza } = meshCorpo.geometry.userData;
+  if (!posizioniOriginali || !frazioniAltezza) return null;
+
+  const tolleranza = 0.015;
+  let massimoX = 0;
+  for (let i = 0; i < frazioniAltezza.length; i++) {
+    if (Math.abs(frazioniAltezza[i] - FRAZIONE_SPALLA) < tolleranza) {
+      const fattore = fattoreScalaPerAltezza(frazioniAltezza[i], proporzioni);
+      const x = Math.abs(posizioniOriginali[i * 3] * fattore);
+      if (x > massimoX) massimoX = x;
+    }
+  }
+  return massimoX > 0 ? massimoX : null;
+}
+
+function aggiornaManiche(
+  s,
+  corpo,
+  proporzioni,
+  categoria,
+  modello,
+  scalaTotale,
+) {
+  const lunghezza = lunghezzaManica(categoria, modello);
+  const xSpallaLocale = s.meshCorpo
+    ? trovaXSpallaReale(s.meshCorpo, proporzioni)
+    : null;
+
+  if (lunghezza === "nessuna" || !xSpallaLocale) {
+    s.meshManicaSx.visible = false;
+    s.meshManicaDx.visible = false;
+    s.meshToppaSx.visible = false;
+    s.meshToppaDx.visible = false;
+    return;
+  }
+
+  const xSpallaMetri = xSpallaLocale * scalaTotale;
+  [
+    [s.meshManicaSx, s.meshToppaSx, -xSpallaMetri],
+    [s.meshManicaDx, s.meshToppaDx, xSpallaMetri],
+  ].forEach(([meshManica, meshToppa, xSpalla]) => {
+    const { posizioni, uv, indici } = creaManica(
+      corpo,
+      proporzioni,
+      xSpalla,
+      lunghezza,
+    );
+    meshManica.geometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(posizioni, 3),
+    );
+    meshManica.geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+    meshManica.geometry.setIndex(indici);
+    meshManica.geometry.computeVertexNormals();
+    meshManica.visible = true;
+
+    const toppa = creaToppaSpalla(corpo, proporzioni, xSpalla);
+    meshToppa.geometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(toppa.posizioni, 3),
+    );
+    meshToppa.geometry.setAttribute(
+      "uv",
+      new THREE.BufferAttribute(toppa.uv, 2),
+    );
+    meshToppa.geometry.setIndex(toppa.indici);
+    meshToppa.geometry.computeVertexNormals();
+    meshToppa.visible = true;
+  });
+}
+
 function Manichino3D({
   proporzioni,
   coloreHex,
@@ -58,9 +135,14 @@ function Manichino3D({
 }) {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
+
   const proporzioniRef = useRef(proporzioni);
+  const categoriaRef = useRef(categoria);
+  const modelloRef = useRef(modello);
   useEffect(() => {
     proporzioniRef.current = proporzioni;
+    categoriaRef.current = categoria;
+    modelloRef.current = modello;
   });
 
   useEffect(() => {
@@ -162,6 +244,20 @@ function Manichino3D({
     meshManicaDx.castShadow = true;
     scene.add(meshManicaSx, meshManicaDx);
 
+    const meshToppaSx = new THREE.Mesh(
+      new THREE.BufferGeometry(),
+      materialeTessuto,
+    );
+    const meshToppaDx = new THREE.Mesh(
+      new THREE.BufferGeometry(),
+      materialeTessuto,
+    );
+    meshToppaSx.visible = false;
+    meshToppaDx.visible = false;
+    meshToppaSx.castShadow = true;
+    meshToppaDx.castShadow = true;
+    scene.add(meshToppaSx, meshToppaDx);
+
     sceneRef.current = {
       gruppoManichino,
       controls,
@@ -172,6 +268,8 @@ function Manichino3D({
       meshTessuto,
       meshManicaSx,
       meshManicaDx,
+      meshToppaSx,
+      meshToppaDx,
       tessuto: null,
       proporzioni: null,
       altezzaCorrente: 1,
@@ -290,6 +388,21 @@ function Manichino3D({
           s.controls.target.set(0, -0.9 + altezzaModelloReale * 0.55, 0);
         }
 
+        if (meshCorpo) {
+          const corpoAttuale = {
+            yPiedi: -0.9,
+            altezzaModello: dimensioni.y * SCALA_MM_A_METRI * s.altezzaCorrente,
+          };
+          aggiornaManiche(
+            s,
+            corpoAttuale,
+            proporzioniRef.current,
+            categoriaRef.current,
+            modelloRef.current,
+            SCALA_MM_A_METRI * s.altezzaCorrente,
+          );
+        }
+
         s.gruppoManichino.add(oggetto);
         s.modelloCorrente = oggetto;
         s.genereCaricato = percorso;
@@ -346,31 +459,7 @@ function Manichino3D({
       s.meshTessuto.visible = false;
     }
 
-    const lunghezza = lunghezzaManica(categoria, modello);
-    if (lunghezza !== "nessuna") {
-      [
-        ["sinistra", s.meshManicaSx],
-        ["destra", s.meshManicaDx],
-      ].forEach(([lato, mesh]) => {
-        const { posizioni, uv, indici } = creaManica(
-          corpo,
-          proporzioni,
-          lato,
-          lunghezza,
-        );
-        mesh.geometry.setAttribute(
-          "position",
-          new THREE.BufferAttribute(posizioni, 3),
-        );
-        mesh.geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
-        mesh.geometry.setIndex(indici);
-        mesh.geometry.computeVertexNormals();
-        mesh.visible = true;
-      });
-    } else {
-      s.meshManicaSx.visible = false;
-      s.meshManicaDx.visible = false;
-    }
+    aggiornaManiche(s, corpo, proporzioni, categoria, modello, scalaTotale);
 
     s.altezzaCorrente = altezza;
   }, [proporzioni, categoria, modello]);
