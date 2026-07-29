@@ -15,8 +15,14 @@ import { useDispatch } from "react-redux";
 import { login } from "./store/authSlice";
 import { utenteAttuale } from "./api/auth";
 import { misureMie } from "./api/misure";
-import GestionaleSarta from "./pages/GestionaleSarta";
 import SoloCliente from "./components/SoloCliente";
+import { Navigate } from "react-router-dom";
+import GestionaleLayout from "./pages/gestionale/GestionaleLayout";
+import Calendario from "./pages/gestionale/Calendario";
+import Ordini from "./pages/gestionale/Ordini";
+import NuovoOrdine from "./pages/gestionale/NuovoOrdine";
+import Preventivi from "./pages/gestionale/Preventivi";
+import Pagamenti from "./pages/gestionale/Pagamenti";
 
 function App() {
   const dispatch = useDispatch();
@@ -57,7 +63,14 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/gestionale" element={<GestionaleSarta />} />
+        <Route path="/gestionale" element={<GestionaleLayout />}>
+          <Route index element={<Navigate to="calendario" replace />} />
+          <Route path="calendario" element={<Calendario />} />
+          <Route path="ordini" element={<Ordini />} />
+          <Route path="nuovo-ordine" element={<NuovoOrdine />} />
+          <Route path="preventivi" element={<Preventivi />} />
+          <Route path="pagamenti" element={<Pagamenti />} />
+        </Route>
         <Route
           path="/"
           element={
