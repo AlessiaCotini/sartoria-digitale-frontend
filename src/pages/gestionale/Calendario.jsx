@@ -242,9 +242,151 @@ function NuovoAppuntamentoModal({ slot, onChiudi, onCreato }) {
   );
 }
 
+const STATI_APPUNTAMENTO = [
+  "RICHIESTO",
+  "CONFERMATO",
+  "COMPLETATO",
+  "ANNULLATO",
+];
+
+function ModificaAppuntamentoModal({ appuntamento, onChiudi, onModificato }) {
+  const [data, setData] = useState(
+    dayjs(appuntamento.dataOra).format("YYYY-MM-DD"),
+  );
+  const [oraInizio, setOraInizio] = useState(
+    dayjs(appuntamento.dataOra).format("HH:mm"),
+  );
+  const [oraFine, setOraFine] = useState(
+    dayjs(appuntamento.dataOraFine).format("HH:mm"),
+  );
+  const [stato, setStato] = useState(appuntamento.stato);
+  const [note, setNote] = useState(appuntamento.note || "");
+  const [errore, setErrore] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setErrore("");
+
+    const dati = {
+      dataOra: dayjs(`${data}T${oraInizio}`).format("YYYY-MM-DDTHH:mm:ss"),
+      dataOraFine: dayjs(`${data}T${oraFine}`).format("YYYY-MM-DDTHH:mm:ss"),
+      stato,
+      note,
+    };
+
+    modificaAppuntamento(appuntamento.id, dati)
+      .then(() => {
+        onModificato();
+        onChiudi();
+      })
+      .catch((err) =>
+        setErrore(err.response?.data?.errore || "Errore nella modifica."),
+      );
+  }
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+        padding: "1rem",
+      }}
+    >
+      <div
+        className="form-sartoria"
+        style={{ maxWidth: "480px", width: "100%" }}
+      >
+        <h5 className="mb-3">Modifica appuntamento</h5>
+        <p className="text-muted small mb-3">{appuntamento.nomeCliente}</p>
+
+        <form onSubmit={handleSubmit}>
+          <div className="row g-2 mb-3">
+            <div className="col-12">
+              <label className="form-label">Data</label>
+              <input
+                type="date"
+                className="form-control"
+                value={data}
+                onChange={(e) => setData(e.target.value)}
+                required
+              />
+            </div>
+            <div className="col-6">
+              <label className="form-label">Ora inizio</label>
+              <input
+                type="time"
+                className="form-control"
+                value={oraInizio}
+                onChange={(e) => setOraInizio(e.target.value)}
+                required
+              />
+            </div>
+            <div className="col-6">
+              <label className="form-label">Ora fine</label>
+              <input
+                type="time"
+                className="form-control"
+                value={oraFine}
+                onChange={(e) => setOraFine(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Stato</label>
+            <select
+              className="form-select"
+              value={stato}
+              onChange={(e) => setStato(e.target.value)}
+            >
+              {STATI_APPUNTAMENTO.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Note</label>
+            <textarea
+              className="form-control"
+              rows="2"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            ></textarea>
+          </div>
+
+          {errore && <p className="text-danger small">{errore}</p>}
+
+          <div className="d-flex gap-2">
+            <button type="submit" className="btn btn-gold flex-grow-1">
+              Salva modifiche
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-dark-luxury"
+              onClick={onChiudi}
+            >
+              Annulla
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 function Calendario() {
   const [eventi, setEventi] = useState([]);
   const [slotSelezionato, setSlotSelezionato] = useState(null);
+  const [appuntamentoInModifica, setAppuntamentoInModifica] = useState(null);
 
   function ricarica() {
     return getAppuntamentiTutti().then((appuntamenti) => {
@@ -270,15 +412,7 @@ function Calendario() {
   }
 
   function handleSelectEvent(evento) {
-    const a = evento.resource;
-    if (a.stato === "RICHIESTO") {
-      const conferma = window.confirm(
-        `Confermare l'appuntamento con ${a.nomeCliente}?`,
-      );
-      if (conferma) {
-        modificaAppuntamento(a.id, { stato: "CONFERMATO" }).then(ricarica);
-      }
-    }
+    setAppuntamentoInModifica(evento.resource);
   }
 
   return (
@@ -311,6 +445,14 @@ function Calendario() {
           slot={slotSelezionato}
           onChiudi={() => setSlotSelezionato(null)}
           onCreato={ricarica}
+        />
+      )}
+
+      {appuntamentoInModifica && (
+        <ModificaAppuntamentoModal
+          appuntamento={appuntamentoInModifica}
+          onChiudi={() => setAppuntamentoInModifica(null)}
+          onModificato={ricarica}
         />
       )}
     </div>
