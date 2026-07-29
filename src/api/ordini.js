@@ -15,3 +15,7 @@ export function assegnaOrdine(id) {
 export function cambiaStatoOrdine(id, stato) {
   return client.patch(`/ordini/${id}/stato`, { stato }).then((r) => r.data);
 }
+
+export function creaOrdineNegozio(dati) {
+  return client.post("/ordini/negozio", dati).then((r) => r.data);
+}
