@@ -1,9 +1,15 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import catalogo from "../data/catalogo";
+import { getCapi } from "../api/catalogo";
 
 function Home() {
-  const capiInEvidenza = catalogo.filter((capo) => capo.inEvidenza);
+  const [capiInEvidenza, setCapiInEvidenza] = useState([]);
 
+  useEffect(() => {
+    getCapi().then((catalogo) => {
+      setCapiInEvidenza(catalogo.filter((capo) => capo.inEvidenza));
+    });
+  }, []);
   return (
     <>
       <header className="hero">

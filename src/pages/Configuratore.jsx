@@ -1,10 +1,10 @@
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { MATERIALI } from "../data/materiali";
+import { getMateriali, getCapo } from "../api/catalogo";
 import { impostaMateriale, impostaColore } from "../store/configuratoreSlice";
 import { calcolaProporzioni } from "../utils/manichino";
 import Manichino3D from "../components/Manichino3D";
-import catalogo from "../data/catalogo";
 
 function Configuratore() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -13,22 +13,69 @@ function Configuratore() {
     (state) => state.configuratore.materiale,
   );
   const coloreSelezionato = useSelector((state) => state.configuratore.colore);
-  const dispatch = useDispatch();
-  const materiale = MATERIALI.find((m) => m.nome === materialeSelezionato);
-  const colore = materiale.colori.find((c) => c.nome === coloreSelezionato);
-
   const capoId = useSelector((state) => state.configuratore.capoId);
-  const capo = catalogo.find((c) => c.id === capoId);
+  const dispatch = useDispatch();
+
+  const [materiali, setMateriali] = useState([]);
+  const [capo, setCapo] = useState(null);
+  const [caricamento, setCaricamento] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      getMateriali(),
+      capoId ? getCapo(capoId) : Promise.resolve(null),
+    ])
+      .then(([listaMateriali, capoTrovato]) => {
+        setMateriali(listaMateriali);
+        setCapo(capoTrovato);
+        if (!materialeSelezionato && listaMateriali.length > 0) {
+          dispatch(impostaMateriale(listaMateriali[0].nome));
+          dispatch(impostaColore(listaMateriali[0].colori[0].nome));
+        }
+      })
+      .finally(() => setCaricamento(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [capoId]);
+
+  function handleCambiaMateriale(nomeMateriale) {
+    const nuovoMateriale = materiali.find((m) => m.nome === nomeMateriale);
+    if (!nuovoMateriale) return;
+
+    dispatch(impostaMateriale(nuovoMateriale.nome));
+
+    const coloreAncoraValido = nuovoMateriale.colori.some(
+      (c) => c.nome === coloreSelezionato,
+    );
+    if (!coloreAncoraValido) {
+      dispatch(impostaColore(nuovoMateriale.colori[0].nome));
+    }
+  }
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (caricamento || materiali.length === 0) {
+    return (
+      <section className="section">
+        <div className="container">
+          <p className="text-muted">Caricamento configuratore...</p>
+        </div>
+      </section>
+    );
+  }
+
+  const materiale =
+    materiali.find((m) => m.nome === materialeSelezionato) || materiali[0];
+  const colore =
+    materiale.colori.find((c) => c.nome === coloreSelezionato) ||
+    materiale.colori[0];
 
   const prezzoBase = capo ? capo.prezzoDa : 250;
   const nomeCapo = capo ? capo.nome : "un capo su misura";
   const prezzoTotale = prezzoBase + materiale.prezzoAlMetro * 3;
 
   const proporzioni = calcolaProporzioni(misure);
-
-  if (!isLoggedIn) {
-    return <Navigate to="/login" replace />;
-  }
 
   return (
     <section className="section">
@@ -47,9 +94,9 @@ function Configuratore() {
               <select
                 className="form-select"
                 value={materialeSelezionato}
-                onChange={(e) => dispatch(impostaMateriale(e.target.value))}
+                onChange={(e) => handleCambiaMateriale(e.target.value)}
               >
-                {MATERIALI.map((m) => (
+                {materiali.map((m) => (
                   <option key={m.nome} value={m.nome}>
                     {m.nome}
                   </option>
