@@ -16,9 +16,9 @@ function Navbar() {
 
   function handleLogout() {
     dispatch(logout());
+    localStorage.removeItem("token");
     navigate("/");
   }
-
   return (
     <BsNavbar expand="lg" className="navbar-sartoria" variant="light">
       <Container>
