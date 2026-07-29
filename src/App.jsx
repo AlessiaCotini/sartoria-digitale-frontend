@@ -6,7 +6,7 @@ import Register from "./pages/Register";
 import Configuratore from "./pages/Configuratore";
 import Profilo from "./pages/Profilo";
 import Preventivo from "./pages/Preventivo";
-import NavbarSartoria from "./components/Navbar";
+import NavbarSartoria from "./components/NavbarSartoria";
 import Footer from "./components/Footer";
 import Catalogo from "./pages/Catalogo";
 import Dettaglio from "./pages/Dettaglio";
@@ -15,6 +15,8 @@ import { useDispatch } from "react-redux";
 import { login } from "./store/authSlice";
 import { utenteAttuale } from "./api/auth";
 import { misureMie } from "./api/misure";
+import GestionaleSarta from "./pages/GestionaleSarta";
+import SoloCliente from "./components/SoloCliente";
 
 function App() {
   const dispatch = useDispatch();
@@ -53,14 +55,57 @@ function App() {
     <BrowserRouter>
       <NavbarSartoria />
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/catalogo" element={<Catalogo />} />
-        <Route path="/catalogo/:id" element={<Dettaglio />} />
-        <Route path="/configuratore" element={<Configuratore />} />
-        <Route path="/profilo" element={<Profilo />} />
-        <Route path="/preventivo" element={<Preventivo />} />
+        <Route path="/gestionale" element={<GestionaleSarta />} />
+        <Route
+          path="/"
+          element={
+            <SoloCliente>
+              <Home />
+            </SoloCliente>
+          }
+        />
+        <Route
+          path="/catalogo"
+          element={
+            <SoloCliente>
+              <Catalogo />
+            </SoloCliente>
+          }
+        />
+        <Route
+          path="/catalogo/:id"
+          element={
+            <SoloCliente>
+              <Dettaglio />
+            </SoloCliente>
+          }
+        />
+        <Route
+          path="/configuratore"
+          element={
+            <SoloCliente>
+              <Configuratore />
+            </SoloCliente>
+          }
+        />
+        <Route
+          path="/profilo"
+          element={
+            <SoloCliente>
+              <Profilo />
+            </SoloCliente>
+          }
+        />
+        <Route
+          path="/preventivo"
+          element={
+            <SoloCliente>
+              <Preventivo />
+            </SoloCliente>
+          }
+        />
       </Routes>
       <Footer />
     </BrowserRouter>
