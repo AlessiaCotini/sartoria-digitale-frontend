@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { getMateriali, getCapo } from "../api/catalogo";
-import { impostaMateriale, impostaColore } from "../store/configuratoreSlice";
 import { calcolaProporzioni } from "../utils/manichino";
 import Manichino3D from "../components/Manichino3D";
 import { useNavigate } from "react-router-dom";
 import { creaOrdine } from "../api/ordini";
+import { getMateriali, getCapo, getCapi } from "../api/catalogo";
+import {
+  impostaMateriale,
+  impostaColore,
+  impostaCapo,
+} from "../store/configuratoreSlice";
 
 function Configuratore() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -17,7 +21,6 @@ function Configuratore() {
   const coloreSelezionato = useSelector((state) => state.configuratore.colore);
   const capoId = useSelector((state) => state.configuratore.capoId);
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
   const [creazioneOrdine, setCreazioneOrdine] = useState(false);
   const [erroreOrdine, setErroreOrdine] = useState("");
@@ -44,15 +47,18 @@ function Configuratore() {
 
   const [materiali, setMateriali] = useState([]);
   const [capo, setCapo] = useState(null);
+  const [capi, setCapi] = useState([]);
   const [caricamento, setCaricamento] = useState(true);
 
   useEffect(() => {
     Promise.all([
       getMateriali(),
+      getCapi(),
       capoId ? getCapo(capoId) : Promise.resolve(null),
     ])
-      .then(([listaMateriali, capoTrovato]) => {
+      .then(([listaMateriali, listaCapi, capoTrovato]) => {
         setMateriali(listaMateriali);
+        setCapi(listaCapi);
         setCapo(capoTrovato);
         if (!materialeSelezionato && listaMateriali.length > 0) {
           dispatch(impostaMateriale(listaMateriali[0].nome));
@@ -62,6 +68,10 @@ function Configuratore() {
       .finally(() => setCaricamento(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [capoId]);
+
+  function handleCambiaCapo(nuovoCapoId) {
+    dispatch(impostaCapo(nuovoCapoId));
+  }
 
   function handleCambiaMateriale(nomeMateriale) {
     const nuovoMateriale = materiali.find((m) => m.nome === nomeMateriale);
@@ -115,6 +125,21 @@ function Configuratore() {
 
         <div className="row g-4">
           <div className="col-lg-5">
+            <div className="mb-4">
+              <p className="step-label mb-2">Capo</p>
+              <select
+                className="form-select"
+                value={capo?.id || ""}
+                onChange={(e) => handleCambiaCapo(e.target.value)}
+              >
+                <option value="">Scegli un capo</option>
+                {capi.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.nome} — {c.genere} · {c.categoria}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="mb-4">
               <p className="step-label mb-2">Materiale</p>
               <select
