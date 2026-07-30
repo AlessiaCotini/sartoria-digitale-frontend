@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import catalogo from "../data/catalogo";
+import { getCapo } from "../api/catalogo";
 import { impostaCapo } from "../store/configuratoreSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,11 +10,41 @@ function Dettaglio() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const capo = catalogo.find((c) => c.id === Number(id));
+  const [capo, setCapo] = useState(null);
+  const [caricamento, setCaricamento] = useState(true);
+
+  useEffect(() => {
+    let attivo = true;
+
+    getCapo(id)
+      .then((trovato) => {
+        if (attivo) setCapo(trovato);
+      })
+      .catch(() => {
+        if (attivo) setCapo(null);
+      })
+      .finally(() => {
+        if (attivo) setCaricamento(false);
+      });
+
+    return () => {
+      attivo = false;
+    };
+  }, [id]);
 
   function handleConfigura(capoId) {
     dispatch(impostaCapo(capoId));
     navigate(isLoggedIn ? "/configuratore" : "/login");
+  }
+
+  if (caricamento) {
+    return (
+      <section className="section">
+        <div className="container text-center">
+          <p className="text-muted">Caricamento...</p>
+        </div>
+      </section>
+    );
   }
 
   if (!capo) {

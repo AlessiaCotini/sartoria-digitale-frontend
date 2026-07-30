@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import catalogo from "../data/catalogo";
+import { getCapi } from "../api/catalogo";
 import { impostaCapo } from "../store/configuratoreSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 function Catalogo() {
+  const [catalogo, setCatalogo] = useState([]);
+  const [caricamento, setCaricamento] = useState(true);
   const [genere, setGenere] = useState("Tutti");
   const [categoria, setCategoria] = useState("Tutte");
   const [tessuto, setTessuto] = useState("Tutti");
@@ -13,7 +15,12 @@ function Catalogo() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // categorie disponibili in base al genere scelto
+  useEffect(() => {
+    getCapi()
+      .then(setCatalogo)
+      .finally(() => setCaricamento(false));
+  }, []);
+
   const categorieDisponibili = [
     ...new Set(
       catalogo
@@ -40,6 +47,16 @@ function Catalogo() {
   function cambiaGenere(nuovoGenere) {
     setGenere(nuovoGenere);
     setCategoria("Tutte");
+  }
+
+  if (caricamento) {
+    return (
+      <section className="section">
+        <div className="container">
+          <p className="text-muted">Caricamento collezione...</p>
+        </div>
+      </section>
+    );
   }
 
   return (

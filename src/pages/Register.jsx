@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
 import { CAMPI_MISURE } from "../data/misure";
 import { useSelector } from "react-redux";
+import { registraCliente, loginRichiesta, utenteAttuale } from "../api/auth";
 
 function Register() {
   const [nome, setNome] = useState("");
@@ -24,7 +25,7 @@ function Register() {
     setMisure((prev) => ({ ...prev, [chiave]: valore }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (password !== confermaPassword) {
@@ -38,8 +39,28 @@ function Register() {
       return;
     }
 
-    dispatch(login({ utente: { nome, cognome, email }, misure }));
-    navigate(capoId ? "/configuratore" : "/profilo");
+    const misureNumeriche = Object.fromEntries(
+      CAMPI_MISURE.map((c) => [c.chiave, parseFloat(misure[c.chiave])]),
+    );
+
+    try {
+      await registraCliente({
+        nome,
+        cognome,
+        email,
+        password,
+        misure: misureNumeriche,
+      });
+      const { token } = await loginRichiesta(email, password);
+      localStorage.setItem("token", token);
+      const utente = await utenteAttuale();
+      dispatch(login({ utente, misure: misureNumeriche }));
+      navigate(capoId ? "/configuratore" : "/profilo");
+    } catch (err) {
+      setErrore(
+        err.response?.data?.errore || "Errore durante la registrazione.",
+      );
+    }
   }
 
   return (

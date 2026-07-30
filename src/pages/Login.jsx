@@ -1,20 +1,37 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../store/authSlice";
-import { useSelector } from "react-redux";
+import { loginRichiesta, utenteAttuale } from "../api/auth";
+import { misureMie } from "../api/misure";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errore, setErrore] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const capoId = useSelector((state) => state.configuratore.capoId);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    dispatch(login({ email }));
-    navigate(capoId ? "/configuratore" : "/profilo");
+    setErrore("");
+
+    try {
+      const { token } = await loginRichiesta(email, password);
+      localStorage.setItem("token", token);
+      const utente = await utenteAttuale();
+
+      let misure = null;
+      if (utente.ruolo === "CLIENTE") {
+        misure = await misureMie();
+      }
+
+      dispatch(login({ utente, misure }));
+      navigate(capoId ? "/configuratore" : "/profilo");
+    } catch (err) {
+      setErrore(err.response?.data?.errore || "Email o password errati.");
+    }
   }
 
   return (
@@ -54,6 +71,8 @@ function Login() {
               required
             />
           </div>
+
+          {errore && <p className="text-danger small mb-3">{errore}</p>}
 
           <button type="submit" className="btn btn-gold w-100 mb-3">
             Accedi

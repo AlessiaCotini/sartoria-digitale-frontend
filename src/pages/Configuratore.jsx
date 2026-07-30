@@ -1,23 +1,12 @@
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
-<<<<<<< Updated upstream
-import { MATERIALI } from "../data/materiali";
+import { getMateriali, getCapo } from "../api/catalogo";
 import { impostaMateriale, impostaColore } from "../store/configuratoreSlice";
-import { calcolaProporzioni } from "../utils/manichino";
-import Manichino3D from "../components/Manichino3D";
-import catalogo from "../data/catalogo";
-=======
 import { calcolaProporzioni } from "../utils/manichino";
 import Manichino3D from "../components/Manichino3D";
 import { useNavigate } from "react-router-dom";
 import { creaOrdine } from "../api/ordini";
-import { getMateriali, getCapo, getCapi } from "../api/catalogo";
-import {
-  impostaMateriale,
-  impostaColore,
-  impostaCapo,
-} from "../store/configuratoreSlice";
->>>>>>> Stashed changes
 
 function Configuratore() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -26,18 +15,12 @@ function Configuratore() {
     (state) => state.configuratore.materiale,
   );
   const coloreSelezionato = useSelector((state) => state.configuratore.colore);
-  const dispatch = useDispatch();
-  const materiale = MATERIALI.find((m) => m.nome === materialeSelezionato);
-  const colore = materiale.colori.find((c) => c.nome === coloreSelezionato);
-
-<<<<<<< Updated upstream
   const capoId = useSelector((state) => state.configuratore.capoId);
-  const capo = catalogo.find((c) => c.id === capoId);
-=======
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const [creazioneOrdine, setCreazioneOrdine] = useState(false);
   const [erroreOrdine, setErroreOrdine] = useState("");
-  const [capi, setCapi] = useState([]);
 
   function handleCreaOrdine() {
     setErroreOrdine("");
@@ -66,12 +49,10 @@ function Configuratore() {
   useEffect(() => {
     Promise.all([
       getMateriali(),
-      getCapi(),
       capoId ? getCapo(capoId) : Promise.resolve(null),
     ])
-      .then(([listaMateriali, listaCapi, capoTrovato]) => {
+      .then(([listaMateriali, capoTrovato]) => {
         setMateriali(listaMateriali);
-        setCapi(listaCapi);
         setCapo(capoTrovato);
         if (!materialeSelezionato && listaMateriali.length > 0) {
           dispatch(impostaMateriale(listaMateriali[0].nome));
@@ -81,10 +62,6 @@ function Configuratore() {
       .finally(() => setCaricamento(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [capoId]);
-
-  function handleCambiaCapo(nuovoCapoId) {
-    dispatch(impostaCapo(nuovoCapoId));
-  }
 
   function handleCambiaMateriale(nomeMateriale) {
     const nuovoMateriale = materiali.find((m) => m.nome === nomeMateriale);
@@ -119,17 +96,12 @@ function Configuratore() {
   const colore =
     materiale.colori.find((c) => c.nome === coloreSelezionato) ||
     materiale.colori[0];
->>>>>>> Stashed changes
 
   const prezzoBase = capo ? capo.prezzoDa : 250;
   const nomeCapo = capo ? capo.nome : "un capo su misura";
   const prezzoTotale = prezzoBase + materiale.prezzoAlMetro * 3;
 
   const proporzioni = calcolaProporzioni(misure);
-
-  if (!isLoggedIn) {
-    return <Navigate to="/login" replace />;
-  }
 
   return (
     <section className="section">
@@ -144,28 +116,13 @@ function Configuratore() {
         <div className="row g-4">
           <div className="col-lg-5">
             <div className="mb-4">
-              <p className="step-label mb-2">Capo</p>
-              <select
-                className="form-select"
-                value={capo?.id || ""}
-                onChange={(e) => handleCambiaCapo(e.target.value)}
-              >
-                <option value="">Scegli un capo</option>
-                {capi.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.nome} — {c.genere} · {c.categoria}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-4">
               <p className="step-label mb-2">Materiale</p>
               <select
                 className="form-select"
                 value={materialeSelezionato}
-                onChange={(e) => dispatch(impostaMateriale(e.target.value))}
+                onChange={(e) => handleCambiaMateriale(e.target.value)}
               >
-                {MATERIALI.map((m) => (
+                {materiali.map((m) => (
                   <option key={m.nome} value={m.nome}>
                     {m.nome}
                   </option>
@@ -205,6 +162,28 @@ function Configuratore() {
               <p className="text-muted small mb-0">
                 Base capo + tessuto {materiale.nome.toLowerCase()}
               </p>
+
+              {capo ? (
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-gold w-100 mt-3"
+                    onClick={handleCreaOrdine}
+                    disabled={creazioneOrdine}
+                  >
+                    {creazioneOrdine ? "Invio in corso..." : "Crea ordine"}
+                  </button>
+                  {erroreOrdine && (
+                    <p className="text-danger small mt-2 mb-0">
+                      {erroreOrdine}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="text-muted small mt-3 mb-0">
+                  Scegli un capo dalla Collezione per poter creare un ordine.
+                </p>
+              )}
             </div>
           </div>
           <div className="col-lg-7">
