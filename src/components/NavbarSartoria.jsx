@@ -8,6 +8,8 @@ import {
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
+import BadgeMessaggi from "./BadgeMessaggi";
+
 const RUOLI_GESTIONALE = ["SARTA", "SOTTOPOSTO", "SUPER_ADMIN"];
 
 function NavbarSartoria() {
@@ -43,6 +45,7 @@ function NavbarSartoria() {
               {ruoloGestionale ? (
                 <Nav.Link as={NavLink} to="/gestionale">
                   Gestionale
+                  <BadgeMessaggi />
                 </Nav.Link>
               ) : (
                 <>
@@ -56,9 +59,15 @@ function NavbarSartoria() {
                     Costruzione
                   </Nav.Link>
                   {isLoggedIn && (
-                    <Nav.Link as={NavLink} to="/profilo">
-                      Profilo &amp; Misure
-                    </Nav.Link>
+                    <>
+                      <Nav.Link as={NavLink} to="/preventivo">
+                        Preventivi
+                        <BadgeMessaggi />
+                      </Nav.Link>
+                      <Nav.Link as={NavLink} to="/profilo">
+                        Profilo &amp; Misure
+                      </Nav.Link>
+                    </>
                   )}
                 </>
               )}

@@ -32,3 +32,11 @@ export function inviaMessaggio(stompClient, ordineId, testo) {
     body: JSON.stringify({ testo }),
   });
 }
+
+export function getConteggioNonLetti() {
+  return client.get("/messaggi/non-letti/conteggio").then((r) => r.data);
+}
+
+export function segnaComeLetti(ordineId) {
+  return client.patch(`/messaggi/ordine/${ordineId}/letti`);
+}

@@ -5,6 +5,8 @@ import { getMateriali, getCapo } from "../api/catalogo";
 import { impostaMateriale, impostaColore } from "../store/configuratoreSlice";
 import { calcolaProporzioni } from "../utils/manichino";
 import Manichino3D from "../components/Manichino3D";
+import { useNavigate } from "react-router-dom";
+import { creaOrdine } from "../api/ordini";
 
 function Configuratore() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -15,6 +17,30 @@ function Configuratore() {
   const coloreSelezionato = useSelector((state) => state.configuratore.colore);
   const capoId = useSelector((state) => state.configuratore.capoId);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+  const [creazioneOrdine, setCreazioneOrdine] = useState(false);
+  const [erroreOrdine, setErroreOrdine] = useState("");
+
+  function handleCreaOrdine() {
+    setErroreOrdine("");
+    setCreazioneOrdine(true);
+
+    creaOrdine({
+      capoId: capo.id,
+      materialeId: materiale.id,
+      colore: coloreSelezionato,
+    })
+      .then(() => {
+        navigate("/preventivo");
+      })
+      .catch((err) => {
+        setErroreOrdine(
+          err.response?.data?.errore || "Errore nella creazione dell'ordine.",
+        );
+      })
+      .finally(() => setCreazioneOrdine(false));
+  }
 
   const [materiali, setMateriali] = useState([]);
   const [capo, setCapo] = useState(null);
@@ -136,6 +162,28 @@ function Configuratore() {
               <p className="text-muted small mb-0">
                 Base capo + tessuto {materiale.nome.toLowerCase()}
               </p>
+
+              {capo ? (
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-gold w-100 mt-3"
+                    onClick={handleCreaOrdine}
+                    disabled={creazioneOrdine}
+                  >
+                    {creazioneOrdine ? "Invio in corso..." : "Crea ordine"}
+                  </button>
+                  {erroreOrdine && (
+                    <p className="text-danger small mt-2 mb-0">
+                      {erroreOrdine}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="text-muted small mt-3 mb-0">
+                  Scegli un capo dalla Collezione per poter creare un ordine.
+                </p>
+              )}
             </div>
           </div>
           <div className="col-lg-7">

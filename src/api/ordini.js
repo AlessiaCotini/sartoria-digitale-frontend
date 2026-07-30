@@ -19,3 +19,11 @@ export function cambiaStatoOrdine(id, stato) {
 export function creaOrdineNegozio(dati) {
   return client.post("/ordini/negozio", dati).then((r) => r.data);
 }
+
+export function getOrdiniMiei() {
+  return client.get("/ordini/miei").then((r) => r.data);
+}
+
+export function creaOrdine(dati) {
+  return client.post("/ordini", dati).then((r) => r.data);
+}
