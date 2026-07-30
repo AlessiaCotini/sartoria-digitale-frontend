@@ -1,10 +1,23 @@
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
+<<<<<<< Updated upstream
 import { MATERIALI } from "../data/materiali";
 import { impostaMateriale, impostaColore } from "../store/configuratoreSlice";
 import { calcolaProporzioni } from "../utils/manichino";
 import Manichino3D from "../components/Manichino3D";
 import catalogo from "../data/catalogo";
+=======
+import { calcolaProporzioni } from "../utils/manichino";
+import Manichino3D from "../components/Manichino3D";
+import { useNavigate } from "react-router-dom";
+import { creaOrdine } from "../api/ordini";
+import { getMateriali, getCapo, getCapi } from "../api/catalogo";
+import {
+  impostaMateriale,
+  impostaColore,
+  impostaCapo,
+} from "../store/configuratoreSlice";
+>>>>>>> Stashed changes
 
 function Configuratore() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -17,8 +30,96 @@ function Configuratore() {
   const materiale = MATERIALI.find((m) => m.nome === materialeSelezionato);
   const colore = materiale.colori.find((c) => c.nome === coloreSelezionato);
 
+<<<<<<< Updated upstream
   const capoId = useSelector((state) => state.configuratore.capoId);
   const capo = catalogo.find((c) => c.id === capoId);
+=======
+  const navigate = useNavigate();
+  const [creazioneOrdine, setCreazioneOrdine] = useState(false);
+  const [erroreOrdine, setErroreOrdine] = useState("");
+  const [capi, setCapi] = useState([]);
+
+  function handleCreaOrdine() {
+    setErroreOrdine("");
+    setCreazioneOrdine(true);
+
+    creaOrdine({
+      capoId: capo.id,
+      materialeId: materiale.id,
+      colore: coloreSelezionato,
+    })
+      .then(() => {
+        navigate("/preventivo");
+      })
+      .catch((err) => {
+        setErroreOrdine(
+          err.response?.data?.errore || "Errore nella creazione dell'ordine.",
+        );
+      })
+      .finally(() => setCreazioneOrdine(false));
+  }
+
+  const [materiali, setMateriali] = useState([]);
+  const [capo, setCapo] = useState(null);
+  const [caricamento, setCaricamento] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      getMateriali(),
+      getCapi(),
+      capoId ? getCapo(capoId) : Promise.resolve(null),
+    ])
+      .then(([listaMateriali, listaCapi, capoTrovato]) => {
+        setMateriali(listaMateriali);
+        setCapi(listaCapi);
+        setCapo(capoTrovato);
+        if (!materialeSelezionato && listaMateriali.length > 0) {
+          dispatch(impostaMateriale(listaMateriali[0].nome));
+          dispatch(impostaColore(listaMateriali[0].colori[0].nome));
+        }
+      })
+      .finally(() => setCaricamento(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [capoId]);
+
+  function handleCambiaCapo(nuovoCapoId) {
+    dispatch(impostaCapo(nuovoCapoId));
+  }
+
+  function handleCambiaMateriale(nomeMateriale) {
+    const nuovoMateriale = materiali.find((m) => m.nome === nomeMateriale);
+    if (!nuovoMateriale) return;
+
+    dispatch(impostaMateriale(nuovoMateriale.nome));
+
+    const coloreAncoraValido = nuovoMateriale.colori.some(
+      (c) => c.nome === coloreSelezionato,
+    );
+    if (!coloreAncoraValido) {
+      dispatch(impostaColore(nuovoMateriale.colori[0].nome));
+    }
+  }
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (caricamento || materiali.length === 0) {
+    return (
+      <section className="section">
+        <div className="container">
+          <p className="text-muted">Caricamento configuratore...</p>
+        </div>
+      </section>
+    );
+  }
+
+  const materiale =
+    materiali.find((m) => m.nome === materialeSelezionato) || materiali[0];
+  const colore =
+    materiale.colori.find((c) => c.nome === coloreSelezionato) ||
+    materiale.colori[0];
+>>>>>>> Stashed changes
 
   const prezzoBase = capo ? capo.prezzoDa : 250;
   const nomeCapo = capo ? capo.nome : "un capo su misura";
@@ -42,6 +143,21 @@ function Configuratore() {
 
         <div className="row g-4">
           <div className="col-lg-5">
+            <div className="mb-4">
+              <p className="step-label mb-2">Capo</p>
+              <select
+                className="form-select"
+                value={capo?.id || ""}
+                onChange={(e) => handleCambiaCapo(e.target.value)}
+              >
+                <option value="">Scegli un capo</option>
+                {capi.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.nome} — {c.genere} · {c.categoria}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="mb-4">
               <p className="step-label mb-2">Materiale</p>
               <select
