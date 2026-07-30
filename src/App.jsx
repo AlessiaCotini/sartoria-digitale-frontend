@@ -23,6 +23,9 @@ import Ordini from "./pages/gestionale/Ordini";
 import NuovoOrdine from "./pages/gestionale/NuovoOrdine";
 import Preventivi from "./pages/gestionale/Preventivi";
 import Pagamenti from "./pages/gestionale/Pagamenti";
+import GestioneCatalogo from "./pages/gestionale/GestioneCatalogo";
+import Team from "./pages/gestionale/Team";
+import Magazzino from "./pages/gestionale/Magazzino";
 
 function App() {
   const dispatch = useDispatch();
@@ -70,6 +73,9 @@ function App() {
           <Route path="nuovo-ordine" element={<NuovoOrdine />} />
           <Route path="preventivi" element={<Preventivi />} />
           <Route path="pagamenti" element={<Pagamenti />} />
+          <Route path="catalogo" element={<GestioneCatalogo />} />
+          <Route path="magazzino" element={<Magazzino />} />
+          <Route path="team" element={<Team />} />
         </Route>
         <Route
           path="/"

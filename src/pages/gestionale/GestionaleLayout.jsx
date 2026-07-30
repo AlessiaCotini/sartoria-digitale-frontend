@@ -1,5 +1,6 @@
 import { NavLink, Outlet, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import BadgeMessaggi from "../../components/BadgeMessaggi";
 
 const RUOLI_AMMESSI = ["SARTA", "SOTTOPOSTO", "SUPER_ADMIN"];
 
@@ -9,6 +10,9 @@ function GestionaleLayout() {
   if (!utente || !RUOLI_AMMESSI.includes(utente.ruolo)) {
     return <Navigate to="/" replace />;
   }
+
+  const puoGestireCatalogoETeam =
+    utente.ruolo === "SARTA" || utente.ruolo === "SUPER_ADMIN";
 
   return (
     <section className="section">
@@ -35,6 +39,7 @@ function GestionaleLayout() {
             }
           >
             Ordini
+            <BadgeMessaggi ambito="ordini" />
           </NavLink>
           <NavLink
             to="/gestionale/nuovo-ordine"
@@ -51,6 +56,7 @@ function GestionaleLayout() {
             }
           >
             Preventivi
+            <BadgeMessaggi ambito="preventivi" />
           </NavLink>
           <NavLink
             to="/gestionale/pagamenti"
@@ -60,6 +66,34 @@ function GestionaleLayout() {
           >
             Pagamenti
           </NavLink>
+          <NavLink
+            to="/gestionale/magazzino"
+            className={({ isActive }) =>
+              `filter-tab ${isActive ? "active" : ""}`
+            }
+          >
+            Magazzino
+          </NavLink>
+          {puoGestireCatalogoETeam && (
+            <>
+              <NavLink
+                to="/gestionale/catalogo"
+                className={({ isActive }) =>
+                  `filter-tab ${isActive ? "active" : ""}`
+                }
+              >
+                Catalogo
+              </NavLink>
+              <NavLink
+                to="/gestionale/team"
+                className={({ isActive }) =>
+                  `filter-tab ${isActive ? "active" : ""}`
+                }
+              >
+                Team
+              </NavLink>
+            </>
+          )}
         </div>
 
         <Outlet />

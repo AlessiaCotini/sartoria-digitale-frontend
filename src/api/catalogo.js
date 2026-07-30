@@ -31,3 +31,11 @@ export function getCapo(id) {
 export function getMateriali() {
   return client.get("/materiali").then((r) => r.data);
 }
+
+export function creaCapo(dati) {
+  return client.post("/capi", dati).then((r) => r.data);
+}
+
+export function creaMateriale(dati) {
+  return client.post("/materiali", dati).then((r) => r.data);
+}

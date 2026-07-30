@@ -5,30 +5,29 @@ import {
   cambiaStatoOrdine,
 } from "../../api/ordini";
 import { getPagamentiTutti } from "../../api/pagamenti";
+import { getConteggioPerOrdine } from "../../api/chat";
 import RegistraPagamentoModal from "../../components/RegistraPagamentoModal";
+import ChatModal from "../../components/ChatModal";
 
 const STATI_ORDINE = [
   "PREVENTIVO_RICHIESTO",
-  "IN_NEGOZIAZIONE",
   "ACCETTATO",
   "MATERIALI_ORDINATI",
-  "APPROVATO_SARTA",
   "IN_LAVORAZIONE",
   "COMPLETATO",
   "ANNULLATO",
 ];
 
-const STATI_PRIMA_DI_ACCETTATO = [
-  "PREVENTIVO_RICHIESTO",
-  "IN_NEGOZIAZIONE",
-  "ANNULLATO",
-];
+const STATI_PRIMA_DI_ACCETTATO = ["PREVENTIVO_RICHIESTO", "ANNULLATO"];
 
 function Ordini() {
   const [ordini, setOrdini] = useState([]);
   const [pagamenti, setPagamenti] = useState([]);
+  const [conteggi, setConteggi] = useState([]);
   const [caricamento, setCaricamento] = useState(true);
   const [modale, setModale] = useState(null);
+  const [erroreStato, setErroreStato] = useState("");
+  const [chatAperta, setChatAperta] = useState(null);
 
   function ricarica() {
     return Promise.all([getOrdiniTutti(), getPagamentiTutti()]).then(
@@ -39,8 +38,20 @@ function Ordini() {
     );
   }
 
+  function ricaricaConteggi() {
+    return getConteggioPerOrdine().then(setConteggi);
+  }
+
+  function conteggioDi(ordineId) {
+    return conteggi.find((c) => c.ordineId === ordineId)?.conteggio || 0;
+  }
+
   useEffect(() => {
-    ricarica().finally(() => setCaricamento(false));
+    Promise.all([ricarica(), ricaricaConteggi()]).finally(() =>
+      setCaricamento(false),
+    );
+    const intervallo = setInterval(ricaricaConteggi, 15000);
+    return () => clearInterval(intervallo);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -49,7 +60,14 @@ function Ordini() {
   }
 
   function handleCambiaStato(id, stato) {
-    cambiaStatoOrdine(id, stato).then(ricarica);
+    setErroreStato("");
+    cambiaStatoOrdine(id, stato)
+      .then(ricarica)
+      .catch((err) =>
+        setErroreStato(
+          err.response?.data?.errore || "Impossibile cambiare stato.",
+        ),
+      );
   }
 
   if (caricamento) {
@@ -58,6 +76,7 @@ function Ordini() {
 
   return (
     <>
+      {erroreStato && <p className="text-danger small mb-2">{erroreStato}</p>}
       <div className="table-responsive">
         <table className="table align-middle">
           <thead>
@@ -68,6 +87,7 @@ function Ordini() {
               <th>Prezzo</th>
               <th>Stato</th>
               <th>Assegnato</th>
+              <th>Chat</th>
               <th>Pagamento</th>
             </tr>
           </thead>
@@ -118,6 +138,22 @@ function Ordini() {
                     )}
                   </td>
                   <td>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-dark-luxury position-relative"
+                      onClick={() =>
+                        setChatAperta({ ordine: o, tipoChiamata: "apertura" })
+                      }
+                    >
+                      Apri
+                      {conteggioDi(o.id) > 0 && (
+                        <span className="badge-soft ms-1">
+                          {conteggioDi(o.id)}
+                        </span>
+                      )}
+                    </button>
+                  </td>
+                  <td>
                     <div className="d-flex align-items-center gap-2">
                       <span className="badge-soft">
                         {pagamento?.stato || "NON_PAGATO"}
@@ -162,7 +198,7 @@ function Ordini() {
             })}
             {ordini.length === 0 && (
               <tr>
-                <td colSpan="7" className="text-muted text-center">
+                <td colSpan="8" className="text-muted text-center">
                   Nessun ordine.
                 </td>
               </tr>
@@ -178,6 +214,15 @@ function Ordini() {
           valoreDefault={modale.valoreDefault}
           onChiudi={() => setModale(null)}
           onRegistrato={ricarica}
+        />
+      )}
+      {chatAperta && (
+        <ChatModal
+          ordine={chatAperta.ordine}
+          onChiudi={() => {
+            setChatAperta(null);
+            ricaricaConteggi();
+          }}
         />
       )}
     </>

@@ -27,3 +27,19 @@ export function getOrdiniMiei() {
 export function creaOrdine(dati) {
   return client.post("/ordini", dati).then((r) => r.data);
 }
+
+export function modificaPrezzoOrdine(id, prezzoTotale) {
+  return client
+    .patch(`/ordini/${id}/prezzo`, { prezzoTotale })
+    .then((r) => r.data);
+}
+
+export function getCodaMagazzino() {
+  return client.get("/ordini/magazzino").then((r) => r.data);
+}
+
+export function modificaFornitoreOrdine(id, fornitore) {
+  return client
+    .patch(`/ordini/${id}/fornitore`, { fornitore })
+    .then((r) => r.data);
+}

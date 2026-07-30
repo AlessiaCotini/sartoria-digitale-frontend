@@ -40,3 +40,7 @@ export function getConteggioNonLetti() {
 export function segnaComeLetti(ordineId) {
   return client.patch(`/messaggi/ordine/${ordineId}/letti`);
 }
+
+export function getConteggioPerOrdine() {
+  return client.get("/messaggi/non-letti/per-ordine").then((r) => r.data);
+}

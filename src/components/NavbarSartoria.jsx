@@ -45,7 +45,6 @@ function NavbarSartoria() {
               {ruoloGestionale ? (
                 <Nav.Link as={NavLink} to="/gestionale">
                   Gestionale
-                  <BadgeMessaggi />
                 </Nav.Link>
               ) : (
                 <>
