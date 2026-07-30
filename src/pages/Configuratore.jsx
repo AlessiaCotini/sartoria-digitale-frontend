@@ -6,6 +6,7 @@ import Manichino3D from "../components/Manichino3D";
 import { useNavigate } from "react-router-dom";
 import { creaOrdine } from "../api/ordini";
 import { getMateriali, getCapo, getCapi } from "../api/catalogo";
+import { getOpzioni } from "../api/opzioni";
 import {
   impostaMateriale,
   impostaColore,
@@ -33,6 +34,7 @@ function Configuratore() {
       capoId: capo.id,
       materialeId: materiale.id,
       colore: coloreSelezionato,
+      opzioniIds: opzioniScelte,
     })
       .then(() => {
         navigate("/preventivo");
@@ -48,6 +50,8 @@ function Configuratore() {
   const [materiali, setMateriali] = useState([]);
   const [capo, setCapo] = useState(null);
   const [capi, setCapi] = useState([]);
+  const [opzioni, setOpzioni] = useState([]);
+  const [opzioniSelezionate, setOpzioniSelezionate] = useState({});
   const [caricamento, setCaricamento] = useState(true);
 
   useEffect(() => {
@@ -68,6 +72,29 @@ function Configuratore() {
       .finally(() => setCaricamento(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [capoId]);
+
+  useEffect(() => {
+    let attivo = true;
+
+    const promessa = capo
+      ? getOpzioni(capo.categoria.toUpperCase())
+      : Promise.resolve([]);
+
+    promessa.then((lista) => {
+      if (attivo) {
+        setOpzioni(lista);
+        setOpzioniSelezionate({});
+      }
+    });
+
+    return () => {
+      attivo = false;
+    };
+  }, [capo]);
+
+  function handleSelezionaOpzione(tipo, opzioneId) {
+    setOpzioniSelezionate((prev) => ({ ...prev, [tipo]: opzioneId }));
+  }
 
   function handleCambiaCapo(nuovoCapoId) {
     dispatch(impostaCapo(nuovoCapoId));
@@ -109,7 +136,12 @@ function Configuratore() {
 
   const prezzoBase = capo ? capo.prezzoDa : 250;
   const nomeCapo = capo ? capo.nome : "un capo su misura";
-  const prezzoTotale = prezzoBase + materiale.prezzoAlMetro * 3;
+  const opzioniScelte = Object.values(opzioniSelezionate).filter(Boolean);
+  const sovrapprezzoTotale = opzioni
+    .filter((o) => opzioniScelte.includes(o.id))
+    .reduce((somma, o) => somma + o.sovrapprezzo, 0);
+  const prezzoTotale =
+    prezzoBase + materiale.prezzoAlMetro * 3 + sovrapprezzoTotale;
 
   const proporzioni = calcolaProporzioni(misure);
 
@@ -178,6 +210,36 @@ function Configuratore() {
               </div>
               <p className="text-muted small mt-2 mb-0">{coloreSelezionato}</p>
             </div>
+
+            {opzioni.length > 0 && (
+              <div className="mb-4">
+                {["CHIUSURA", "VESTIBILITA"].map((tipo) => {
+                  const opzioniDelTipo = opzioni.filter((o) => o.tipo === tipo);
+                  if (opzioniDelTipo.length === 0) return null;
+
+                  return (
+                    <div key={tipo} className="mb-3">
+                      <p className="step-label mb-2">
+                        {tipo === "CHIUSURA" ? "Chiusura" : "Vestibilità"}
+                      </p>
+                      <div className="filter-group justify-content-start">
+                        {opzioniDelTipo.map((o) => (
+                          <button
+                            key={o.id}
+                            type="button"
+                            className={`filter-tab ${opzioniSelezionate[tipo] === o.id ? "active" : ""}`}
+                            onClick={() => handleSelezionaOpzione(tipo, o.id)}
+                          >
+                            {o.nome}
+                            {o.sovrapprezzo > 0 && ` (+€${o.sovrapprezzo})`}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
             <div className="form-sartoria">
               <p className="step-label mb-1">Prezzo stimato</p>
