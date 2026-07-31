@@ -60,17 +60,15 @@ export function calcolaProporzioni(misure) {
   const scalaCaviglia = limita(caviglia / RIFERIMENTO.caviglia, 0.8, 1.3);
   const scalaBicipite = limita(bicipite / RIFERIMENTO.bicipite, 0.8, 1.3);
   const scalaPolso = limita(polso / RIFERIMENTO.polso, 0.8, 1.3);
+  const scalaBusto = limita(busto / RIFERIMENTO.busto, 0.8, 1.3);
 
   // soglie di altezza (frazioni 0-1, dai piedi alla testa) personalizzate in base
   // alla lunghezza reale di gamba e busto, invece di essere fisse uguali per tutti
   const frazioneVita = limita(gamba / altezza, 0.38, 0.52);
-  const frazioneSpalle = limita(
-    frazioneVita + busto / altezza,
-    frazioneVita + 0.18,
-    0.97,
-  );
+  const frazioneSpalle = limita(frazioneVita + 0.28, frazioneVita + 0.18, 0.97);
   const frazioneCollo = limita(frazioneSpalle + 0.06, frazioneSpalle + 0.02, 1);
   const frazioneTorace = frazioneVita + (frazioneSpalle - frazioneVita) * 0.55;
+  const frazioneBusto = frazioneVita + (frazioneSpalle - frazioneVita) * 0.4;
   const frazioneFianchi = frazioneVita * 0.92;
   const frazioneCoscia = frazioneVita * 0.78;
   const frazioneGinocchio = frazioneVita * 0.45;
@@ -105,5 +103,7 @@ export function calcolaProporzioni(misure) {
     larghezzaTorace: LARGHEZZA_RIFERIMENTO.torace * scalaTorace,
     larghezzaVita: LARGHEZZA_RIFERIMENTO.vita * scalaVita,
     larghezzaFianchi: LARGHEZZA_RIFERIMENTO.fianchi * scalaFianchi,
+    scalaBusto,
+    frazioneBusto,
   };
 }

@@ -6,6 +6,7 @@ function fasce(proporzioni) {
     { frazione: proporzioni.frazioneCollo, scala: proporzioni.scalaCollo },
     { frazione: proporzioni.frazioneSpalle, scala: proporzioni.scalaSpalle },
     { frazione: proporzioni.frazioneTorace, scala: proporzioni.scalaTorace },
+    { frazione: proporzioni.frazioneBusto, scala: proporzioni.scalaBusto },
     { frazione: proporzioni.frazioneVita, scala: proporzioni.scalaVita },
     { frazione: proporzioni.frazioneFianchi, scala: proporzioni.scalaFianchi },
     { frazione: proporzioni.frazioneCoscia, scala: proporzioni.scalaCoscia },
@@ -17,7 +18,7 @@ function fasce(proporzioni) {
       frazione: proporzioni.frazioneCaviglia,
       scala: proporzioni.scalaCaviglia,
     },
-    { frazione: 0, scala: 1 }, // pianta del piede: nessuna deformazione
+    { frazione: 0, scala: 1 },
   ];
 }
 
