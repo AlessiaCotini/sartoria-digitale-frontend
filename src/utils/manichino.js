@@ -12,7 +12,7 @@ const RIFERIMENTO = {
   polso: 16,
   manica: 60,
   gamba: 104,
-  busto: 42,
+  busto: 90,
 };
 
 const LARGHEZZA_RIFERIMENTO = {

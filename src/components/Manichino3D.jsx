@@ -5,22 +5,39 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { coloraSvg } from "../utils/coloraSvg";
 import { fattoreScalaPerAltezza } from "../utils/sagomaCorpo";
 import { creaTessuto, aggiornaTessuto, COLONNE, RIGHE } from "../utils/tessuto";
-import {
-  lunghezzaManica,
-  creaManica,
-  FRAZIONE_SPALLA,
-  creaToppaSpalla,
-} from "../utils/maniche";
+import { lunghezzaManica, creaManica, creaToppaSpalla } from "../utils/maniche";
 
-const ZONE_TESSUTO = {
-  Camicie: { da: 0.58, a: 0.82 },
-  Magliette: { da: 0.55, a: 0.8 },
-  Cardigan: { da: 0.5, a: 0.84 },
-  Giacche: { da: 0.48, a: 0.84 },
-  Completi: { da: 0.48, a: 0.84 },
-  Abiti: { da: 0.08, a: 0.84 },
-  Gonne: { da: 0.3, a: 0.58 },
-};
+//calcoliamo le zone personalizzate
+function zonaPerCategoria(categoria, proporzioni) {
+  const {
+    frazioneSpalle,
+    frazioneVita,
+    frazioneFianchi,
+    frazioneCoscia,
+    frazioneGinocchio,
+    frazioneCaviglia,
+  } = proporzioni;
+
+  switch (categoria) {
+    case "Camicie":
+      return { da: frazioneVita - 0.03, a: frazioneSpalle - 0.02 };
+    case "Magliette":
+      return { da: frazioneVita - 0.02, a: frazioneSpalle - 0.05 };
+    case "Cardigan":
+      return { da: frazioneFianchi - 0.02, a: frazioneSpalle };
+    case "Giacche":
+    case "Completi":
+      return { da: frazioneFianchi - 0.04, a: frazioneSpalle };
+    case "Abiti":
+      return { da: frazioneGinocchio, a: frazioneSpalle };
+    case "Gonne":
+      return { da: frazioneCoscia, a: frazioneVita + 0.03 };
+    case "Pantaloni":
+      return { da: frazioneCaviglia + 0.01, a: frazioneVita + 0.02 };
+    default:
+      return null;
+  }
+}
 
 // il file è esportato in millimetri, la nostra scena ragiona in "metri"
 const SCALA_MM_A_METRI = 0.001;
@@ -60,7 +77,9 @@ function trovaXSpallaReale(meshCorpo, proporzioni) {
   const tolleranza = 0.015;
   let massimoX = 0;
   for (let i = 0; i < frazioniAltezza.length; i++) {
-    if (Math.abs(frazioniAltezza[i] - FRAZIONE_SPALLA) < tolleranza) {
+    if (
+      Math.abs(frazioniAltezza[i] - proporzioni.frazioneSpalle) < tolleranza
+    ) {
       const fattore = fattoreScalaPerAltezza(frazioniAltezza[i], proporzioni);
       const x = Math.abs(posizioniOriginali[i * 3] * fattore);
       if (x > massimoX) massimoX = x;
@@ -441,7 +460,7 @@ function Manichino3D({
       s.controls.target.set(0, yPiedi + altezzaModello * 0.55, 0);
     }
 
-    const zona = ZONE_TESSUTO[categoria];
+    const zona = zonaPerCategoria(categoria, proporzioni);
     if (zona) {
       const yAlto = yPiedi + zona.a * altezzaModello;
       const yBasso = yPiedi + zona.da * altezzaModello;
@@ -468,7 +487,7 @@ function Manichino3D({
   useEffect(() => {
     if (!sceneRef.current) return;
     const { meshTessuto } = sceneRef.current;
-    const zona = ZONE_TESSUTO[categoria];
+    const zona = zonaPerCategoria(categoria, proporzioniRef.current);
 
     if (!immagineCapo || !zona) {
       meshTessuto.visible = false;
