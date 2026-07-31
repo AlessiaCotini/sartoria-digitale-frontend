@@ -1,19 +1,41 @@
-export function fattoreScalaPerAltezza(frazione, proporzioni) {
-  const { scalaSpalle, scalaTorace, scalaVita, scalaFianchi } = proporzioni;
+// elenco delle fasce del corpo, dal collo ai piedi, ciascuna con la propria
+// soglia di altezza (frazione 0-1, personalizzata) e la propria scala di
+// circonferenza. Deve restare ordinato da frazione più alta a più bassa.
+function fasce(proporzioni) {
+  return [
+    { frazione: proporzioni.frazioneCollo, scala: proporzioni.scalaCollo },
+    { frazione: proporzioni.frazioneSpalle, scala: proporzioni.scalaSpalle },
+    { frazione: proporzioni.frazioneTorace, scala: proporzioni.scalaTorace },
+    { frazione: proporzioni.frazioneVita, scala: proporzioni.scalaVita },
+    { frazione: proporzioni.frazioneFianchi, scala: proporzioni.scalaFianchi },
+    { frazione: proporzioni.frazioneCoscia, scala: proporzioni.scalaCoscia },
+    {
+      frazione: proporzioni.frazioneGinocchio,
+      scala: proporzioni.scalaGinocchio,
+    },
+    {
+      frazione: proporzioni.frazioneCaviglia,
+      scala: proporzioni.scalaCaviglia,
+    },
+    { frazione: 0, scala: 1 }, // pianta del piede: nessuna deformazione
+  ];
+}
 
-  if (frazione > 0.8) return scalaSpalle;
-  if (frazione > 0.6) {
-    const t = (frazione - 0.6) / 0.2;
-    return scalaTorace + (scalaSpalle - scalaTorace) * t;
+export function fattoreScalaPerAltezza(frazione, proporzioni) {
+  const lista = fasce(proporzioni);
+
+  // sopra la fascia più alta (collo): resta piatto, come su testa/collo
+  if (frazione >= lista[0].frazione) return lista[0].scala;
+
+  for (let i = 0; i < lista.length - 1; i++) {
+    const alta = lista[i];
+    const bassa = lista[i + 1];
+    if (frazione <= alta.frazione && frazione >= bassa.frazione) {
+      const range = alta.frazione - bassa.frazione;
+      const t = range > 0 ? (frazione - bassa.frazione) / range : 0;
+      return bassa.scala + (alta.scala - bassa.scala) * t;
+    }
   }
-  if (frazione > 0.5) {
-    const t = (frazione - 0.5) / 0.1;
-    return scalaVita + (scalaTorace - scalaVita) * t;
-  }
-  if (frazione > 0.3) {
-    const t = (frazione - 0.3) / 0.2;
-    return scalaFianchi + (scalaVita - scalaFianchi) * t;
-  }
-  const t = Math.min(frazione / 0.3, 1);
-  return 1 + (scalaFianchi - 1) * t;
+
+  return 1;
 }

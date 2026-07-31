@@ -11,7 +11,6 @@ const MANICA_PER_CATEGORIA = {
   Pantaloni: "nessuna",
 };
 
-// eccezioni: alcuni modelli non seguono il default della categoria
 const ECCEZIONI_MODELLO = {
   Smanicata: "nessuna",
   Canotta: "nessuna",
@@ -25,29 +24,46 @@ export function lunghezzaManica(categoria, modello) {
 export const COLONNE_MANICA = 10;
 export const RIGHE_MANICA = 6;
 
-export const FRAZIONE_SPALLA = 0.82;
-const FRAZIONE_FINE = {
-  corta: 0.63,
-  lunga: 0.485,
+// quanto della lunghezza reale del braccio copre ciascun tipo di manica:
+// corta arriva a circa un terzo del braccio, lunga fino al polso
+const COPERTURA_BRACCIO = {
+  corta: 0.35,
+  lunga: 1,
 };
 
-// raggi di riferimento ricavati da circonferenze medie (bicipite/gomito/polso),
-// stessa logica usata in tessuto.js: raggio = circonferenza / (2π)
-const RAGGIO_BICIPITE = 34 / (2 * Math.PI) / 100;
-const RAGGIO_FINE = {
-  corta: 28 / (2 * Math.PI) / 100,
-  lunga: 18 / (2 * Math.PI) / 100,
+// raggi di riferimento (circonferenza/2π), scalati poi con le circonferenze
+// reali della persona (scalaBicipite/scalaPolso) invece che con le spalle
+const RAGGIO_BICIPITE_RIFERIMENTO = 28 / (2 * Math.PI) / 100;
+const RAGGIO_FINE_RIFERIMENTO = {
+  corta: 26 / (2 * Math.PI) / 100,
+  lunga: 16 / (2 * Math.PI) / 100,
 };
 
-const MARGINE_SPALLA = 0.03; // sovrapposizione con il busto per chiudere lo spacco
+const MARGINE_SPALLA = 0.03;
+
+function frazioneFineManica(proporzioni, lunghezza) {
+  const copertura = COPERTURA_BRACCIO[lunghezza] ?? 0;
+  const frazione =
+    proporzioni.frazioneSpalle - proporzioni.frazioneBraccio * copertura;
+  return Math.max(
+    proporzioni.frazioneGinocchio,
+    Math.min(frazione, proporzioni.frazioneSpalle - 0.05),
+  );
+}
 
 export function creaManica(corpo, proporzioni, xSpalla, lunghezza) {
-  const ySpalla = corpo.yPiedi + corpo.altezzaModello * FRAZIONE_SPALLA;
-  const yFine = corpo.yPiedi + corpo.altezzaModello * FRAZIONE_FINE[lunghezza];
-  const raggioSpalla =
-    RAGGIO_BICIPITE * proporzioni.scalaSpalle + MARGINE_SPALLA;
+  const ySpalla =
+    corpo.yPiedi + corpo.altezzaModello * proporzioni.frazioneSpalle;
+  const yFine =
+    corpo.yPiedi +
+    corpo.altezzaModello * frazioneFineManica(proporzioni, lunghezza);
 
-  const raggioFine = RAGGIO_FINE[lunghezza] * proporzioni.scalaSpalle;
+  const raggioSpalla =
+    RAGGIO_BICIPITE_RIFERIMENTO * proporzioni.scalaBicipite + MARGINE_SPALLA;
+  const raggioFineBase =
+    lunghezza === "lunga"
+      ? RAGGIO_FINE_RIFERIMENTO.lunga * proporzioni.scalaPolso
+      : RAGGIO_FINE_RIFERIMENTO.corta * proporzioni.scalaBicipite;
 
   const posizioni = new Float32Array(COLONNE_MANICA * RIGHE_MANICA * 3);
   const uv = new Float32Array(COLONNE_MANICA * RIGHE_MANICA * 2);
@@ -55,7 +71,7 @@ export function creaManica(corpo, proporzioni, xSpalla, lunghezza) {
   for (let riga = 0; riga < RIGHE_MANICA; riga++) {
     const t = riga / (RIGHE_MANICA - 1);
     const y = ySpalla - t * (ySpalla - yFine);
-    const raggio = raggioSpalla + (raggioFine - raggioSpalla) * t;
+    const raggio = raggioSpalla + (raggioFineBase - raggioSpalla) * t;
 
     for (let colonna = 0; colonna < COLONNE_MANICA; colonna++) {
       const i = riga * COLONNE_MANICA + colonna;
@@ -83,12 +99,14 @@ export function creaManica(corpo, proporzioni, xSpalla, lunghezza) {
 
   return { posizioni, uv, indici };
 }
+
 export function creaToppaSpalla(corpo, proporzioni, xSpalla) {
   const segno = Math.sign(xSpalla) || 1;
-  const ySpalla = corpo.yPiedi + corpo.altezzaModello * FRAZIONE_SPALLA;
+  const ySpalla =
+    corpo.yPiedi + corpo.altezzaModello * proporzioni.frazioneSpalle;
   const raggioManica =
-    RAGGIO_BICIPITE * proporzioni.scalaSpalle + MARGINE_SPALLA;
-  const raggioBusto = raggioTorace(FRAZIONE_SPALLA, proporzioni);
+    RAGGIO_BICIPITE_RIFERIMENTO * proporzioni.scalaBicipite + MARGINE_SPALLA;
+  const raggioBusto = raggioTorace(proporzioni.frazioneSpalle, proporzioni);
 
   const posizioni = new Float32Array((COLONNE_MANICA + 1) * 3);
   posizioni[0] = segno * raggioBusto;
