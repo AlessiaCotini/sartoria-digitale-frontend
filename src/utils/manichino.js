@@ -78,7 +78,25 @@ export function calcolaProporzioni(misure) {
   // serve a far arrivare la manica al punto giusto invece di una frazione fissa
   const frazioneBraccio = manica / altezza;
 
+  const DUE_PI = 2 * Math.PI;
+  const raggioCollo = collo / DUE_PI / 100;
+  const raggioTorace = torace / DUE_PI / 100;
+  const raggioBusto = busto / DUE_PI / 100;
+  const raggioVita = vita / DUE_PI / 100;
+  const raggioFianchi = fianchi / DUE_PI / 100;
+  const raggioCoscia = coscia / DUE_PI / 100;
+  const raggioGinocchio = ginocchio / DUE_PI / 100;
+  const raggioCaviglia = caviglia / DUE_PI / 100;
+
   return {
+    raggioCollo,
+    raggioTorace,
+    raggioBusto,
+    raggioVita,
+    raggioFianchi,
+    raggioCoscia,
+    raggioGinocchio,
+    raggioCaviglia,
     scalaAltezza,
     scalaCollo,
     scalaSpalle,

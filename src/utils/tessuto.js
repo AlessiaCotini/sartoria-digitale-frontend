@@ -1,4 +1,4 @@
-import { fattoreScalaPerAltezza } from "./sagomaCorpo";
+import { raggioRealePerAltezza } from "./sagomaCorpo";
 
 export const COLONNE = 16;
 export const RIGHE = 20;
@@ -8,10 +8,9 @@ const SMORZAMENTO = 0.98;
 const ITERAZIONI_VINCOLI = 4;
 // raggio ricavato dalla circonferenza toracica di riferimento (96 cm),
 // trattando la sezione del busto come un cerchio: raggio = circonferenza / (2π)
-const RAGGIO_TORACE_NEUTRO = 96 / (2 * Math.PI) / 100;
 
 export function raggioTorace(frazione, proporzioni) {
-  return RAGGIO_TORACE_NEUTRO * fattoreScalaPerAltezza(frazione, proporzioni);
+  return raggioRealePerAltezza(frazione, proporzioni);
 }
 
 export function creaTessuto(altezzaZona, centroY, corpo, proporzioni) {

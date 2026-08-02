@@ -5,7 +5,12 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { coloraSvg } from "../utils/coloraSvg";
 import { fattoreScalaPerAltezza } from "../utils/sagomaCorpo";
 import { creaTessuto, aggiornaTessuto, COLONNE, RIGHE } from "../utils/tessuto";
-import { lunghezzaManica, creaManica, creaToppaSpalla } from "../utils/maniche";
+import {
+  lunghezzaManica,
+  creaManica,
+  creaToppaSpalla,
+  FRAZIONE_SPALLA_MESH,
+} from "../utils/maniche";
 
 //calcoliamo le zone personalizzate
 function zonaPerCategoria(categoria, proporzioni) {
@@ -77,9 +82,7 @@ function trovaXSpallaReale(meshCorpo, proporzioni) {
   const tolleranza = 0.015;
   let massimoX = 0;
   for (let i = 0; i < frazioniAltezza.length; i++) {
-    if (
-      Math.abs(frazioniAltezza[i] - proporzioni.frazioneSpalle) < tolleranza
-    ) {
+    if (Math.abs(frazioniAltezza[i] - FRAZIONE_SPALLA_MESH) < tolleranza) {
       const fattore = fattoreScalaPerAltezza(frazioniAltezza[i], proporzioni);
       const x = Math.abs(posizioniOriginali[i * 3] * fattore);
       if (x > massimoX) massimoX = x;

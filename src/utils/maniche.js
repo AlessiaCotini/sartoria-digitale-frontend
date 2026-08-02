@@ -1,4 +1,8 @@
 import { raggioTorace } from "./tessuto";
+// altezza reale delle spalle sul modello 3D: è una caratteristica fissa del
+// file FBX (non della persona), va tenuta separata dal confine personalizzato
+// usato solo per decidere dove inizia/finisce il capo sul corpo
+export const FRAZIONE_SPALLA_MESH = 0.82;
 
 const MANICA_PER_CATEGORIA = {
   Camicie: "lunga",
@@ -44,16 +48,15 @@ const MARGINE_SPALLA = 0.03;
 function frazioneFineManica(proporzioni, lunghezza) {
   const copertura = COPERTURA_BRACCIO[lunghezza] ?? 0;
   const frazione =
-    proporzioni.frazioneSpalle - proporzioni.frazioneBraccio * copertura;
+    FRAZIONE_SPALLA_MESH - proporzioni.frazioneBraccio * copertura;
   return Math.max(
     proporzioni.frazioneGinocchio,
-    Math.min(frazione, proporzioni.frazioneSpalle - 0.05),
+    Math.min(frazione, FRAZIONE_SPALLA_MESH - 0.05),
   );
 }
 
 export function creaManica(corpo, proporzioni, xSpalla, lunghezza) {
-  const ySpalla =
-    corpo.yPiedi + corpo.altezzaModello * proporzioni.frazioneSpalle;
+  const ySpalla = corpo.yPiedi + corpo.altezzaModello * FRAZIONE_SPALLA_MESH;
   const yFine =
     corpo.yPiedi +
     corpo.altezzaModello * frazioneFineManica(proporzioni, lunghezza);
@@ -102,11 +105,10 @@ export function creaManica(corpo, proporzioni, xSpalla, lunghezza) {
 
 export function creaToppaSpalla(corpo, proporzioni, xSpalla) {
   const segno = Math.sign(xSpalla) || 1;
-  const ySpalla =
-    corpo.yPiedi + corpo.altezzaModello * proporzioni.frazioneSpalle;
+  const ySpalla = corpo.yPiedi + corpo.altezzaModello * FRAZIONE_SPALLA_MESH;
   const raggioManica =
     RAGGIO_BICIPITE_RIFERIMENTO * proporzioni.scalaBicipite + MARGINE_SPALLA;
-  const raggioBusto = raggioTorace(proporzioni.frazioneSpalle, proporzioni);
+  const raggioBusto = raggioTorace(FRAZIONE_SPALLA_MESH, proporzioni);
 
   const posizioni = new Float32Array((COLONNE_MANICA + 1) * 3);
   posizioni[0] = segno * raggioBusto;

@@ -40,3 +40,47 @@ export function fattoreScalaPerAltezza(frazione, proporzioni) {
 
   return 1;
 }
+
+// come fasce(), ma per il raggio REALE del tessuto (in metri), niente "spalle"
+// perché non è una circonferenza ma una larghezza — tra collo e torace
+// il raggio si interpola naturalmente senza bisogno di un punto dedicato
+function fasceRaggio(proporzioni) {
+  return [
+    { frazione: proporzioni.frazioneCollo, raggio: proporzioni.raggioCollo },
+    { frazione: proporzioni.frazioneTorace, raggio: proporzioni.raggioTorace },
+    { frazione: proporzioni.frazioneBusto, raggio: proporzioni.raggioBusto },
+    { frazione: proporzioni.frazioneVita, raggio: proporzioni.raggioVita },
+    {
+      frazione: proporzioni.frazioneFianchi,
+      raggio: proporzioni.raggioFianchi,
+    },
+    { frazione: proporzioni.frazioneCoscia, raggio: proporzioni.raggioCoscia },
+    {
+      frazione: proporzioni.frazioneGinocchio,
+      raggio: proporzioni.raggioGinocchio,
+    },
+    {
+      frazione: proporzioni.frazioneCaviglia,
+      raggio: proporzioni.raggioCaviglia,
+    },
+    { frazione: 0, raggio: proporzioni.raggioCaviglia },
+  ];
+}
+
+export function raggioRealePerAltezza(frazione, proporzioni) {
+  const lista = fasceRaggio(proporzioni);
+
+  if (frazione >= lista[0].frazione) return lista[0].raggio;
+
+  for (let i = 0; i < lista.length - 1; i++) {
+    const alta = lista[i];
+    const bassa = lista[i + 1];
+    if (frazione <= alta.frazione && frazione >= bassa.frazione) {
+      const range = alta.frazione - bassa.frazione;
+      const t = range > 0 ? (frazione - bassa.frazione) / range : 0;
+      return bassa.raggio + (alta.raggio - bassa.raggio) * t;
+    }
+  }
+
+  return proporzioni.raggioCaviglia;
+}
