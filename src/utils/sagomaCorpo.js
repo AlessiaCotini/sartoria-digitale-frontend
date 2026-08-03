@@ -41,15 +41,22 @@ export function fattoreScalaPerAltezza(frazione, proporzioni) {
   return 1;
 }
 
-// come fasce(), ma per il raggio REALE del tessuto (in metri), niente "spalle"
-// perché non è una circonferenza ma una larghezza — tra collo e torace
-// il raggio si interpola naturalmente senza bisogno di un punto dedicato
 function fasceRaggio(proporzioni) {
   return [
-    { frazione: proporzioni.frazioneCollo, raggio: proporzioni.raggioCollo },
+    {
+      frazione: proporzioni.frazioneCollo,
+      raggio: proporzioni.raggioColloReale ?? proporzioni.raggioCollo,
+    },
+    {
+      frazione: proporzioni.frazioneSpallaMesh,
+      raggio: proporzioni.raggioSpalleTessuto,
+    },
     { frazione: proporzioni.frazioneTorace, raggio: proporzioni.raggioTorace },
     { frazione: proporzioni.frazioneBusto, raggio: proporzioni.raggioBusto },
-    { frazione: proporzioni.frazioneVita, raggio: proporzioni.raggioVita },
+    {
+      frazione: proporzioni.frazioneVita,
+      raggio: proporzioni.raggioVitaReale ?? proporzioni.raggioVita,
+    },
     {
       frazione: proporzioni.frazioneFianchi,
       raggio: proporzioni.raggioFianchi,
@@ -61,9 +68,12 @@ function fasceRaggio(proporzioni) {
     },
     {
       frazione: proporzioni.frazioneCaviglia,
-      raggio: proporzioni.raggioCaviglia,
+      raggio: proporzioni.raggioCavigliaReale ?? proporzioni.raggioCaviglia,
     },
-    { frazione: 0, raggio: proporzioni.raggioCaviglia },
+    {
+      frazione: 0,
+      raggio: proporzioni.raggioCavigliaReale ?? proporzioni.raggioCaviglia,
+    },
   ];
 }
 

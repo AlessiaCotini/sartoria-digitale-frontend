@@ -10,12 +10,13 @@ import {
   creaManica,
   creaToppaSpalla,
   FRAZIONE_SPALLA_MESH,
+  OFFSET_X_SPALLA,
 } from "../utils/maniche";
 
 //calcoliamo le zone personalizzate
 function zonaPerCategoria(categoria, proporzioni) {
   const {
-    frazioneSpalle,
+    frazioneCollo,
     frazioneVita,
     frazioneFianchi,
     frazioneCoscia,
@@ -25,16 +26,16 @@ function zonaPerCategoria(categoria, proporzioni) {
 
   switch (categoria) {
     case "Camicie":
-      return { da: frazioneVita - 0.03, a: frazioneSpalle - 0.02 };
+      return { da: frazioneVita - 0.02, a: frazioneCollo };
     case "Magliette":
-      return { da: frazioneVita - 0.02, a: frazioneSpalle - 0.05 };
+      return { da: frazioneVita - 0.02, a: frazioneCollo - 0.03 };
     case "Cardigan":
-      return { da: frazioneFianchi - 0.02, a: frazioneSpalle };
+      return { da: frazioneFianchi - 0.05, a: frazioneCollo };
     case "Giacche":
     case "Completi":
-      return { da: frazioneFianchi - 0.04, a: frazioneSpalle };
+      return { da: frazioneFianchi - 0.04, a: frazioneCollo };
     case "Abiti":
-      return { da: frazioneGinocchio, a: frazioneSpalle };
+      return { da: frazioneGinocchio, a: frazioneCollo };
     case "Gonne":
       return { da: frazioneCoscia, a: frazioneVita + 0.03 };
     case "Pantaloni":
@@ -75,20 +76,52 @@ function deformaCorpo(meshCorpo, proporzioni) {
   meshCorpo.geometry.computeVertexNormals();
 }
 
-function trovaXSpallaReale(meshCorpo, proporzioni) {
+function trovaXRealeAFrazione(
+  meshCorpo,
+  frazione,
+  proporzioni,
+  tolleranza = 0.015,
+) {
   const { posizioniOriginali, frazioniAltezza } = meshCorpo.geometry.userData;
   if (!posizioniOriginali || !frazioniAltezza) return null;
 
-  const tolleranza = 0.015;
-  let massimoX = 0;
+  let migliore = null;
+  let migliorPunteggio = -Infinity;
   for (let i = 0; i < frazioniAltezza.length; i++) {
-    if (Math.abs(frazioniAltezza[i] - FRAZIONE_SPALLA_MESH) < tolleranza) {
+    if (Math.abs(frazioniAltezza[i] - frazione) < tolleranza) {
       const fattore = fattoreScalaPerAltezza(frazioniAltezza[i], proporzioni);
-      const x = Math.abs(posizioniOriginali[i * 3] * fattore);
-      if (x > massimoX) massimoX = x;
+      const x = posizioniOriginali[i * 3] * fattore;
+      const z = posizioniOriginali[i * 3 + 2] * fattore;
+      // premia una x grande (lontano dal centro) e penalizza una z grande
+      // (avanti/indietro): il vero braccio sporge di lato, non avanti o dietro
+      const punteggio = Math.abs(x) - Math.abs(z);
+      if (punteggio > migliorPunteggio) {
+        migliorPunteggio = punteggio;
+        migliore = Math.abs(x);
+      }
     }
   }
-  return massimoX > 0 ? massimoX : null;
+  return migliore;
+}
+
+function trovaXSpallaReale(meshCorpo, proporzioni) {
+  return trovaXRealeAFrazione(meshCorpo, FRAZIONE_SPALLA_MESH, proporzioni);
+}
+
+function proporzioniConPuntiReali(meshCorpo, proporzioni, scalaTotale) {
+  if (!meshCorpo) return proporzioni;
+
+  function raggioReale(frazione) {
+    const x = trovaXRealeAFrazione(meshCorpo, frazione, proporzioni);
+    return x != null ? x * scalaTotale : null;
+  }
+
+  return {
+    ...proporzioni,
+    raggioColloReale: raggioReale(proporzioni.frazioneCollo),
+    raggioVitaReale: raggioReale(proporzioni.frazioneVita),
+    raggioCavigliaReale: raggioReale(proporzioni.frazioneCaviglia),
+  };
 }
 
 function aggiornaManiche(
@@ -112,7 +145,7 @@ function aggiornaManiche(
     return;
   }
 
-  const xSpallaMetri = xSpallaLocale * scalaTotale;
+  const xSpallaMetri = xSpallaLocale * scalaTotale * OFFSET_X_SPALLA;
   [
     [s.meshManicaSx, s.meshToppaSx, -xSpallaMetri],
     [s.meshManicaDx, s.meshToppaDx, xSpallaMetri],
@@ -367,7 +400,6 @@ function Manichino3D({
         bbox.getSize(dimensioni);
 
         oggetto.updateMatrixWorld(true);
-
         let meshCorpo = null;
         oggetto.traverse((figlio) => {
           if (figlio.isMesh && figlio.name === "body") meshCorpo = figlio;
@@ -463,7 +495,12 @@ function Manichino3D({
       s.controls.target.set(0, yPiedi + altezzaModello * 0.55, 0);
     }
 
-    const zona = zonaPerCategoria(categoria, proporzioni);
+    const proporzioniReali = proporzioniConPuntiReali(
+      s.meshCorpo,
+      proporzioni,
+      scalaTotale,
+    );
+    const zona = zonaPerCategoria(categoria, proporzioniReali);
     if (zona) {
       const yAlto = yPiedi + zona.a * altezzaModello;
       const yBasso = yPiedi + zona.da * altezzaModello;
@@ -471,10 +508,10 @@ function Manichino3D({
         yAlto - yBasso,
         (yAlto + yBasso) / 2,
         corpo,
-        proporzioni,
+        proporzioniReali,
       );
       s.corpo = corpo;
-      s.proporzioni = proporzioni;
+      s.proporzioni = proporzioniReali;
       s.corpo = corpo;
     } else {
       s.tessuto = null;

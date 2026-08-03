@@ -17,7 +17,7 @@ export function creaTessuto(altezzaZona, centroY, corpo, proporzioni) {
   const particelle = [];
   const yAlto = centroY + altezzaZona / 2;
   const yBasso = centroY - altezzaZona / 2;
-  const margine = 0.02;
+  const margine = 0.01;
 
   for (let riga = 0; riga < RIGHE; riga++) {
     const t = riga / (RIGHE - 1);
@@ -108,7 +108,7 @@ export function aggiornaTessuto(tessuto, corpo, proporzioni) {
       corpo.altezzaModello > 0
         ? (p.y - corpo.yPiedi) / corpo.altezzaModello
         : 0.7;
-    const raggio = raggioTorace(frazione, proporzioni) + 0.02;
+    const raggio = raggioTorace(frazione, proporzioni) + 0.01;
     const distanzaAsse = Math.sqrt(p.x * p.x + p.z * p.z) || 0.0001;
 
     const differenza = raggio - distanzaAsse;

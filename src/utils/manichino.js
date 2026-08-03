@@ -1,3 +1,5 @@
+import { FRAZIONE_COLLO_MESH, FRAZIONE_SPALLA_MESH } from "./maniche";
+
 const RIFERIMENTO = {
   altezza: 170,
   collo: 36,
@@ -64,11 +66,11 @@ export function calcolaProporzioni(misure) {
 
   // soglie di altezza (frazioni 0-1, dai piedi alla testa) personalizzate in base
   // alla lunghezza reale di gamba e busto, invece di essere fisse uguali per tutti
-  const frazioneVita = limita(gamba / altezza, 0.38, 0.52);
-  const frazioneSpalle = limita(frazioneVita + 0.28, frazioneVita + 0.18, 0.97);
-  const frazioneCollo = limita(frazioneSpalle + 0.06, frazioneSpalle + 0.02, 1);
+  const frazioneVita = limita(gamba / altezza, 0.48, 0.52);
+  const frazioneSpalle = limita(frazioneVita + 0.28, frazioneVita + 0.16, 0.97);
+  const frazioneCollo = FRAZIONE_COLLO_MESH;
   const frazioneTorace = frazioneVita + (frazioneSpalle - frazioneVita) * 0.55;
-  const frazioneBusto = frazioneVita + (frazioneSpalle - frazioneVita) * 0.4;
+  const frazioneBusto = frazioneVita + (frazioneSpalle - frazioneVita) * 0.3;
   const frazioneFianchi = frazioneVita * 0.92;
   const frazioneCoscia = frazioneVita * 0.78;
   const frazioneGinocchio = frazioneVita * 0.45;
@@ -87,6 +89,7 @@ export function calcolaProporzioni(misure) {
   const raggioCoscia = coscia / DUE_PI / 100;
   const raggioGinocchio = ginocchio / DUE_PI / 100;
   const raggioCaviglia = caviglia / DUE_PI / 100;
+  const raggioSpalleTessuto = spalle / 2 / 100;
 
   return {
     raggioCollo,
@@ -110,6 +113,8 @@ export function calcolaProporzioni(misure) {
     scalaPolso,
     frazioneCollo,
     frazioneSpalle,
+    frazioneSpallaMesh: FRAZIONE_SPALLA_MESH,
+    raggioSpalleTessuto,
     frazioneTorace,
     frazioneVita,
     frazioneFianchi,

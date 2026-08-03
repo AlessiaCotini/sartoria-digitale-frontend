@@ -3,7 +3,16 @@ import { raggioTorace } from "./tessuto";
 // file FBX (non della persona), va tenuta separata dal confine personalizzato
 // usato solo per decidere dove inizia/finisce il capo sul corpo
 export const FRAZIONE_SPALLA_MESH = 0.82;
+export const OFFSET_X_SPALLA = 0.85;
 
+// il collo è sempre questo margine fisso SOPRA la spalla — non un numero
+// separato da tenere sincronizzato a mano in un altro file
+const MARGINE_COLLO = 0.05;
+export const FRAZIONE_COLLO_MESH = FRAZIONE_SPALLA_MESH + MARGINE_COLLO;
+
+// stesso bordo di avvolgimento usato dal tessuto del busto in tessuto.js:
+// il tessuto copre solo da -126° a +126°, non un cerchio completo
+const ANGOLO_BORDO_TESSUTO = Math.PI * 0.7;
 const MANICA_PER_CATEGORIA = {
   Camicie: "lunga",
   Magliette: "corta",
@@ -43,9 +52,9 @@ const RAGGIO_FINE_RIFERIMENTO = {
   lunga: 16 / (2 * Math.PI) / 100,
 };
 
-const MARGINE_SPALLA = 0.03;
+const MARGINE_SPALLA = 0.04;
 
-function frazioneFineManica(proporzioni, lunghezza) {
+export function frazioneFineManica(proporzioni, lunghezza) {
   const copertura = COPERTURA_BRACCIO[lunghezza] ?? 0;
   const frazione =
     FRAZIONE_SPALLA_MESH - proporzioni.frazioneBraccio * copertura;
@@ -55,11 +64,29 @@ function frazioneFineManica(proporzioni, lunghezza) {
   );
 }
 
-export function creaManica(corpo, proporzioni, xSpalla, lunghezza) {
-  const ySpalla = corpo.yPiedi + corpo.altezzaModello * FRAZIONE_SPALLA_MESH;
-  const yFine =
-    corpo.yPiedi +
-    corpo.altezzaModello * frazioneFineManica(proporzioni, lunghezza);
+function altezzaFineManica(ySpalla, corpo, proporzioni, lunghezza) {
+  const copertura = COPERTURA_BRACCIO[lunghezza] ?? 0;
+  const lunghezzaBraccioMetri =
+    proporzioni.frazioneBraccio * corpo.altezzaModello * copertura;
+  const yFineGrezzo = ySpalla - lunghezzaBraccioMetri;
+  const yGinocchio =
+    corpo.yPiedi + corpo.altezzaModello * proporzioni.frazioneGinocchio;
+  return Math.max(
+    yGinocchio,
+    Math.min(yFineGrezzo, ySpalla - 0.05 * corpo.altezzaModello),
+  );
+}
+
+export function creaManica(
+  corpo,
+  proporzioni,
+  xSpalla,
+  lunghezza,
+  ySpallaReale,
+) {
+  const ySpalla =
+    ySpallaReale ?? corpo.yPiedi + corpo.altezzaModello * FRAZIONE_SPALLA_MESH;
+  const yFine = altezzaFineManica(ySpalla, corpo, proporzioni, lunghezza);
 
   const raggioSpalla =
     RAGGIO_BICIPITE_RIFERIMENTO * proporzioni.scalaBicipite + MARGINE_SPALLA;
@@ -103,17 +130,24 @@ export function creaManica(corpo, proporzioni, xSpalla, lunghezza) {
   return { posizioni, uv, indici };
 }
 
-export function creaToppaSpalla(corpo, proporzioni, xSpalla) {
+export function creaToppaSpalla(corpo, proporzioni, xSpalla, ySpallaReale) {
   const segno = Math.sign(xSpalla) || 1;
-  const ySpalla = corpo.yPiedi + corpo.altezzaModello * FRAZIONE_SPALLA_MESH;
+  const ySpalla =
+    ySpallaReale ?? corpo.yPiedi + corpo.altezzaModello * FRAZIONE_SPALLA_MESH;
+  const frazioneSpallaEffettiva =
+    (ySpalla - corpo.yPiedi) / corpo.altezzaModello;
   const raggioManica =
     RAGGIO_BICIPITE_RIFERIMENTO * proporzioni.scalaBicipite + MARGINE_SPALLA;
-  const raggioBusto = raggioTorace(FRAZIONE_SPALLA_MESH, proporzioni);
+  const raggioBusto = raggioTorace(frazioneSpallaEffettiva, proporzioni);
+
+  const angoloBordo = segno * ANGOLO_BORDO_TESSUTO;
+  const xBusto = raggioBusto * Math.sin(angoloBordo);
+  const zBusto = raggioBusto * Math.cos(angoloBordo);
 
   const posizioni = new Float32Array((COLONNE_MANICA + 1) * 3);
-  posizioni[0] = segno * raggioBusto;
+  posizioni[0] = xBusto;
   posizioni[1] = ySpalla;
-  posizioni[2] = 0;
+  posizioni[2] = zBusto;
 
   for (let colonna = 0; colonna < COLONNE_MANICA; colonna++) {
     const angolo = (colonna / COLONNE_MANICA) * Math.PI * 2;
