@@ -151,6 +151,7 @@ function Configuratore() {
   const opzioneVestibilita = opzioni.find(
     (o) => o.id === opzioniSelezionate.VESTIBILITA,
   );
+  const opzioneTasche = opzioni.find((o) => o.id === opzioniSelezionate.TASCHE);
 
   return (
     <section className="section">
@@ -220,14 +221,18 @@ function Configuratore() {
 
             {opzioni.length > 0 && (
               <div className="mb-4">
-                {["CHIUSURA", "VESTIBILITA"].map((tipo) => {
+                {["CHIUSURA", "TASCHE", "VESTIBILITA"].map((tipo) => {
                   const opzioniDelTipo = opzioni.filter((o) => o.tipo === tipo);
                   if (opzioniDelTipo.length === 0) return null;
 
                   return (
                     <div key={tipo} className="mb-3">
                       <p className="step-label mb-2">
-                        {tipo === "CHIUSURA" ? "Chiusura" : "Vestibilità"}
+                        {tipo === "CHIUSURA"
+                          ? "Chiusura"
+                          : tipo === "TASCHE"
+                            ? "Tasche"
+                            : "Vestibilità"}
                       </p>
                       <div className="filter-group justify-content-start">
                         {opzioniDelTipo.map((o) => (
@@ -291,6 +296,7 @@ function Configuratore() {
                 modello={capo?.modello}
                 chiusura={opzioneChiusura?.nome}
                 vestibilita={opzioneVestibilita?.nome}
+                tasche={opzioneTasche?.nome}
               />
             </div>
             <p className="text-muted small text-center mt-2">

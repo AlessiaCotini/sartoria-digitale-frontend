@@ -90,6 +90,7 @@ function Manichino3D({
   modello,
   chiusura,
   vestibilita,
+  tasche,
 }) {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
@@ -387,6 +388,30 @@ function Manichino3D({
             ctx.fill();
           }
 
+          if (tasche === "Toppa" || tasche === "A filo") {
+            const y = canvas.height * 0.28;
+            const larghezzaTasca = canvas.width * 0.14;
+            const altezzaTasca = canvas.height * 0.09;
+            const offsetX = canvas.width * 0.2;
+
+            [-1, 1].forEach((lato) => {
+              const x = canvas.width / 2 + lato * offsetX - larghezzaTasca / 2;
+
+              if (tasche === "Toppa") {
+                ctx.strokeStyle = "#2b2620";
+                ctx.lineWidth = canvas.width * 0.004;
+                ctx.strokeRect(x, y, larghezzaTasca, altezzaTasca);
+              } else {
+                ctx.strokeStyle = "#2b2620";
+                ctx.lineWidth = canvas.width * 0.004;
+                ctx.beginPath();
+                ctx.moveTo(x, y + altezzaTasca);
+                ctx.lineTo(x + larghezzaTasca, y + altezzaTasca);
+                ctx.stroke();
+              }
+            });
+          }
+
           const texture = new THREE.CanvasTexture(canvas);
           texture.needsUpdate = true;
 
@@ -424,7 +449,7 @@ function Manichino3D({
     return () => {
       annullato = true;
     };
-  }, [immagineCapo, coloreHex, chiusura]);
+  }, [immagineCapo, coloreHex, chiusura, tasche]);
 
   return (
     <div
