@@ -13,9 +13,20 @@ const RIFERIMENTO = {
   bicipite: 28,
   polso: 16,
   manica: 60,
-  gamba: 80,
   busto: 90,
 };
+
+// altezze reali (frazioni 0-1, piedi->testa) misurate direttamente sullo
+// scheletro Mixamo del modello 3D: sono caratteristiche FISSE di questo
+// modello, non calcolate dalle misure del cliente (che invece determinano
+// solo QUANTO è largo il corpo in ogni fascia, non a che altezza si trova)
+const FRAZIONE_VITA_MESH = 0.598;
+const FRAZIONE_FIANCHI_MESH = 0.571;
+const FRAZIONE_COSCIA_MESH = 0.438;
+const FRAZIONE_GINOCCHIO_MESH = 0.305;
+const FRAZIONE_CAVIGLIA_MESH = 0.037;
+const FRAZIONE_TORACE_MESH = 0.767;
+const FRAZIONE_BUSTO_MESH = 0.703;
 
 function numeroValido(valore, fallback) {
   const n = parseFloat(valore);
@@ -39,7 +50,6 @@ export function calcolaProporzioni(misure) {
   const bicipite = numeroValido(misure?.bicipite, RIFERIMENTO.bicipite);
   const polso = numeroValido(misure?.polso, RIFERIMENTO.polso);
   const manica = numeroValido(misure?.manica, RIFERIMENTO.manica);
-  const gamba = numeroValido(misure?.gamba, RIFERIMENTO.gamba);
   const busto = numeroValido(misure?.busto, RIFERIMENTO.busto);
 
   const scalaAltezza = limita(altezza / RIFERIMENTO.altezza, 0.8, 1.3);
@@ -55,23 +65,15 @@ export function calcolaProporzioni(misure) {
   const scalaPolso = limita(polso / RIFERIMENTO.polso, 0.8, 1.3);
   const scalaBusto = limita(busto / RIFERIMENTO.busto, 0.8, 1.3);
 
-  // soglia dell'altezza a cui sta la vita, personalizzata sulla lunghezza
-  // reale della gamba (frazione dell'altezza totale della persona)
-  const frazioneVita = limita(gamba / altezza, 0.4, 0.54);
-
-  // collo e punto di aggancio manica sono caratteristiche FISSE del modello
-  // 3D (non della persona): un solo riferimento, importato da maniche.js
   const frazioneCollo = FRAZIONE_COLLO_MESH;
   const frazioneSpallaMesh = FRAZIONE_SPALLA_MESH;
-
-  const frazioneTorace =
-    frazioneVita + (frazioneSpallaMesh - frazioneVita) * 0.55;
-  const frazioneBusto =
-    frazioneVita + (frazioneSpallaMesh - frazioneVita) * 0.35;
-  const frazioneFianchi = frazioneVita * 0.92;
-  const frazioneCoscia = frazioneVita * 0.75;
-  const frazioneGinocchio = frazioneVita * 0.42;
-  const frazioneCaviglia = frazioneVita * 0.08;
+  const frazioneTorace = FRAZIONE_TORACE_MESH;
+  const frazioneBusto = FRAZIONE_BUSTO_MESH;
+  const frazioneVita = FRAZIONE_VITA_MESH;
+  const frazioneFianchi = FRAZIONE_FIANCHI_MESH;
+  const frazioneCoscia = FRAZIONE_COSCIA_MESH;
+  const frazioneGinocchio = FRAZIONE_GINOCCHIO_MESH;
+  const frazioneCaviglia = FRAZIONE_CAVIGLIA_MESH;
 
   const frazioneBraccio = manica / altezza;
 

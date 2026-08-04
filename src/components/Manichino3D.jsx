@@ -56,7 +56,6 @@ function zonaCapo(categoria, proporzioni) {
     frazioneCollo,
     frazioneVita,
     frazioneFianchi,
-    frazioneCoscia,
     frazioneGinocchio,
     frazioneCaviglia,
   } = proporzioni;
@@ -65,7 +64,7 @@ function zonaCapo(categoria, proporzioni) {
     case "Camicie":
       return { da: frazioneVita + 0.02, a: frazioneCollo };
     case "Magliette":
-      return { da: frazioneVita + 0.03, a: frazioneCollo - 0.03 };
+      return { da: frazioneVita + 0.08, a: frazioneCollo - 0.01 };
     case "Cardigan":
       return { da: frazioneFianchi - 0.05, a: frazioneCollo };
     case "Giacche":
@@ -74,7 +73,7 @@ function zonaCapo(categoria, proporzioni) {
     case "Abiti":
       return { da: frazioneGinocchio, a: frazioneCollo };
     case "Gonne":
-      return { da: frazioneCoscia, a: frazioneVita + 0.03 };
+      return { da: frazioneGinocchio, a: frazioneVita + 0.03 };
     case "Pantaloni":
       return { da: frazioneCaviglia + 0.02, a: frazioneVita + 0.02 };
     default:
@@ -236,6 +235,26 @@ function Manichino3D({
         const dimensioni = new THREE.Vector3();
         bbox.getSize(dimensioni);
 
+        oggetto.updateMatrixWorld(true);
+        [
+          "mixamorigHips",
+          "mixamorigSpine",
+          "mixamorigSpine1",
+          "mixamorigSpine2",
+          "mixamorigNeck",
+          "mixamorigLeftUpLeg",
+          "mixamorigLeftLeg",
+          "mixamorigLeftFoot",
+        ].forEach((nome) => {
+          const osso = oggetto.getObjectByName(nome);
+          if (osso) {
+            const pos = new THREE.Vector3();
+            osso.getWorldPosition(pos);
+            const frazione = (pos.y - bbox.min.y) / dimensioni.y;
+            console.log(nome, "->", frazione.toFixed(3));
+          }
+        });
+
         oggetto.position.y = -bbox.min.y;
         oggetto.position.x = -(bbox.min.x + bbox.max.x) / 2;
         oggetto.position.z = -(bbox.min.z + bbox.max.z) / 2;
@@ -293,8 +312,12 @@ function Manichino3D({
       const altezzaOverlay = yAlto - yBasso;
       const fattoreVestibilita = vestibilita === "Oversize" ? 1.15 : 1;
       const aspetto = s.aspettoCapo || 0.6;
+      const scalaLarghezza =
+        categoria === "Gonne" || categoria === "Pantaloni"
+          ? proporzioni.scalaFianchi * 1.6
+          : proporzioni.scalaTorace;
       const larghezzaOverlay =
-        altezzaOverlay * aspetto * proporzioni.scalaTorace * fattoreVestibilita;
+        altezzaOverlay * aspetto * scalaLarghezza * fattoreVestibilita;
 
       s.meshOverlay.position.set(0, centroY, altezzaModello * 0.06);
       s.meshOverlay.scale.set(larghezzaOverlay, altezzaOverlay, 1);
@@ -380,11 +403,12 @@ function Manichino3D({
             const yBasso2 = yPiedi2 + zona2.da * altezzaModello2;
             const altezzaOverlay2 = yAlto2 - yBasso2;
             const fattoreVestibilita2 = vestibilita === "Oversize" ? 1.15 : 1;
+            const scalaLarghezza2 =
+              categoria === "Gonne" || categoria === "Pantaloni"
+                ? proporzioni.scalaFianchi * 1.6
+                : proporzioni.scalaTorace;
             s.meshOverlay.scale.set(
-              altezzaOverlay2 *
-                aspetto *
-                proporzioniRef.current.scalaTorace *
-                fattoreVestibilita2,
+              altezzaOverlay2 * aspetto * scalaLarghezza2 * fattoreVestibilita2,
               altezzaOverlay2,
               1,
             );
