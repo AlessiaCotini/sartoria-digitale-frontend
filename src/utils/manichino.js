@@ -1,4 +1,4 @@
-import { FRAZIONE_COLLO_MESH, FRAZIONE_SPALLA_MESH } from "./maniche";
+import { FRAZIONE_SPALLA_MESH, FRAZIONE_COLLO_MESH } from "./maniche";
 
 const RIFERIMENTO = {
   altezza: 170,
@@ -13,15 +13,8 @@ const RIFERIMENTO = {
   bicipite: 28,
   polso: 16,
   manica: 60,
-  gamba: 104,
+  gamba: 80,
   busto: 90,
-};
-
-const LARGHEZZA_RIFERIMENTO = {
-  spalle: 70,
-  torace: 64,
-  vita: 50,
-  fianchi: 66,
 };
 
 function numeroValido(valore, fallback) {
@@ -49,8 +42,6 @@ export function calcolaProporzioni(misure) {
   const gamba = numeroValido(misure?.gamba, RIFERIMENTO.gamba);
   const busto = numeroValido(misure?.busto, RIFERIMENTO.busto);
 
-  // scale delle circonferenze: quanto ogni fascia del corpo è più larga/stretta
-  // rispetto al corpo di riferimento (170cm)
   const scalaAltezza = limita(altezza / RIFERIMENTO.altezza, 0.8, 1.3);
   const scalaCollo = limita(collo / RIFERIMENTO.collo, 0.8, 1.3);
   const scalaSpalle = limita(spalle / RIFERIMENTO.spalle, 0.8, 1.3);
@@ -64,20 +55,24 @@ export function calcolaProporzioni(misure) {
   const scalaPolso = limita(polso / RIFERIMENTO.polso, 0.8, 1.3);
   const scalaBusto = limita(busto / RIFERIMENTO.busto, 0.8, 1.3);
 
-  // soglie di altezza (frazioni 0-1, dai piedi alla testa) personalizzate in base
-  // alla lunghezza reale di gamba e busto, invece di essere fisse uguali per tutti
-  const frazioneVita = limita(gamba / altezza, 0.48, 0.52);
-  const frazioneSpalle = limita(frazioneVita + 0.28, frazioneVita + 0.16, 0.97);
-  const frazioneCollo = FRAZIONE_COLLO_MESH;
-  const frazioneTorace = frazioneVita + (frazioneSpalle - frazioneVita) * 0.55;
-  const frazioneBusto = frazioneVita + (frazioneSpalle - frazioneVita) * 0.3;
-  const frazioneFianchi = frazioneVita * 0.92;
-  const frazioneCoscia = frazioneVita * 0.78;
-  const frazioneGinocchio = frazioneVita * 0.45;
-  const frazioneCaviglia = frazioneVita * 0.1;
+  // soglia dell'altezza a cui sta la vita, personalizzata sulla lunghezza
+  // reale della gamba (frazione dell'altezza totale della persona)
+  const frazioneVita = limita(gamba / altezza, 0.4, 0.54);
 
-  // lunghezza reale del braccio, come frazione dell'altezza della persona:
-  // serve a far arrivare la manica al punto giusto invece di una frazione fissa
+  // collo e punto di aggancio manica sono caratteristiche FISSE del modello
+  // 3D (non della persona): un solo riferimento, importato da maniche.js
+  const frazioneCollo = FRAZIONE_COLLO_MESH;
+  const frazioneSpallaMesh = FRAZIONE_SPALLA_MESH;
+
+  const frazioneTorace =
+    frazioneVita + (frazioneSpallaMesh - frazioneVita) * 0.55;
+  const frazioneBusto =
+    frazioneVita + (frazioneSpallaMesh - frazioneVita) * 0.35;
+  const frazioneFianchi = frazioneVita * 0.92;
+  const frazioneCoscia = frazioneVita * 0.75;
+  const frazioneGinocchio = frazioneVita * 0.42;
+  const frazioneCaviglia = frazioneVita * 0.08;
+
   const frazioneBraccio = manica / altezza;
 
   const DUE_PI = 2 * Math.PI;
@@ -89,6 +84,8 @@ export function calcolaProporzioni(misure) {
   const raggioCoscia = coscia / DUE_PI / 100;
   const raggioGinocchio = ginocchio / DUE_PI / 100;
   const raggioCaviglia = caviglia / DUE_PI / 100;
+  // "spalle" è una larghezza, non una circonferenza: usiamo metà come raggio
+  // approssimativo così il tessuto resta largo quanto le vere spalle
   const raggioSpalleTessuto = spalle / 2 / 100;
 
   return {
@@ -100,6 +97,7 @@ export function calcolaProporzioni(misure) {
     raggioCoscia,
     raggioGinocchio,
     raggioCaviglia,
+    raggioSpalleTessuto,
     scalaAltezza,
     scalaCollo,
     scalaSpalle,
@@ -111,22 +109,16 @@ export function calcolaProporzioni(misure) {
     scalaCaviglia,
     scalaBicipite,
     scalaPolso,
+    scalaBusto,
     frazioneCollo,
-    frazioneSpalle,
-    frazioneSpallaMesh: FRAZIONE_SPALLA_MESH,
-    raggioSpalleTessuto,
+    frazioneSpallaMesh,
     frazioneTorace,
+    frazioneBusto,
     frazioneVita,
     frazioneFianchi,
     frazioneCoscia,
     frazioneGinocchio,
     frazioneCaviglia,
     frazioneBraccio,
-    larghezzaSpalle: LARGHEZZA_RIFERIMENTO.spalle * scalaSpalle,
-    larghezzaTorace: LARGHEZZA_RIFERIMENTO.torace * scalaTorace,
-    larghezzaVita: LARGHEZZA_RIFERIMENTO.vita * scalaVita,
-    larghezzaFianchi: LARGHEZZA_RIFERIMENTO.fianchi * scalaFianchi,
-    scalaBusto,
-    frazioneBusto,
   };
 }

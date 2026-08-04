@@ -1,14 +1,17 @@
-// elenco delle fasce del corpo, dal collo ai piedi, ciascuna con la propria
-// soglia di altezza (frazione 0-1, personalizzata) e la propria scala di
-// circonferenza. Deve restare ordinato da frazione più alta a più bassa.
+// fasce per la deformazione del CORPO (scala relativa)
 function fasce(proporzioni) {
   return [
     { frazione: proporzioni.frazioneCollo, scala: proporzioni.scalaCollo },
-    { frazione: proporzioni.frazioneSpalle, scala: proporzioni.scalaSpalle },
+    {
+      frazione: proporzioni.frazioneSpallaMesh,
+      scala: proporzioni.scalaSpalle,
+    },
     { frazione: proporzioni.frazioneTorace, scala: proporzioni.scalaTorace },
-    { frazione: proporzioni.frazioneBusto, scala: proporzioni.scalaBusto },
     { frazione: proporzioni.frazioneVita, scala: proporzioni.scalaVita },
-    { frazione: proporzioni.frazioneFianchi, scala: proporzioni.scalaFianchi },
+    {
+      frazione: proporzioni.frazioneFianchi,
+      scala: proporzioni.scalaFianchi,
+    },
     { frazione: proporzioni.frazioneCoscia, scala: proporzioni.scalaCoscia },
     {
       frazione: proporzioni.frazioneGinocchio,
@@ -24,8 +27,6 @@ function fasce(proporzioni) {
 
 export function fattoreScalaPerAltezza(frazione, proporzioni) {
   const lista = fasce(proporzioni);
-
-  // sopra la fascia più alta (collo): resta piatto, come su testa/collo
   if (frazione >= lista[0].frazione) return lista[0].scala;
 
   for (let i = 0; i < lista.length - 1; i++) {
@@ -37,10 +38,12 @@ export function fattoreScalaPerAltezza(frazione, proporzioni) {
       return bassa.scala + (alta.scala - bassa.scala) * t;
     }
   }
-
   return 1;
 }
 
+// fasce per il raggio REALE del tessuto (in metri): include una fascia
+// "spalla" larga (larghezza reale, non circonferenza) così il tessuto resta
+// largo fino all'attaccatura della manica e si restringe solo verso il collo
 function fasceRaggio(proporzioni) {
   return [
     {
@@ -79,7 +82,6 @@ function fasceRaggio(proporzioni) {
 
 export function raggioRealePerAltezza(frazione, proporzioni) {
   const lista = fasceRaggio(proporzioni);
-
   if (frazione >= lista[0].frazione) return lista[0].raggio;
 
   for (let i = 0; i < lista.length - 1; i++) {
@@ -91,6 +93,5 @@ export function raggioRealePerAltezza(frazione, proporzioni) {
       return bassa.raggio + (alta.raggio - bassa.raggio) * t;
     }
   }
-
   return proporzioni.raggioCaviglia;
 }

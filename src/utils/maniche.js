@@ -1,18 +1,13 @@
 import { raggioTorace } from "./tessuto";
-// altezza reale delle spalle sul modello 3D: è una caratteristica fissa del
-// file FBX (non della persona), va tenuta separata dal confine personalizzato
-// usato solo per decidere dove inizia/finisce il capo sul corpo
-export const FRAZIONE_SPALLA_MESH = 0.82;
-export const OFFSET_X_SPALLA = 0.85;
 
-// il collo è sempre questo margine fisso SOPRA la spalla — non un numero
-// separato da tenere sincronizzato a mano in un altro file
+export const FRAZIONE_SPALLA_MESH = 0.82;
 const MARGINE_COLLO = 0.05;
 export const FRAZIONE_COLLO_MESH = FRAZIONE_SPALLA_MESH + MARGINE_COLLO;
 
-// stesso bordo di avvolgimento usato dal tessuto del busto in tessuto.js:
-// il tessuto copre solo da -126° a +126°, non un cerchio completo
+export const OFFSET_X_SPALLA = 0.85;
+
 const ANGOLO_BORDO_TESSUTO = Math.PI * 0.7;
+
 const MANICA_PER_CATEGORIA = {
   Camicie: "lunga",
   Magliette: "corta",
@@ -37,32 +32,18 @@ export function lunghezzaManica(categoria, modello) {
 export const COLONNE_MANICA = 10;
 export const RIGHE_MANICA = 6;
 
-// quanto della lunghezza reale del braccio copre ciascun tipo di manica:
-// corta arriva a circa un terzo del braccio, lunga fino al polso
 const COPERTURA_BRACCIO = {
   corta: 0.35,
   lunga: 1,
 };
 
-// raggi di riferimento (circonferenza/2π), scalati poi con le circonferenze
-// reali della persona (scalaBicipite/scalaPolso) invece che con le spalle
 const RAGGIO_BICIPITE_RIFERIMENTO = 28 / (2 * Math.PI) / 100;
 const RAGGIO_FINE_RIFERIMENTO = {
   corta: 26 / (2 * Math.PI) / 100,
   lunga: 16 / (2 * Math.PI) / 100,
 };
 
-const MARGINE_SPALLA = 0.04;
-
-export function frazioneFineManica(proporzioni, lunghezza) {
-  const copertura = COPERTURA_BRACCIO[lunghezza] ?? 0;
-  const frazione =
-    FRAZIONE_SPALLA_MESH - proporzioni.frazioneBraccio * copertura;
-  return Math.max(
-    proporzioni.frazioneGinocchio,
-    Math.min(frazione, FRAZIONE_SPALLA_MESH - 0.05),
-  );
-}
+const MARGINE_SPALLA = 0.045; // prima era 0.04: un filo più ampio per coprire lo scarto col tessuto simulato
 
 function altezzaFineManica(ySpalla, corpo, proporzioni, lunghezza) {
   const copertura = COPERTURA_BRACCIO[lunghezza] ?? 0;
@@ -115,6 +96,7 @@ export function creaManica(
       uv[i * 2 + 1] = 1 - t;
     }
   }
+
   const indici = [];
   for (let riga = 0; riga < RIGHE_MANICA - 1; riga++) {
     for (let colonna = 0; colonna < COLONNE_MANICA; colonna++) {

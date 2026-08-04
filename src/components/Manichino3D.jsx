@@ -12,8 +12,8 @@ import {
   FRAZIONE_SPALLA_MESH,
   OFFSET_X_SPALLA,
 } from "../utils/maniche";
+import { creaGamba, OFFSET_X_GAMBA } from "../utils/gambe";
 
-//calcoliamo le zone personalizzate
 function zonaPerCategoria(categoria, proporzioni) {
   const {
     frazioneCollo,
@@ -21,14 +21,13 @@ function zonaPerCategoria(categoria, proporzioni) {
     frazioneFianchi,
     frazioneCoscia,
     frazioneGinocchio,
-    frazioneCaviglia,
   } = proporzioni;
 
   switch (categoria) {
     case "Camicie":
-      return { da: frazioneVita - 0.02, a: frazioneCollo };
+      return { da: frazioneVita + 0.02, a: frazioneCollo };
     case "Magliette":
-      return { da: frazioneVita - 0.02, a: frazioneCollo - 0.03 };
+      return { da: frazioneVita + 0.03, a: frazioneCollo - 0.03 };
     case "Cardigan":
       return { da: frazioneFianchi - 0.05, a: frazioneCollo };
     case "Giacche":
@@ -39,13 +38,14 @@ function zonaPerCategoria(categoria, proporzioni) {
     case "Gonne":
       return { da: frazioneCoscia, a: frazioneVita + 0.03 };
     case "Pantaloni":
-      return { da: frazioneCaviglia + 0.01, a: frazioneVita + 0.02 };
+      // solo il "cinturino" superiore: da qui in giù le due gambe sono
+      // due tubi separati (vedi aggiornaGambe), non un unico avvolgimento
+      return { da: frazioneCoscia, a: frazioneVita + 0.02 };
     default:
       return null;
   }
 }
 
-// il file è esportato in millimetri, la nostra scena ragiona in "metri"
 const SCALA_MM_A_METRI = 0.001;
 
 function percorsoModello(genere) {
@@ -92,8 +92,6 @@ function trovaXRealeAFrazione(
       const fattore = fattoreScalaPerAltezza(frazioniAltezza[i], proporzioni);
       const x = posizioniOriginali[i * 3] * fattore;
       const z = posizioniOriginali[i * 3 + 2] * fattore;
-      // premia una x grande (lontano dal centro) e penalizza una z grande
-      // (avanti/indietro): il vero braccio sporge di lato, non avanti o dietro
       const punteggio = Math.abs(x) - Math.abs(z);
       if (punteggio > migliorPunteggio) {
         migliorPunteggio = punteggio;
@@ -180,6 +178,50 @@ function aggiornaManiche(
   });
 }
 
+function aggiornaGambe(s, corpo, proporzioni, categoria, scalaTotale) {
+  if (categoria !== "Pantaloni" || !s.meshCorpo) {
+    s.meshGambaSx.visible = false;
+    s.meshGambaDx.visible = false;
+    return;
+  }
+
+  const xGambaLocale = trovaXRealeAFrazione(
+    s.meshCorpo,
+    proporzioni.frazioneCoscia,
+    proporzioni,
+  );
+
+  if (!xGambaLocale) {
+    s.meshGambaSx.visible = false;
+    s.meshGambaDx.visible = false;
+    return;
+  }
+
+  const xGambaMetri = xGambaLocale * scalaTotale * OFFSET_X_GAMBA;
+  const yAlto =
+    corpo.yPiedi + corpo.altezzaModello * proporzioni.frazioneCoscia;
+
+  [
+    [s.meshGambaSx, -xGambaMetri],
+    [s.meshGambaDx, xGambaMetri],
+  ].forEach(([meshGamba, xGamba]) => {
+    const { posizioni, uv, indici } = creaGamba(
+      corpo,
+      proporzioni,
+      xGamba,
+      yAlto,
+    );
+    meshGamba.geometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(posizioni, 3),
+    );
+    meshGamba.geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+    meshGamba.geometry.setIndex(indici);
+    meshGamba.geometry.computeVertexNormals();
+    meshGamba.visible = true;
+  });
+}
+
 function Manichino3D({
   proporzioni,
   coloreHex,
@@ -230,16 +272,13 @@ function Manichino3D({
     controls.maxDistance = 8;
     controls.target.set(0, 1, 0);
 
-    // il manichino vero e proprio (FBX) viene caricato dentro questo
-    // gruppo vuoto: così possiamo scalarlo/spostarlo e sostituirlo senza
-    // toccare il resto della scena
     const gruppoManichino = new THREE.Group();
     scene.add(gruppoManichino);
 
     const materialeTessuto = new THREE.MeshStandardMaterial({
       color: "#ffffff",
       side: THREE.DoubleSide,
-      transparent: true,
+      transparent: false,
     });
 
     const geoTessuto = new THREE.BufferGeometry();
@@ -313,6 +352,20 @@ function Manichino3D({
     meshToppaDx.castShadow = true;
     scene.add(meshToppaSx, meshToppaDx);
 
+    const meshGambaSx = new THREE.Mesh(
+      new THREE.BufferGeometry(),
+      materialeTessuto,
+    );
+    const meshGambaDx = new THREE.Mesh(
+      new THREE.BufferGeometry(),
+      materialeTessuto,
+    );
+    meshGambaSx.visible = false;
+    meshGambaDx.visible = false;
+    meshGambaSx.castShadow = true;
+    meshGambaDx.castShadow = true;
+    scene.add(meshGambaSx, meshGambaDx);
+
     sceneRef.current = {
       gruppoManichino,
       controls,
@@ -325,6 +378,8 @@ function Manichino3D({
       meshManicaDx,
       meshToppaSx,
       meshToppaDx,
+      meshGambaSx,
+      meshGambaDx,
       tessuto: null,
       proporzioni: null,
       altezzaCorrente: 1,
@@ -368,7 +423,6 @@ function Manichino3D({
     };
   }, []);
 
-  // carica il modello FBX giusto (uomo/donna) quando cambia il genere
   useEffect(() => {
     if (!sceneRef.current) return;
     const s = sceneRef.current;
@@ -400,6 +454,7 @@ function Manichino3D({
         bbox.getSize(dimensioni);
 
         oggetto.updateMatrixWorld(true);
+
         let meshCorpo = null;
         oggetto.traverse((figlio) => {
           if (figlio.isMesh && figlio.name === "body") meshCorpo = figlio;
@@ -455,6 +510,13 @@ function Manichino3D({
             modelloRef.current,
             SCALA_MM_A_METRI * s.altezzaCorrente,
           );
+          aggiornaGambe(
+            s,
+            corpoAttuale,
+            proporzioniRef.current,
+            categoriaRef.current,
+            SCALA_MM_A_METRI * s.altezzaCorrente,
+          );
         }
 
         s.gruppoManichino.add(oggetto);
@@ -472,7 +534,6 @@ function Manichino3D({
     };
   }, [genere]);
 
-  // scala/posiziona il manichino e ricrea la zona del tessuto sulle misure
   useEffect(() => {
     if (!sceneRef.current) return;
     const s = sceneRef.current;
@@ -512,18 +573,17 @@ function Manichino3D({
       );
       s.corpo = corpo;
       s.proporzioni = proporzioniReali;
-      s.corpo = corpo;
     } else {
       s.tessuto = null;
       s.meshTessuto.visible = false;
     }
 
     aggiornaManiche(s, corpo, proporzioni, categoria, modello, scalaTotale);
+    aggiornaGambe(s, corpo, proporzioni, categoria, scalaTotale);
 
     s.altezzaCorrente = altezza;
   }, [proporzioni, categoria, modello]);
 
-  // carica e colora la bozza scelta, la disegna sopra il manichino
   useEffect(() => {
     if (!sceneRef.current) return;
     const { meshTessuto } = sceneRef.current;

@@ -6,8 +6,7 @@ export const RIGHE = 20;
 const GRAVITA = -0.0015;
 const SMORZAMENTO = 0.98;
 const ITERAZIONI_VINCOLI = 4;
-// raggio ricavato dalla circonferenza toracica di riferimento (96 cm),
-// trattando la sezione del busto come un cerchio: raggio = circonferenza / (2π)
+const MARGINE_TESSUTO = 0.015;
 
 export function raggioTorace(frazione, proporzioni) {
   return raggioRealePerAltezza(frazione, proporzioni);
@@ -17,7 +16,6 @@ export function creaTessuto(altezzaZona, centroY, corpo, proporzioni) {
   const particelle = [];
   const yAlto = centroY + altezzaZona / 2;
   const yBasso = centroY - altezzaZona / 2;
-  const margine = 0.01;
 
   for (let riga = 0; riga < RIGHE; riga++) {
     const t = riga / (RIGHE - 1);
@@ -26,7 +24,7 @@ export function creaTessuto(altezzaZona, centroY, corpo, proporzioni) {
       corpo.altezzaModello > 0
         ? (y - corpo.yPiedi) / corpo.altezzaModello
         : 0.7;
-    const raggio = raggioTorace(frazione, proporzioni) + margine;
+    const raggio = raggioTorace(frazione, proporzioni) + MARGINE_TESSUTO;
 
     for (let colonna = 0; colonna < COLONNE; colonna++) {
       const u = colonna / (COLONNE - 1);
@@ -108,11 +106,11 @@ export function aggiornaTessuto(tessuto, corpo, proporzioni) {
       corpo.altezzaModello > 0
         ? (p.y - corpo.yPiedi) / corpo.altezzaModello
         : 0.7;
-    const raggio = raggioTorace(frazione, proporzioni) + 0.01;
+    const raggio = raggioTorace(frazione, proporzioni) + MARGINE_TESSUTO;
     const distanzaAsse = Math.sqrt(p.x * p.x + p.z * p.z) || 0.0001;
 
     const differenza = raggio - distanzaAsse;
-    const aderenza = 0.35;
+    const aderenza = 0.55; // prima era 0.35: più aderente, meno scarto residuo
     const nuovaDistanza = distanzaAsse + differenza * aderenza;
     const fattore = nuovaDistanza / distanzaAsse;
 
