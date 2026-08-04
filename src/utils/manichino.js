@@ -75,29 +75,7 @@ export function calcolaProporzioni(misure) {
 
   const frazioneBraccio = manica / altezza;
 
-  const DUE_PI = 2 * Math.PI;
-  const raggioCollo = collo / DUE_PI / 100;
-  const raggioTorace = torace / DUE_PI / 100;
-  const raggioBusto = busto / DUE_PI / 100;
-  const raggioVita = vita / DUE_PI / 100;
-  const raggioFianchi = fianchi / DUE_PI / 100;
-  const raggioCoscia = coscia / DUE_PI / 100;
-  const raggioGinocchio = ginocchio / DUE_PI / 100;
-  const raggioCaviglia = caviglia / DUE_PI / 100;
-  // "spalle" è una larghezza, non una circonferenza: usiamo metà come raggio
-  // approssimativo così il tessuto resta largo quanto le vere spalle
-  const raggioSpalleTessuto = spalle / 2 / 100;
-
   return {
-    raggioCollo,
-    raggioTorace,
-    raggioBusto,
-    raggioVita,
-    raggioFianchi,
-    raggioCoscia,
-    raggioGinocchio,
-    raggioCaviglia,
-    raggioSpalleTessuto,
     scalaAltezza,
     scalaCollo,
     scalaSpalle,

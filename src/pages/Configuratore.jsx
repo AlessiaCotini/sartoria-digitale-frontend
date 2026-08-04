@@ -145,6 +145,13 @@ function Configuratore() {
 
   const proporzioni = calcolaProporzioni(misure);
 
+  const opzioneChiusura = opzioni.find(
+    (o) => o.id === opzioniSelezionate.CHIUSURA,
+  );
+  const opzioneVestibilita = opzioni.find(
+    (o) => o.id === opzioniSelezionate.VESTIBILITA,
+  );
+
   return (
     <section className="section">
       <div className="container">
@@ -282,6 +289,8 @@ function Configuratore() {
                 categoria={capo?.categoria}
                 genere={capo?.genere}
                 modello={capo?.modello}
+                chiusura={opzioneChiusura?.nome}
+                vestibilita={opzioneVestibilita?.nome}
               />
             </div>
             <p className="text-muted small text-center mt-2">
