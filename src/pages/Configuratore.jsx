@@ -12,6 +12,7 @@ import {
   impostaColore,
   impostaCapo,
 } from "../store/configuratoreSlice";
+import { percorsoSagoma } from "../utils/sagome";
 
 function Configuratore() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -152,6 +153,9 @@ function Configuratore() {
     (o) => o.id === opzioniSelezionate.VESTIBILITA,
   );
   const opzioneTasche = opzioni.find((o) => o.id === opzioniSelezionate.TASCHE);
+  const opzioneSpacco = opzioni.find(
+    (o) => o.id === opzioniSelezionate.SPACCHI,
+  );
 
   return (
     <section className="section">
@@ -221,35 +225,41 @@ function Configuratore() {
 
             {opzioni.length > 0 && (
               <div className="mb-4">
-                {["CHIUSURA", "TASCHE", "VESTIBILITA"].map((tipo) => {
-                  const opzioniDelTipo = opzioni.filter((o) => o.tipo === tipo);
-                  if (opzioniDelTipo.length === 0) return null;
+                {["CHIUSURA", "TASCHE", "VESTIBILITA", "SPACCHI"].map(
+                  (tipo) => {
+                    const opzioniDelTipo = opzioni.filter(
+                      (o) => o.tipo === tipo,
+                    );
+                    if (opzioniDelTipo.length === 0) return null;
 
-                  return (
-                    <div key={tipo} className="mb-3">
-                      <p className="step-label mb-2">
-                        {tipo === "CHIUSURA"
-                          ? "Chiusura"
-                          : tipo === "TASCHE"
-                            ? "Tasche"
-                            : "Vestibilità"}
-                      </p>
-                      <div className="filter-group justify-content-start">
-                        {opzioniDelTipo.map((o) => (
-                          <button
-                            key={o.id}
-                            type="button"
-                            className={`filter-tab ${opzioniSelezionate[tipo] === o.id ? "active" : ""}`}
-                            onClick={() => handleSelezionaOpzione(tipo, o.id)}
-                          >
-                            {o.nome}
-                            {o.sovrapprezzo > 0 && ` (+€${o.sovrapprezzo})`}
-                          </button>
-                        ))}
+                    return (
+                      <div key={tipo} className="mb-3">
+                        <p className="step-label mb-2">
+                          {tipo === "CHIUSURA"
+                            ? "Chiusura"
+                            : tipo === "TASCHE"
+                              ? "Tasche"
+                              : tipo === "SPACCHI"
+                                ? "Spacco"
+                                : "Vestibilità"}
+                        </p>
+                        <div className="filter-group justify-content-start">
+                          {opzioniDelTipo.map((o) => (
+                            <button
+                              key={o.id}
+                              type="button"
+                              className={`filter-tab ${opzioniSelezionate[tipo] === o.id ? "active" : ""}`}
+                              onClick={() => handleSelezionaOpzione(tipo, o.id)}
+                            >
+                              {o.nome}
+                              {o.sovrapprezzo > 0 && ` (+€${o.sovrapprezzo})`}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  },
+                )}
               </div>
             )}
 
@@ -290,13 +300,16 @@ function Configuratore() {
               <Manichino3D
                 proporzioni={proporzioni}
                 coloreHex={colore.hex}
-                immagineCapo={capo?.immagine}
+                immagineCapo={
+                  capo ? percorsoSagoma(capo.categoria, capo.genere) : null
+                }
                 categoria={capo?.categoria}
                 genere={capo?.genere}
                 modello={capo?.modello}
                 chiusura={opzioneChiusura?.nome}
                 vestibilita={opzioneVestibilita?.nome}
                 tasche={opzioneTasche?.nome}
+                spacco={opzioneSpacco?.nome}
               />
             </div>
             <p className="text-muted small text-center mt-2">

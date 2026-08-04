@@ -51,7 +51,7 @@ function deformaConOssa(oggetto, proporzioni) {
 }
 
 // zona verticale (frazioni 0-1, piedi->testa) coperta dal disegno del capo
-function zonaCapo(categoria, proporzioni) {
+function zonaCapo(categoria, genere, proporzioni) {
   const {
     frazioneCollo,
     frazioneVita,
@@ -71,7 +71,9 @@ function zonaCapo(categoria, proporzioni) {
     case "Completi":
       return { da: frazioneFianchi - 0.04, a: frazioneCollo };
     case "Abiti":
-      return { da: frazioneGinocchio, a: frazioneCollo };
+      return genere === "Uomo"
+        ? { da: frazioneFianchi - 0.04, a: frazioneCollo }
+        : { da: frazioneGinocchio, a: frazioneCollo };
     case "Gonne":
       return { da: frazioneGinocchio, a: frazioneVita + 0.03 };
     case "Pantaloni":
@@ -91,6 +93,7 @@ function Manichino3D({
   chiusura,
   vestibilita,
   tasche,
+  spacco,
 }) {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
@@ -98,6 +101,13 @@ function Manichino3D({
   const proporzioniRef = useRef(proporzioni);
   const categoriaRef = useRef(categoria);
   const modelloRef = useRef(modello);
+  const genereRef = useRef(genere);
+  useEffect(() => {
+    proporzioniRef.current = proporzioni;
+    categoriaRef.current = categoria;
+    modelloRef.current = modello;
+    genereRef.current = genere;
+  });
   useEffect(() => {
     proporzioniRef.current = proporzioni;
     categoriaRef.current = categoria;
@@ -305,7 +315,7 @@ function Manichino3D({
       s.controls.target.set(0, yPiedi + altezzaModello * 0.55, 0);
     }
 
-    const zona = zonaCapo(categoria, proporzioni);
+    const zona = zonaCapo(categoria, genere, proporzioni);
     if (zona && s.meshOverlay) {
       const yAlto = yPiedi + zona.a * altezzaModello;
       const yBasso = yPiedi + zona.da * altezzaModello;
@@ -412,6 +422,23 @@ function Manichino3D({
             });
           }
 
+          if (spacco === "Laterale" || spacco === "Centrale") {
+            const altezzaSpacco = canvas.height * 0.22;
+            const yFine = canvas.height * 0.98;
+            const yInizio = yFine - altezzaSpacco;
+            const x =
+              spacco === "Centrale"
+                ? canvas.width / 2
+                : canvas.width / 2 + canvas.width * 0.16;
+
+            ctx.strokeStyle = "#2b2620";
+            ctx.lineWidth = canvas.width * 0.006;
+            ctx.beginPath();
+            ctx.moveTo(x, yInizio);
+            ctx.lineTo(x, yFine);
+            ctx.stroke();
+          }
+
           const texture = new THREE.CanvasTexture(canvas);
           texture.needsUpdate = true;
 
@@ -422,16 +449,21 @@ function Manichino3D({
           const yPiedi2 = -0.9;
           const altezzaModello2 =
             (s.altezzaNativaMM || 1900) * SCALA_MM_A_METRI * s.altezzaCorrente;
-          const zona2 = zonaCapo(categoriaRef.current, proporzioniRef.current);
+          const zona2 = zonaCapo(
+            categoriaRef.current,
+            genereRef.current,
+            proporzioniRef.current,
+          );
           if (zona2) {
             const yAlto2 = yPiedi2 + zona2.a * altezzaModello2;
             const yBasso2 = yPiedi2 + zona2.da * altezzaModello2;
             const altezzaOverlay2 = yAlto2 - yBasso2;
             const fattoreVestibilita2 = vestibilita === "Oversize" ? 1.15 : 1;
             const scalaLarghezza2 =
-              categoria === "Gonne" || categoria === "Pantaloni"
-                ? proporzioni.scalaFianchi * 1.6
-                : proporzioni.scalaTorace;
+              categoriaRef.current === "Gonne" ||
+              categoriaRef.current === "Pantaloni"
+                ? proporzioniRef.current.scalaFianchi * 1.6
+                : proporzioniRef.current.scalaTorace;
             s.meshOverlay.scale.set(
               altezzaOverlay2 * aspetto * scalaLarghezza2 * fattoreVestibilita2,
               altezzaOverlay2,
@@ -449,7 +481,7 @@ function Manichino3D({
     return () => {
       annullato = true;
     };
-  }, [immagineCapo, coloreHex, chiusura, tasche]);
+  }, [immagineCapo, coloreHex, chiusura, tasche, spacco]);
 
   return (
     <div
