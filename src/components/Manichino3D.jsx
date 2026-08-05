@@ -63,12 +63,12 @@ function zonaCapo(categoria, genere, proporzioni) {
 
   switch (categoria) {
     case "Camicie":
-      return { da: frazioneFianchi - 0.03, a: frazioneCollo };
+      return { da: frazioneFianchi - 0.09, a: frazioneCollo };
     case "Magliette":
-      return { da: frazioneVita - 0.1, a: frazioneCollo };
+      return { da: frazioneVita - 0.12, a: frazioneCollo };
     case "Abiti":
       return genere === "Uomo"
-        ? { da: frazioneFianchi - 0.04, a: frazioneCollo }
+        ? { da: frazioneFianchi - 0.06, a: frazioneCollo }
         : { da: frazioneGinocchio, a: frazioneCollo };
     case "Gonne":
       return { da: frazioneGinocchio, a: frazioneVita + 0.03 };
@@ -309,9 +309,11 @@ function Manichino3D({
       const fattoreVestibilita =
         vestibilitaRef.current === "Oversize" ? 1.15 : 1;
       const scalaLarghezza =
-        categoria === "Gonne" || categoria === "Pantaloni"
-          ? proporzioni.scalaFianchi * 1.1
-          : proporzioni.scalaTorace;
+        categoria === "Gonne"
+          ? proporzioni.scalaFianchi * 1.2
+          : categoria === "Pantaloni"
+            ? proporzioni.scalaFianchi * 1.4
+            : proporzioni.scalaTorace;
       const larghezzaOverlay =
         altezzaOverlay * s.aspettoCapo * scalaLarghezza * fattoreVestibilita;
 
