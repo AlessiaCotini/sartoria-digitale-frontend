@@ -62,14 +62,12 @@ function zonaCapo(categoria, genere, proporzioni) {
 
   switch (categoria) {
     case "Camicie":
-      return { da: frazioneVita + 0.02, a: frazioneCollo };
-    case "Magliette":
-      return { da: frazioneVita + 0.08, a: frazioneCollo - 0.01 };
     case "Cardigan":
-      return { da: frazioneFianchi - 0.05, a: frazioneCollo };
     case "Giacche":
     case "Completi":
-      return { da: frazioneFianchi - 0.04, a: frazioneCollo };
+      return { da: frazioneFianchi - 0.03, a: frazioneCollo };
+    case "Magliette":
+      return { da: frazioneVita + 0.08, a: frazioneCollo - 0.01 };
     case "Abiti":
       return genere === "Uomo"
         ? { da: frazioneFianchi - 0.04, a: frazioneCollo }

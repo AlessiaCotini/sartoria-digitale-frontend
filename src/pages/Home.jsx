@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getCapi } from "../api/catalogo";
+import { percorsoSagoma } from "../utils/sagome";
 
 function Home() {
   const [capiInEvidenza, setCapiInEvidenza] = useState([]);
@@ -156,13 +157,10 @@ function Home() {
               <div className="col-md-4" key={capo.id}>
                 <div className="product-card">
                   <div className="product-thumb">
-                    {capo.immagine ? (
-                      <img src={capo.immagine} alt={capo.nome} />
-                    ) : (
-                      <span className="small">
-                        {capo.nome} — foto in arrivo
-                      </span>
-                    )}
+                    <img
+                      src={percorsoSagoma(capo.categoria, capo.genere)}
+                      alt={capo.nome}
+                    />
                   </div>
                   <div className="product-body">
                     <span className="badge-soft">{capo.categoria}</span>

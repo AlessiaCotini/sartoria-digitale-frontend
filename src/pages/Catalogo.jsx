@@ -4,6 +4,7 @@ import { getCapi } from "../api/catalogo";
 import { impostaCapo } from "../store/configuratoreSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { percorsoSagoma } from "../utils/sagome";
 
 function Catalogo() {
   const [catalogo, setCatalogo] = useState([]);
@@ -131,13 +132,10 @@ function Catalogo() {
               <div className="product-card">
                 <Link to={`/catalogo/${capo.id}`}>
                   <div className="product-thumb">
-                    {capo.immagine ? (
-                      <img src={capo.immagine} alt={capo.nome} />
-                    ) : (
-                      <span className="small">
-                        {capo.nome} — foto in arrivo
-                      </span>
-                    )}
+                    <img
+                      src={percorsoSagoma(capo.categoria, capo.genere)}
+                      alt={capo.nome}
+                    />
                   </div>
                 </Link>
                 <div className="product-body">

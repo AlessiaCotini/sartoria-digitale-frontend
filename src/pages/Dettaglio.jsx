@@ -4,6 +4,7 @@ import { getCapo } from "../api/catalogo";
 import { impostaCapo } from "../store/configuratoreSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { percorsoSagoma } from "../utils/sagome";
 
 function Dettaglio() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -70,11 +71,10 @@ function Dettaglio() {
           <div className="col-lg-6">
             <div className="product-card">
               <div className="product-thumb" style={{ aspectRatio: "3/4" }}>
-                {capo.immagine ? (
-                  <img src={capo.immagine} alt={capo.nome} />
-                ) : (
-                  <span className="small">{capo.nome} — foto in arrivo</span>
-                )}
+                <img
+                  src={percorsoSagoma(capo.categoria, capo.genere)}
+                  alt={capo.nome}
+                />
               </div>
             </div>
           </div>
