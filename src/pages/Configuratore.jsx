@@ -12,7 +12,6 @@ import {
   impostaColore,
   impostaCapo,
 } from "../store/configuratoreSlice";
-import { percorsoSagoma } from "../utils/sagome";
 
 function Configuratore() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -78,7 +77,7 @@ function Configuratore() {
     let attivo = true;
 
     const promessa = capo
-      ? getOpzioni(capo.categoria.toUpperCase())
+      ? getOpzioni(capo.categoriaBackend)
       : Promise.resolve([]);
 
     promessa.then((lista) => {
@@ -300,9 +299,6 @@ function Configuratore() {
               <Manichino3D
                 proporzioni={proporzioni}
                 coloreHex={colore.hex}
-                immagineCapo={
-                  capo ? percorsoSagoma(capo.categoria, capo.genere) : null
-                }
                 categoria={capo?.categoria}
                 genere={capo?.genere}
                 modello={capo?.modello}

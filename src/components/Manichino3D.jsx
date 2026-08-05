@@ -3,10 +3,11 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { coloraSvg } from "../utils/coloraSvg";
+import { percorsoSagoma } from "../utils/sagome";
 
 const SCALA_MM_A_METRI = 0.001;
 const COLORE_PELLE = "#b5aea3";
-const COLORE_SFONDO = "#dcd3c0"; // sabbia del sito, aggiusta se serve
+const COLORE_SFONDO = "#dcd3c0";
 
 function percorsoModello(genere) {
   return genere === "Uomo"
@@ -62,12 +63,9 @@ function zonaCapo(categoria, genere, proporzioni) {
 
   switch (categoria) {
     case "Camicie":
-    case "Cardigan":
-    case "Giacche":
-    case "Completi":
       return { da: frazioneFianchi - 0.03, a: frazioneCollo };
     case "Magliette":
-      return { da: frazioneVita + 0.08, a: frazioneCollo - 0.01 };
+      return { da: frazioneVita - 0.1, a: frazioneCollo };
     case "Abiti":
       return genere === "Uomo"
         ? { da: frazioneFianchi - 0.04, a: frazioneCollo }
@@ -81,10 +79,106 @@ function zonaCapo(categoria, genere, proporzioni) {
   }
 }
 
+// carica un SVG, lo colora, lo disegna su canvas (con eventuali decorazioni) e
+// restituisce la texture pronta per Three.js insieme al suo aspetto (w/h)
+function caricaTexture(percorso, coloreHex, disegnaDecorazioni) {
+  return fetch(percorso)
+    .then((r) => r.text())
+    .then(
+      (testoSvg) =>
+        new Promise((resolve, reject) => {
+          const { svgColorato, aspetto } = coloraSvg(testoSvg, coloreHex);
+          const immagine = new Image();
+          immagine.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = 1024;
+            canvas.height = 1536;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(immagine, 0, 0, 1024, 1536);
+            if (disegnaDecorazioni) disegnaDecorazioni(ctx, canvas);
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.needsUpdate = true;
+            resolve({ texture, aspetto });
+          };
+          immagine.onerror = reject;
+          immagine.src =
+            "data:image/svg+xml;charset=utf-8," +
+            encodeURIComponent(svgColorato);
+        }),
+    );
+}
+
+function disegnaDecorazioni(ctx, canvas, { chiusura, tasche, spacco }) {
+  if (chiusura === "Bottoni") {
+    ctx.fillStyle = "#2b2620";
+    const numeroBottoni = 7;
+    for (let i = 0; i < numeroBottoni; i++) {
+      const y = canvas.height * (0.1 + i * (0.78 / (numeroBottoni - 1)));
+      ctx.beginPath();
+      ctx.arc(canvas.width / 2, y, canvas.width * 0.01, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  } else if (chiusura === "Zip") {
+    ctx.strokeStyle = "#2b2620";
+    ctx.lineWidth = canvas.width * 0.01;
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, canvas.height * 0.1);
+    ctx.lineTo(canvas.width / 2, canvas.height * 0.88);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(
+      canvas.width / 2,
+      canvas.height * 0.1,
+      canvas.width * 0.016,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fillStyle = "#2b2620";
+    ctx.fill();
+  }
+
+  if (tasche === "Toppa" || tasche === "A filo") {
+    const y = canvas.height * 0.28;
+    const larghezzaTasca = canvas.width * 0.14;
+    const altezzaTasca = canvas.height * 0.09;
+    const offsetX = canvas.width * 0.2;
+
+    [-1, 1].forEach((lato) => {
+      const x = canvas.width / 2 + lato * offsetX - larghezzaTasca / 2;
+      ctx.strokeStyle = "#2b2620";
+      ctx.lineWidth = canvas.width * 0.004;
+      if (tasche === "Toppa") {
+        ctx.strokeRect(x, y, larghezzaTasca, altezzaTasca);
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(x, y + altezzaTasca);
+        ctx.lineTo(x + larghezzaTasca, y + altezzaTasca);
+        ctx.stroke();
+      }
+    });
+  }
+
+  if (spacco === "Laterale" || spacco === "Centrale") {
+    const altezzaSpacco = canvas.height * 0.22;
+    const yFine = canvas.height * 0.98;
+    const yInizio = yFine - altezzaSpacco;
+    const x =
+      spacco === "Centrale"
+        ? canvas.width / 2
+        : canvas.width / 2 + canvas.width * 0.16;
+
+    ctx.strokeStyle = "#2b2620";
+    ctx.lineWidth = canvas.width * 0.006;
+    ctx.beginPath();
+    ctx.moveTo(x, yInizio);
+    ctx.lineTo(x, yFine);
+    ctx.stroke();
+  }
+}
+
 function Manichino3D({
   proporzioni,
   coloreHex,
-  immagineCapo,
   categoria,
   genere,
   modello,
@@ -98,17 +192,12 @@ function Manichino3D({
 
   const proporzioniRef = useRef(proporzioni);
   const categoriaRef = useRef(categoria);
-  const modelloRef = useRef(modello);
   const genereRef = useRef(genere);
+  const modelloRef = useRef(modello);
   useEffect(() => {
     proporzioniRef.current = proporzioni;
     categoriaRef.current = categoria;
-    modelloRef.current = modello;
     genereRef.current = genere;
-  });
-  useEffect(() => {
-    proporzioniRef.current = proporzioni;
-    categoriaRef.current = categoria;
     modelloRef.current = modello;
   });
 
@@ -153,7 +242,6 @@ function Manichino3D({
     pavimento.receiveShadow = true;
     scene.add(pavimento);
 
-    // il disegno piatto del capo, mostrato pulito davanti al manichino
     const materialeOverlay = new THREE.MeshBasicMaterial({
       transparent: true,
       side: THREE.DoubleSide,
@@ -200,6 +288,46 @@ function Manichino3D({
     };
   }, []);
 
+  function aggiornaOverlay() {
+    const s = sceneRef.current;
+    if (!s || !s.meshOverlay) return;
+
+    const categoria = categoriaRef.current;
+    const genere = genereRef.current;
+    const proporzioni = proporzioniRef.current;
+
+    const yPiedi = -0.9;
+    const altezzaModello =
+      (s.altezzaNativaMM || 1900) * SCALA_MM_A_METRI * s.altezzaCorrente;
+
+    const zona = zonaCapo(categoria, genere, proporzioni);
+    if (zona && s.aspettoCapo) {
+      const yAlto = yPiedi + zona.a * altezzaModello;
+      const yBasso = yPiedi + zona.da * altezzaModello;
+      const centroY = (yAlto + yBasso) / 2;
+      const altezzaOverlay = yAlto - yBasso;
+      const fattoreVestibilita =
+        vestibilitaRef.current === "Oversize" ? 1.15 : 1;
+      const scalaLarghezza =
+        categoria === "Gonne" || categoria === "Pantaloni"
+          ? proporzioni.scalaFianchi * 1.1
+          : proporzioni.scalaTorace;
+      const larghezzaOverlay =
+        altezzaOverlay * s.aspettoCapo * scalaLarghezza * fattoreVestibilita;
+
+      s.meshOverlay.position.set(0, centroY, altezzaModello * 0.06);
+      s.meshOverlay.scale.set(larghezzaOverlay, altezzaOverlay, 1);
+      s.meshOverlay.visible = !!s.meshOverlay.material.map;
+    } else {
+      s.meshOverlay.visible = false;
+    }
+  }
+
+  const vestibilitaRef = useRef(vestibilita);
+  useEffect(() => {
+    vestibilitaRef.current = vestibilita;
+  });
+
   // carica il modello FBX giusto per il genere
   useEffect(() => {
     if (!sceneRef.current) return;
@@ -244,26 +372,6 @@ function Manichino3D({
         const dimensioni = new THREE.Vector3();
         bbox.getSize(dimensioni);
 
-        oggetto.updateMatrixWorld(true);
-        [
-          "mixamorigHips",
-          "mixamorigSpine",
-          "mixamorigSpine1",
-          "mixamorigSpine2",
-          "mixamorigNeck",
-          "mixamorigLeftUpLeg",
-          "mixamorigLeftLeg",
-          "mixamorigLeftFoot",
-        ].forEach((nome) => {
-          const osso = oggetto.getObjectByName(nome);
-          if (osso) {
-            const pos = new THREE.Vector3();
-            osso.getWorldPosition(pos);
-            const frazione = (pos.y - bbox.min.y) / dimensioni.y;
-            console.log(nome, "->", frazione.toFixed(3));
-          }
-        });
-
         oggetto.position.y = -bbox.min.y;
         oggetto.position.x = -(bbox.min.x + bbox.max.x) / 2;
         oggetto.position.z = -(bbox.min.z + bbox.max.z) / 2;
@@ -280,6 +388,7 @@ function Manichino3D({
         s.gruppoManichino.add(oggetto);
         s.modelloCorrente = oggetto;
         s.genereCaricato = percorso;
+        aggiornaOverlay();
       },
       undefined,
       (errore) => {
@@ -290,6 +399,7 @@ function Manichino3D({
     return () => {
       annullato = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [genere]);
 
   // scala il corpo con le ossa e riposiziona la sovraimpressione del capo
@@ -301,6 +411,7 @@ function Manichino3D({
     const scalaTotale = SCALA_MM_A_METRI * altezza;
     s.gruppoManichino.scale.set(scalaTotale, scalaTotale, scalaTotale);
     s.gruppoManichino.position.set(0, -0.9, 0);
+    s.altezzaCorrente = altezza;
 
     if (s.modelloCorrente) {
       deformaConOssa(s.modelloCorrente, proporzioni);
@@ -313,164 +424,33 @@ function Manichino3D({
       s.controls.target.set(0, yPiedi + altezzaModello * 0.55, 0);
     }
 
-    const zona = zonaCapo(categoria, genere, proporzioni);
-    if (zona && s.meshOverlay) {
-      const yAlto = yPiedi + zona.a * altezzaModello;
-      const yBasso = yPiedi + zona.da * altezzaModello;
-      const centroY = (yAlto + yBasso) / 2;
-      const altezzaOverlay = yAlto - yBasso;
-      const fattoreVestibilita = vestibilita === "Oversize" ? 1.15 : 1;
-      const aspetto = s.aspettoCapo || 0.6;
-      const scalaLarghezza =
-        categoria === "Gonne" || categoria === "Pantaloni"
-          ? proporzioni.scalaFianchi * 1.6
-          : proporzioni.scalaTorace;
-      const larghezzaOverlay =
-        altezzaOverlay * aspetto * scalaLarghezza * fattoreVestibilita;
+    aggiornaOverlay();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [proporzioni, categoria, genere, modello, vestibilita]);
 
-      s.meshOverlay.position.set(0, centroY, altezzaModello * 0.06);
-      s.meshOverlay.scale.set(larghezzaOverlay, altezzaOverlay, 1);
-      s.meshOverlay.visible = !!s.meshOverlay.material.map;
-    } else if (s.meshOverlay) {
-      s.meshOverlay.visible = false;
-    }
-
-    s.altezzaCorrente = altezza;
-  }, [proporzioni, categoria, modello, vestibilita]);
-
-  // costruisce la texture del capo (trasparente, non deformata) per la
-  // sovraimpressione
+  // costruisce la texture del capo per la sovraimpressione
   useEffect(() => {
     if (!sceneRef.current) return;
     const s = sceneRef.current;
 
-    if (!immagineCapo) {
+    if (!categoria) {
       s.meshOverlay.visible = false;
       return;
     }
 
     let annullato = false;
+    const percorso = percorsoSagoma(categoria, genere);
+    const decorazioni = { chiusura, tasche, spacco };
 
-    fetch(immagineCapo)
-      .then((r) => r.text())
-      .then((testoSvg) => {
+    caricaTexture(percorso, coloreHex, (ctx, canvas) =>
+      disegnaDecorazioni(ctx, canvas, decorazioni),
+    )
+      .then(({ texture, aspetto }) => {
         if (annullato) return;
-        const { svgColorato, aspetto } = coloraSvg(testoSvg, coloreHex);
+        s.meshOverlay.material.map = texture;
+        s.meshOverlay.material.needsUpdate = true;
         s.aspettoCapo = aspetto;
-
-        const immagine = new Image();
-        immagine.onload = () => {
-          if (annullato) return;
-          const canvas = document.createElement("canvas");
-          canvas.width = 1024;
-          canvas.height = 1536;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(immagine, 0, 0, 1024, 1536);
-
-          if (chiusura === "Bottoni") {
-            ctx.fillStyle = "#2b2620";
-            const numeroBottoni = 7;
-            for (let i = 0; i < numeroBottoni; i++) {
-              const y =
-                canvas.height * (0.1 + i * (0.78 / (numeroBottoni - 1)));
-              ctx.beginPath();
-              ctx.arc(canvas.width / 2, y, canvas.width * 0.01, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          } else if (chiusura === "Zip") {
-            ctx.strokeStyle = "#2b2620";
-            ctx.lineWidth = canvas.width * 0.01;
-            ctx.beginPath();
-            ctx.moveTo(canvas.width / 2, canvas.height * 0.1);
-            ctx.lineTo(canvas.width / 2, canvas.height * 0.88);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(
-              canvas.width / 2,
-              canvas.height * 0.1,
-              canvas.width * 0.016,
-              0,
-              Math.PI * 2,
-            );
-            ctx.fillStyle = "#2b2620";
-            ctx.fill();
-          }
-
-          if (tasche === "Toppa" || tasche === "A filo") {
-            const y = canvas.height * 0.28;
-            const larghezzaTasca = canvas.width * 0.14;
-            const altezzaTasca = canvas.height * 0.09;
-            const offsetX = canvas.width * 0.2;
-
-            [-1, 1].forEach((lato) => {
-              const x = canvas.width / 2 + lato * offsetX - larghezzaTasca / 2;
-
-              if (tasche === "Toppa") {
-                ctx.strokeStyle = "#2b2620";
-                ctx.lineWidth = canvas.width * 0.004;
-                ctx.strokeRect(x, y, larghezzaTasca, altezzaTasca);
-              } else {
-                ctx.strokeStyle = "#2b2620";
-                ctx.lineWidth = canvas.width * 0.004;
-                ctx.beginPath();
-                ctx.moveTo(x, y + altezzaTasca);
-                ctx.lineTo(x + larghezzaTasca, y + altezzaTasca);
-                ctx.stroke();
-              }
-            });
-          }
-
-          if (spacco === "Laterale" || spacco === "Centrale") {
-            const altezzaSpacco = canvas.height * 0.22;
-            const yFine = canvas.height * 0.98;
-            const yInizio = yFine - altezzaSpacco;
-            const x =
-              spacco === "Centrale"
-                ? canvas.width / 2
-                : canvas.width / 2 + canvas.width * 0.16;
-
-            ctx.strokeStyle = "#2b2620";
-            ctx.lineWidth = canvas.width * 0.006;
-            ctx.beginPath();
-            ctx.moveTo(x, yInizio);
-            ctx.lineTo(x, yFine);
-            ctx.stroke();
-          }
-
-          const texture = new THREE.CanvasTexture(canvas);
-          texture.needsUpdate = true;
-
-          s.meshOverlay.material.map = texture;
-          s.meshOverlay.material.needsUpdate = true;
-          s.meshOverlay.visible = true;
-
-          const yPiedi2 = -0.9;
-          const altezzaModello2 =
-            (s.altezzaNativaMM || 1900) * SCALA_MM_A_METRI * s.altezzaCorrente;
-          const zona2 = zonaCapo(
-            categoriaRef.current,
-            genereRef.current,
-            proporzioniRef.current,
-          );
-          if (zona2) {
-            const yAlto2 = yPiedi2 + zona2.a * altezzaModello2;
-            const yBasso2 = yPiedi2 + zona2.da * altezzaModello2;
-            const altezzaOverlay2 = yAlto2 - yBasso2;
-            const fattoreVestibilita2 = vestibilita === "Oversize" ? 1.15 : 1;
-            const scalaLarghezza2 =
-              categoriaRef.current === "Gonne" ||
-              categoriaRef.current === "Pantaloni"
-                ? proporzioniRef.current.scalaFianchi * 1.6
-                : proporzioniRef.current.scalaTorace;
-            s.meshOverlay.scale.set(
-              altezzaOverlay2 * aspetto * scalaLarghezza2 * fattoreVestibilita2,
-              altezzaOverlay2,
-              1,
-            );
-          }
-        };
-        immagine.src =
-          "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgColorato);
+        aggiornaOverlay();
       })
       .catch((errore) => {
         console.error("Errore nel caricare la bozza:", errore);
@@ -479,7 +459,8 @@ function Manichino3D({
     return () => {
       annullato = true;
     };
-  }, [immagineCapo, coloreHex, chiusura, tasche, spacco]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoria, genere, coloreHex, chiusura, tasche, spacco]);
 
   return (
     <div

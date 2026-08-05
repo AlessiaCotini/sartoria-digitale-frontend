@@ -2,19 +2,17 @@ import client from "./client";
 
 const GENERE_DISPLAY = { UOMO: "Uomo", DONNA: "Donna" };
 const CATEGORIA_DISPLAY = {
-  ABITI: "Abiti",
-  CAMICIE: "Camicie",
+  TOP_LUNGO: "Camicie",
   MAGLIETTE: "Magliette",
+  ABITI: "Abiti",
   GONNE: "Gonne",
   PANTALONI: "Pantaloni",
-  CARDIGAN: "Cardigan",
-  GIACCHE: "Giacche",
-  COMPLETI: "Completi",
 };
 
 function normalizzaCapo(capo) {
   return {
     ...capo,
+    categoriaBackend: capo.categoria,
     genere: GENERE_DISPLAY[capo.genere] || capo.genere,
     categoria: CATEGORIA_DISPLAY[capo.categoria] || capo.categoria,
   };
