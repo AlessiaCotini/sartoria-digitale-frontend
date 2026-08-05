@@ -6,6 +6,7 @@ const configuratoreSlice = createSlice({
     materiale: null,
     colore: null,
     capoId: null,
+    accessorioId: null,
   },
   reducers: {
     impostaMateriale: (state, action) => {
@@ -16,10 +17,19 @@ const configuratoreSlice = createSlice({
     },
     impostaCapo: (state, action) => {
       state.capoId = action.payload;
+      state.accessorioId = null;
+    },
+    impostaAccessorio: (state, action) => {
+      state.accessorioId = action.payload;
+      state.capoId = null;
     },
   },
 });
 
-export const { impostaMateriale, impostaColore, impostaCapo } =
-  configuratoreSlice.actions;
+export const {
+  impostaMateriale,
+  impostaColore,
+  impostaCapo,
+  impostaAccessorio,
+} = configuratoreSlice.actions;
 export default configuratoreSlice.reducer;

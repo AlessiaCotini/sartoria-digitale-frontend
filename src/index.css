@@ -206,11 +206,10 @@ a { text-decoration: none; color: inherit; }
 .product-card:hover { box-shadow: var(--shadow-soft); transform: translateY(-3px); }
 
 .product-card .product-thumb {
-  aspect-ratio: 3/4;
+ aspect-ratio: 3/4;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(160deg, #d8cfbd, #c3b79f);
-  display: flex; align-items: center; justify-content: center;
+  background: var(--color-page-alt);
   color: var(--color-ink-soft);
 }
 
@@ -220,7 +219,7 @@ a { text-decoration: none; color: inherit; }
   padding: 1.2rem;
   display: block;}
 .product-card .product-body { padding: 1.2rem 1.3rem 1.5rem; }
-.product-card .product-price { color: var(--color-accent); font-weight: 600; font-family: "Cormorant Garamond", serif; font-size: 1.25rem; }
+.product-card .product-price { color: var(--color-accent-light); font-weight: 600; font-family: "Cormorant Garamond", serif; font-size: 1.25rem; }
 
 .badge-soft {
   background-color: rgba(156, 133, 99, 0.15);
@@ -268,6 +267,10 @@ a { text-decoration: none; color: inherit; }
   border: 1px solid rgba(156, 133, 99, 0.25);
   border-radius: var(--radius);
   color: #f2ede4;
+}
+
+.preview-panel {
+  background: var(--color-page-alt);
 }
 
 .preview-panel, .avatar-stage { padding: 2.2rem; position: relative; }

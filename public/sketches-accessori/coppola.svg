@@ -1,9 +1,9 @@
-<!-- gonna-donna.svg -->
-<svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+<!-- coppola.svg -->
+<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
   <defs><filter id="j2" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="101" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
   <g fill="none" stroke="#4a453e" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" filter="url(#j2)">
-    <path d="M40,8 L80,8 L92,92 L28,92 Z" />
-    <path d="M38,10 L82,10" fill="none" />
-    <path d="M60,12 L60,88" stroke-dasharray="2 4" opacity="0.5" fill="none" />
+    <path d="M35,85 Q25,45 85,32 Q150,22 178,58 Q188,72 165,82 Q160,90 140,88 Q80,98 45,90 Q32,88 35,85 Z" />
+    <path d="M35,85 Q15,86 10,94 Q14,100 34,96 Q40,94 40,88 Z" />
+    <path d="M60,55 Q110,42 165,60" fill="none" />
   </g>
 </svg>

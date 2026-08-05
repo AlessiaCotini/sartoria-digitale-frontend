@@ -29,6 +29,9 @@ import Magazzino from "./pages/gestionale/Magazzino";
 import FAQ from "./pages/FAQ";
 import Privacy from "./pages/Privacy";
 import TerminiCondizioni from "./pages/TerminiCondizioni";
+import Accessori from "./pages/Accessori";
+import DettaglioAccessorio from "./pages/DettaglioAccessorio";
+import ConfiguratoreAccessorio from "./pages/ConfiguratoreAccessorio";
 
 function App() {
   const dispatch = useDispatch();
@@ -96,6 +99,30 @@ function App() {
           element={
             <SoloCliente>
               <Catalogo />
+            </SoloCliente>
+          }
+        />
+        <Route
+          path="/accessori"
+          element={
+            <SoloCliente>
+              <Accessori />
+            </SoloCliente>
+          }
+        />
+        <Route
+          path="/accessori/:id"
+          element={
+            <SoloCliente>
+              <DettaglioAccessorio />
+            </SoloCliente>
+          }
+        />
+        <Route
+          path="/configuratore-accessorio"
+          element={
+            <SoloCliente>
+              <ConfiguratoreAccessorio />
             </SoloCliente>
           }
         />

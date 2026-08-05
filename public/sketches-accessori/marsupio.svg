@@ -1,9 +1,8 @@
-<!-- gonna-donna.svg -->
-<svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+<!-- marsupio.svg -->
+<svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
   <defs><filter id="j2" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="101" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
   <g fill="none" stroke="#4a453e" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" filter="url(#j2)">
-    <path d="M40,8 L80,8 L92,92 L28,92 Z" />
-    <path d="M38,10 L82,10" fill="none" />
-    <path d="M60,12 L60,88" stroke-dasharray="2 4" opacity="0.5" fill="none" />
+    <path d="M40,60 Q30,55 30,75 L35,140 Q37,155 55,158 L125,158 Q143,155 145,140 L150,75 Q150,55 140,60 Q90,45 40,60 Z" />
+    <path d="M45,70 Q90,80 135,70 M20,100 L30,100 M150,100 L160,100" fill="none" />
   </g>
 </svg>

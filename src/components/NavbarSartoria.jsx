@@ -54,6 +54,9 @@ function NavbarSartoria() {
                   <Nav.Link as={NavLink} to="/catalogo">
                     Collezione
                   </Nav.Link>
+                  <Nav.Link as={NavLink} to="/accessori">
+                    Accessori
+                  </Nav.Link>
                   <Nav.Link as={NavLink} to="/configuratore">
                     Costruzione
                   </Nav.Link>

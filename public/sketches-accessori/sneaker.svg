@@ -1,9 +1,9 @@
-<!-- gonna-donna.svg -->
-<svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+<!-- sneaker.svg -->
+<svg viewBox="0 0 220 120" xmlns="http://www.w3.org/2000/svg">
   <defs><filter id="j2" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="101" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
   <g fill="none" stroke="#4a453e" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" filter="url(#j2)">
-    <path d="M40,8 L80,8 L92,92 L28,92 Z" />
-    <path d="M38,10 L82,10" fill="none" />
-    <path d="M60,12 L60,88" stroke-dasharray="2 4" opacity="0.5" fill="none" />
+    <path d="M12,98 L200,98 Q210,100 210,110 L8,110 Q8,100 12,98 Z" />
+    <path d="M15,98 Q10,70 40,58 Q70,45 110,48 Q155,50 190,68 Q200,74 198,98 Z" />
+    <path d="M85,55 L95,68 M100,52 L110,66 M115,50 L125,64 M15,104 L205,104" fill="none" />
   </g>
 </svg>
