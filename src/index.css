@@ -10,6 +10,13 @@
   --color-dark-panel-2: #100f0d;
   --radius: 2px;
   --shadow-soft: 0 18px 40px rgba(43, 38, 32, 0.08);
+  --bs-primary: var(--color-accent);
+  --bs-primary-rgb: 156, 133, 99;
+  --bs-link-color: var(--color-accent);
+  --bs-link-color-rgb: 156, 133, 99;
+  --bs-link-hover-color: var(--color-ink);
+  --bs-link-hover-color-rgb: 43, 38, 32;
+  --bs-focus-ring-color: rgba(156, 133, 99, 0.25);
 }
 
 * { box-sizing: border-box; }
@@ -96,20 +103,42 @@ a { text-decoration: none; color: inherit; }
 .offcanvas-sartoria .nav-link:hover,
 .offcanvas-sartoria .nav-link.active { color: var(--color-accent) !important; }
 
-.btn-gold {
-  background-color: var(--color-ink);
-  border: 1px solid var(--color-ink);
-  color: var(--color-bg);
-  font-weight: 600;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border-radius: 0;
-  padding: 0.65rem 1.6rem;
-  transition: all 0.2s ease;
+.btn-gold,
+.btn-outline-cream,
+.btn-outline-dark-luxury {
+  background: rgba(251, 249, 245, 0.5) !important;
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  color: var(--color-ink) !important;
 }
 
-.btn-gold:hover { background-color: transparent; color: var(--color-ink); }
+.btn-gold:hover,
+.btn-outline-cream:hover,
+.btn-outline-dark-luxury:hover {
+  background: rgba(156, 133, 99, 0.28) !important;
+  border-color: rgba(156, 133, 99, 0.5) !important;
+  color: var(--color-ink) !important;
+}
+
+.btn-gold:disabled,
+.btn-gold.disabled {
+  opacity: 0.4;
+}
+
+.view-toggle button.active {
+  background: rgba(156, 133, 99, 0.3) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--color-ink) !important;
+}
+
+.swatch.selected {
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 0 0 2px rgba(251, 249, 245, 0.5),
+    0 0 0 4px rgba(156, 133, 99, 0.6);
+}
 .btn-gold:disabled, .btn-gold.disabled { opacity: 0.4; }
 
 .btn-outline-cream, .btn-outline-dark-luxury {
@@ -366,3 +395,4 @@ a { text-decoration: none; color: inherit; }
   font-family: "Jost", sans-serif;
   color: var(--color-ink);
 }
+

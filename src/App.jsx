@@ -26,6 +26,9 @@ import Pagamenti from "./pages/gestionale/Pagamenti";
 import GestioneCatalogo from "./pages/gestionale/GestioneCatalogo";
 import Team from "./pages/gestionale/Team";
 import Magazzino from "./pages/gestionale/Magazzino";
+import FAQ from "./pages/FAQ";
+import Privacy from "./pages/Privacy";
+import TerminiCondizioni from "./pages/TerminiCondizioni";
 
 function App() {
   const dispatch = useDispatch();
@@ -66,6 +69,9 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/termini" element={<TerminiCondizioni />} />
         <Route path="/gestionale" element={<GestionaleLayout />}>
           <Route index element={<Navigate to="calendario" replace />} />
           <Route path="calendario" element={<Calendario />} />

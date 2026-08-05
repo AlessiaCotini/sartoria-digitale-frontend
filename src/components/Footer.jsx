@@ -9,9 +9,11 @@ function Footer() {
         <div className="row g-4">
           <div className="col-md-3">
             <div className="brand-font h5">Bellariva</div>
-            <p className="small mb-0">
-              Sartoria di alta gamma, esperienza interamente digitale.
-            </p>
+            <div className="small d-flex flex-column gap-3">
+              <Link to="/faq">FAQ</Link>
+              <Link to="/privacy">Privacy</Link>
+              <Link to="/termini">Termini e condizioni</Link>
+            </div>
           </div>
 
           <div className="col-md-3">
@@ -85,9 +87,9 @@ function Footer() {
         </div>
 
         <hr style={{ borderColor: "var(--color-line)" }} />
-        <p className="small mb-0 text-center">
-          Bellariva — progetto in sviluppo.
-        </p>
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+          <p className="small mb-0">Bellariva — progetto in sviluppo.</p>
+        </div>
       </div>
     </footer>
   );
