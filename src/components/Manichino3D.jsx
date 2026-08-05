@@ -108,14 +108,92 @@ function caricaTexture(percorso, coloreHex, disegnaDecorazioni) {
     );
 }
 
-function disegnaDecorazioni(ctx, canvas, { chiusura, tasche, spacco }) {
-  if (chiusura === "Bottoni") {
+function disegnaDecorazioni(
+  ctx,
+  canvas,
+  { chiusura, tasche, spacco, fantasia, rifinitura },
+) {
+  // fantasia: disegnata per prima, "source-atop" la confina alla sagoma
+  // gia' colorata (non sborda nello sfondo trasparente)
+  if (fantasia === "Righe") {
+    ctx.save();
+    ctx.globalCompositeOperation = "source-atop";
+    ctx.strokeStyle = "rgba(30,25,20,0.28)";
+    ctx.lineWidth = canvas.width * 0.018;
+    for (let x = -canvas.height; x < canvas.width; x += canvas.width * 0.07) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x + canvas.height, canvas.height);
+      ctx.stroke();
+    }
+    ctx.restore();
+  } else if (fantasia === "Pois") {
+    ctx.save();
+    ctx.globalCompositeOperation = "source-atop";
+    ctx.fillStyle = "rgba(30,25,20,0.3)";
+    const passo = canvas.width * 0.09;
+    for (let y = canvas.height * 0.06; y < canvas.height * 0.96; y += passo) {
+      const riga = Math.round(y / passo);
+      const offset = (riga % 2) * (passo / 2);
+      for (
+        let x = canvas.width * 0.08 + offset;
+        x < canvas.width * 0.92;
+        x += passo
+      ) {
+        ctx.beginPath();
+        ctx.arc(x, y, canvas.width * 0.016, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+  } else if (fantasia === "Floreale") {
+    ctx.save();
+    ctx.globalCompositeOperation = "source-atop";
+    ctx.fillStyle = "rgba(30,25,20,0.24)";
+    const passo = canvas.width * 0.13;
+    for (let y = canvas.height * 0.08; y < canvas.height * 0.94; y += passo) {
+      for (let x = canvas.width * 0.12; x < canvas.width * 0.88; x += passo) {
+        for (let p = 0; p < 5; p++) {
+          const angolo = (p / 5) * Math.PI * 2;
+          ctx.beginPath();
+          ctx.arc(
+            x + Math.cos(angolo) * canvas.width * 0.014,
+            y + Math.sin(angolo) * canvas.width * 0.014,
+            canvas.width * 0.009,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fill();
+        }
+      }
+    }
+    ctx.restore();
+  }
+
+  const raggioBottone =
+    chiusura === "Bottoni piccoli"
+      ? 0.006
+      : chiusura === "Bottoni grandi"
+        ? 0.016
+        : 0.01;
+
+  if (
+    chiusura === "Bottoni piccoli" ||
+    chiusura === "Bottoni medi" ||
+    chiusura === "Bottoni grandi"
+  ) {
     ctx.fillStyle = "#2b2620";
     const numeroBottoni = 7;
     for (let i = 0; i < numeroBottoni; i++) {
       const y = canvas.height * (0.1 + i * (0.78 / (numeroBottoni - 1)));
       ctx.beginPath();
-      ctx.arc(canvas.width / 2, y, canvas.width * 0.01, 0, Math.PI * 2);
+      ctx.arc(
+        canvas.width / 2,
+        y,
+        canvas.width * raggioBottone,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
     }
   } else if (chiusura === "Zip") {
@@ -174,6 +252,36 @@ function disegnaDecorazioni(ctx, canvas, { chiusura, tasche, spacco }) {
     ctx.lineTo(x, yFine);
     ctx.stroke();
   }
+
+  if (rifinitura === "Pizzo") {
+    ctx.strokeStyle = "#2b2620";
+    ctx.lineWidth = canvas.width * 0.004;
+    const y = canvas.height * 0.965;
+    for (
+      let x = canvas.width * 0.1;
+      x < canvas.width * 0.9;
+      x += canvas.width * 0.045
+    ) {
+      ctx.beginPath();
+      ctx.arc(x, y, canvas.width * 0.022, Math.PI, 0);
+      ctx.stroke();
+    }
+  } else if (rifinitura === "Frangia") {
+    ctx.strokeStyle = "#2b2620";
+    ctx.lineWidth = canvas.width * 0.003;
+    const yInizio = canvas.height * 0.95;
+    const yFine = canvas.height * 1.0;
+    for (
+      let x = canvas.width * 0.08;
+      x < canvas.width * 0.92;
+      x += canvas.width * 0.018
+    ) {
+      ctx.beginPath();
+      ctx.moveTo(x, yInizio);
+      ctx.lineTo(x, yFine);
+      ctx.stroke();
+    }
+  }
 }
 
 function Manichino3D({
@@ -186,6 +294,8 @@ function Manichino3D({
   vestibilita,
   tasche,
   spacco,
+  fantasia,
+  rifinitura,
 }) {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
@@ -439,10 +549,9 @@ function Manichino3D({
       s.meshOverlay.visible = false;
       return;
     }
-
     let annullato = false;
     const percorso = percorsoSagoma(categoria, genere);
-    const decorazioni = { chiusura, tasche, spacco };
+    const decorazioni = { chiusura, tasche, spacco, fantasia, rifinitura };
 
     caricaTexture(percorso, coloreHex, (ctx, canvas) =>
       disegnaDecorazioni(ctx, canvas, decorazioni),
@@ -462,7 +571,16 @@ function Manichino3D({
       annullato = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoria, genere, coloreHex, chiusura, tasche, spacco]);
+  }, [
+    categoria,
+    genere,
+    coloreHex,
+    chiusura,
+    tasche,
+    spacco,
+    fantasia,
+    rifinitura,
+  ]);
 
   return (
     <div

@@ -155,6 +155,12 @@ function Configuratore() {
   const opzioneSpacco = opzioni.find(
     (o) => o.id === opzioniSelezionate.SPACCHI,
   );
+  const opzioneFantasia = opzioni.find(
+    (o) => o.id === opzioniSelezionate.FANTASIA,
+  );
+  const opzioneRifinitura = opzioni.find(
+    (o) => o.id === opzioniSelezionate.RIFINITURA,
+  );
 
   return (
     <section className="section">
@@ -224,41 +230,48 @@ function Configuratore() {
 
             {opzioni.length > 0 && (
               <div className="mb-4">
-                {["CHIUSURA", "TASCHE", "VESTIBILITA", "SPACCHI"].map(
-                  (tipo) => {
-                    const opzioniDelTipo = opzioni.filter(
-                      (o) => o.tipo === tipo,
-                    );
-                    if (opzioniDelTipo.length === 0) return null;
+                {[
+                  "CHIUSURA",
+                  "TASCHE",
+                  "VESTIBILITA",
+                  "SPACCHI",
+                  "FANTASIA",
+                  "RIFINITURA",
+                ].map((tipo) => {
+                  const opzioniDelTipo = opzioni.filter((o) => o.tipo === tipo);
+                  if (opzioniDelTipo.length === 0) return null;
 
-                    return (
-                      <div key={tipo} className="mb-3">
-                        <p className="step-label mb-2">
-                          {tipo === "CHIUSURA"
-                            ? "Chiusura"
-                            : tipo === "TASCHE"
-                              ? "Tasche"
-                              : tipo === "SPACCHI"
-                                ? "Spacco"
-                                : "Vestibilità"}
-                        </p>
-                        <div className="filter-group justify-content-start">
-                          {opzioniDelTipo.map((o) => (
-                            <button
-                              key={o.id}
-                              type="button"
-                              className={`filter-tab ${opzioniSelezionate[tipo] === o.id ? "active" : ""}`}
-                              onClick={() => handleSelezionaOpzione(tipo, o.id)}
-                            >
-                              {o.nome}
-                              {o.sovrapprezzo > 0 && ` (+€${o.sovrapprezzo})`}
-                            </button>
-                          ))}
-                        </div>
+                  return (
+                    <div key={tipo} className="mb-3">
+                      <p className="step-label mb-2">
+                        {tipo === "CHIUSURA"
+                          ? "Chiusura"
+                          : tipo === "TASCHE"
+                            ? "Tasche"
+                            : tipo === "SPACCHI"
+                              ? "Spacco"
+                              : tipo === "FANTASIA"
+                                ? "Fantasia"
+                                : tipo === "RIFINITURA"
+                                  ? "Rifinitura"
+                                  : "Vestibilità"}
+                      </p>
+                      <div className="filter-group justify-content-start">
+                        {opzioniDelTipo.map((o) => (
+                          <button
+                            key={o.id}
+                            type="button"
+                            className={`filter-tab ${opzioniSelezionate[tipo] === o.id ? "active" : ""}`}
+                            onClick={() => handleSelezionaOpzione(tipo, o.id)}
+                          >
+                            {o.nome}
+                            {o.sovrapprezzo > 0 && ` (+€${o.sovrapprezzo})`}
+                          </button>
+                        ))}
                       </div>
-                    );
-                  },
-                )}
+                    </div>
+                  );
+                })}
               </div>
             )}
 
@@ -306,6 +319,8 @@ function Configuratore() {
                 vestibilita={opzioneVestibilita?.nome}
                 tasche={opzioneTasche?.nome}
                 spacco={opzioneSpacco?.nome}
+                fantasia={opzioneFantasia?.nome}
+                rifinitura={opzioneRifinitura?.nome}
               />
             </div>
             <p className="text-muted small text-center mt-2">
