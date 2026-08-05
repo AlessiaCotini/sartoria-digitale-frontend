@@ -89,7 +89,11 @@ function NavbarSartoria() {
                   >
                     Accedi
                   </Button>
-                  <Button as={Link} to="/register" className="btn-gold btn-sm">
+                  <Button
+                    as={Link}
+                    to="/register"
+                    className="btn-outline-cream btn-sm"
+                  >
                     Registrati
                   </Button>
                 </>

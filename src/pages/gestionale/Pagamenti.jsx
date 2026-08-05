@@ -92,7 +92,7 @@ function Pagamenti() {
                       pagamento?.saldoImporto == null && (
                         <button
                           type="button"
-                          className="btn btn-sm btn-gold"
+                          className="btn btn-sm btn-outline-dark-luxury"
                           onClick={() =>
                             setModale({
                               ordine,
