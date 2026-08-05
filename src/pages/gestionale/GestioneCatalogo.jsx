@@ -2,16 +2,7 @@ import { useState } from "react";
 import { creaCapo, creaMateriale } from "../../api/catalogo";
 
 const GENERI = ["UOMO", "DONNA"];
-const CATEGORIE = [
-  "ABITI",
-  "CAMICIE",
-  "MAGLIETTE",
-  "GONNE",
-  "PANTALONI",
-  "CARDIGAN",
-  "GIACCHE",
-  "COMPLETI",
-];
+const CATEGORIE = ["TOP_LUNGO", "MAGLIETTE", "ABITI", "GONNE", "PANTALONI"];
 
 function FormNuovoCapo() {
   const [nome, setNome] = useState("");
@@ -21,7 +12,6 @@ function FormNuovoCapo() {
   const [tessuto, setTessuto] = useState("");
   const [prezzoDa, setPrezzoDa] = useState("");
   const [inEvidenza, setInEvidenza] = useState(false);
-  const [immagine, setImmagine] = useState("");
   const [errore, setErrore] = useState("");
   const [successo, setSuccesso] = useState("");
 
@@ -38,7 +28,6 @@ function FormNuovoCapo() {
       tessuto,
       prezzoDa: parseFloat(prezzoDa),
       inEvidenza,
-      immagine,
     })
       .then(() => {
         setSuccesso("Capo creato con successo.");
@@ -47,7 +36,6 @@ function FormNuovoCapo() {
         setTessuto("");
         setPrezzoDa("");
         setInEvidenza(false);
-        setImmagine("");
       })
       .catch((err) =>
         setErrore(
@@ -134,16 +122,6 @@ function FormNuovoCapo() {
             value={prezzoDa}
             onChange={(e) => setPrezzoDa(e.target.value)}
             required
-          />
-        </div>
-        <div className="col-6">
-          <label className="form-label">Immagine (percorso/URL)</label>
-          <input
-            type="text"
-            className="form-control"
-            value={immagine}
-            onChange={(e) => setImmagine(e.target.value)}
-            placeholder="/sketches/nome-file.svg"
           />
         </div>
       </div>
