@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { aggiornaMisure } from "../store/authSlice";
 import { CAMPI_MISURE } from "../data/misure";
 
 function Profilo() {
+  const { t } = useTranslation();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const utente = useSelector((state) => state.auth.utente);
   const misureSalvate = useSelector((state) => state.auth.misure);
@@ -32,13 +34,17 @@ function Profilo() {
     <section className="section">
       <div className="container" style={{ maxWidth: "720px" }}>
         <div className="mb-4 text-center">
-          <div className="section-title-eyebrow">Profilo</div>
-          <h2>Ciao, {utente?.nome || "cliente"}</h2>
+          <div className="section-title-eyebrow">{t("profilo.eyebrow")}</div>
+          <h2>
+            {t("profilo.ciao", {
+              nome: utente?.nome || t("profilo.clienteDefault"),
+            })}
+          </h2>
           <div className="divider-gold mx-auto"></div>
         </div>
 
         <div className="form-sartoria mb-4">
-          <p className="step-label mb-2">I tuoi dati</p>
+          <p className="step-label mb-2">{t("profilo.tuoiDati")}</p>
           <p className="mb-1">
             {utente?.nome} {utente?.cognome}
           </p>
@@ -46,11 +52,8 @@ function Profilo() {
         </div>
 
         <form className="form-sartoria" onSubmit={handleSalva}>
-          <p className="step-label mb-2">Le tue misure</p>
-          <p className="text-muted small mb-3">
-            Aggiorna i valori se sono cambiati: la sarta li userà per costruire
-            i tuoi prossimi abiti.
-          </p>
+          <p className="step-label mb-2">{t("profilo.tueMisure")}</p>
+          <p className="text-muted small mb-3">{t("profilo.aggiornaTesto")}</p>
 
           <div className="row g-3 mb-4">
             {CAMPI_MISURE.map((campo) => (
@@ -76,11 +79,13 @@ function Profilo() {
           </div>
 
           {salvato && (
-            <p className="text-success small mb-3">Misure aggiornate.</p>
+            <p className="text-success small mb-3">
+              {t("profilo.misureAggiornate")}
+            </p>
           )}
 
           <button type="submit" className="btn btn-gold">
-            Salva modifiche
+            {t("profilo.salvaModifiche")}
           </button>
         </form>
       </div>

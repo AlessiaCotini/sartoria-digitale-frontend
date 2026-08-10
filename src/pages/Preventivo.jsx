@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { getOrdiniMiei } from "../api/ordini";
 import ChatOrdine from "../components/ChatOrdine";
 
 function Preventivo() {
+  const { t } = useTranslation();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const [ordini, setOrdini] = useState([]);
   const [caricamento, setCaricamento] = useState(true);
@@ -24,7 +26,7 @@ function Preventivo() {
     return (
       <section className="section">
         <div className="container">
-          <p className="text-muted">Caricamento...</p>
+          <p className="text-muted">{t("preventivo.caricamento")}</p>
         </div>
       </section>
     );
@@ -34,8 +36,8 @@ function Preventivo() {
     <section className="section">
       <div className="container">
         <div className="mb-4">
-          <div className="section-title-eyebrow">Preventivi</div>
-          <h2>I tuoi ordini</h2>
+          <div className="section-title-eyebrow">{t("preventivo.eyebrow")}</div>
+          <h2>{t("preventivo.titolo")}</h2>
           <div className="divider-gold"></div>
         </div>
 
@@ -49,14 +51,15 @@ function Preventivo() {
                   className={`list-group-item list-group-item-action ${ordineSelezionato?.id === o.id ? "active" : ""}`}
                   onClick={() => setOrdineSelezionato(o)}
                 >
-                  {o.capoNome} — {o.materialeNome} ({o.colore})
+                  {o.capoNome || o.accessorioNome} — {o.materialeNome} (
+                  {o.colore})
                   <span className="d-block small text-muted">
                     {o.stato} · € {o.prezzoTotale}
                   </span>
                 </button>
               ))}
               {ordini.length === 0 && (
-                <p className="text-muted">Non hai ancora nessun ordine.</p>
+                <p className="text-muted">{t("preventivo.nessunOrdine")}</p>
               )}
             </div>
           </div>
@@ -67,9 +70,7 @@ function Preventivo() {
                 key={ordineSelezionato.id}
               />
             ) : (
-              <p className="text-muted">
-                Seleziona un ordine per aprire la chat con la sarta.
-              </p>
+              <p className="text-muted">{t("preventivo.selezionaOrdine")}</p>
             )}
           </div>
         </div>

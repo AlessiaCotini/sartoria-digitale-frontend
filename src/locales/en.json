@@ -111,5 +111,70 @@
     "errorePasswordDiverse": "The two passwords don't match.",
     "erroreMisureMancanti": "Enter all measurements to complete registration.",
     "erroreDefault": "Error during registration."
+  },
+  "dettaglio": {
+    "tornaCollezione": "← Back to the collection",
+    "nonTrovato": "Garment not found",
+    "descrizione": "\"{{modello}}\" model made in {{tessuto}}. The ideal starting point for your made-to-measure Build.",
+    "configura": "Configure"
+  },
+  "dettaglioAccessorio": {
+    "tornaAccessori": "← Back to accessories",
+    "nonTrovato": "Accessory not found",
+    "descrizione": "\"{{modello}}\" model made in {{tessuto}}.",
+    "configura": "Configure"
+  },
+  "configuratore": {
+    "eyebrow": "Build",
+    "titolo": "Create your garment",
+    "staiConfigurando": "You're configuring: {{nome}}",
+    "capo": "Garment",
+    "scegliCapo": "Choose a garment",
+    "materiale": "Material",
+    "colore": "Color",
+    "chiusura": "Closure",
+    "tasche": "Pockets",
+    "spacco": "Slit",
+    "fantasia": "Pattern",
+    "rifinitura": "Trim",
+    "vestibilita": "Fit",
+    "prezzoStimato": "Estimated price",
+    "baseTessuto": "Base garment + {{tessuto}} fabric",
+    "invioInCorso": "Sending...",
+    "creaOrdine": "Create order",
+    "scegliDallaCollezione": "Choose a garment from the Collection to create an order.",
+    "manichinoTesto": "Stylized mannequin (chest {{torace}} cm, height {{altezza}} cm) — drag to rotate it. The bust and arms represent the garment, the rest is the body.",
+    "caricamento": "Loading configurator...",
+    "erroreOrdine": "Error creating the order.",
+    "unCapoSuMisura": "a made-to-measure garment"
+  },
+  "configuratoreAccessorio": {
+    "titolo": "Customize your accessory",
+    "staiConfigurando": "You're configuring: {{nome}}",
+    "materiale": "Material",
+    "colore": "Color",
+    "fantasia": "Pattern",
+    "prezzoStimato": "Estimated price",
+    "baseTessuto": "Base accessory + {{tessuto}} fabric",
+    "invioInCorso": "Sending...",
+    "creaOrdine": "Create order",
+    "caricamento": "Loading configurator..."
+  },
+  "profilo": {
+    "eyebrow": "Profile",
+    "ciao": "Hi, {{nome}}",
+    "clienteDefault": "customer",
+    "tuoiDati": "Your details",
+    "tueMisure": "Your measurements",
+    "aggiornaTesto": "Update the values if they've changed: the tailor will use them to build your next garments.",
+    "misureAggiornate": "Measurements updated.",
+    "salvaModifiche": "Save changes"
+  },
+  "preventivo": {
+    "eyebrow": "Quotes",
+    "titolo": "Your orders",
+    "nessunOrdine": "You don't have any orders yet.",
+    "selezionaOrdine": "Select an order to open the chat with the tailor.",
+    "caricamento": "Loading..."
   }
 }

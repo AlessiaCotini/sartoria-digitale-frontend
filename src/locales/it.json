@@ -111,5 +111,70 @@
     "errorePasswordDiverse": "Le due password non coincidono.",
     "erroreMisureMancanti": "Inserisci tutte le misure per completare la registrazione.",
     "erroreDefault": "Errore durante la registrazione."
+  },
+  "dettaglio": {
+    "tornaCollezione": "← Torna alla collezione",
+    "nonTrovato": "Capo non trovato",
+    "descrizione": "Modello \"{{modello}}\" realizzato in {{tessuto}}. Punto di partenza ideale per la tua Costruzione su misura.",
+    "configura": "Configura"
+  },
+  "dettaglioAccessorio": {
+    "tornaAccessori": "← Torna agli accessori",
+    "nonTrovato": "Accessorio non trovato",
+    "descrizione": "Modello \"{{modello}}\" realizzato in {{tessuto}}.",
+    "configura": "Configura"
+  },
+  "configuratore": {
+    "eyebrow": "Costruzione",
+    "titolo": "Crea il tuo capo",
+    "staiConfigurando": "Stai configurando: {{nome}}",
+    "capo": "Capo",
+    "scegliCapo": "Scegli un capo",
+    "materiale": "Materiale",
+    "colore": "Colore",
+    "chiusura": "Chiusura",
+    "tasche": "Tasche",
+    "spacco": "Spacco",
+    "fantasia": "Fantasia",
+    "rifinitura": "Rifinitura",
+    "vestibilita": "Vestibilità",
+    "prezzoStimato": "Prezzo stimato",
+    "baseTessuto": "Base capo + tessuto {{tessuto}}",
+    "invioInCorso": "Invio in corso...",
+    "creaOrdine": "Crea ordine",
+    "scegliDallaCollezione": "Scegli un capo dalla Collezione per poter creare un ordine.",
+    "manichinoTesto": "Manichino stilizzato (torace {{torace}} cm, altezza {{altezza}} cm) — trascina per ruotarlo. Busto e braccia rappresentano il capo, il resto è il corpo.",
+    "caricamento": "Caricamento configuratore...",
+    "erroreOrdine": "Errore nella creazione dell'ordine.",
+    "unCapoSuMisura": "un capo su misura"
+  },
+  "configuratoreAccessorio": {
+    "titolo": "Personalizza il tuo accessorio",
+    "staiConfigurando": "Stai configurando: {{nome}}",
+    "materiale": "Materiale",
+    "colore": "Colore",
+    "fantasia": "Fantasia",
+    "prezzoStimato": "Prezzo stimato",
+    "baseTessuto": "Base accessorio + tessuto {{tessuto}}",
+    "invioInCorso": "Invio in corso...",
+    "creaOrdine": "Crea ordine",
+    "caricamento": "Caricamento configuratore..."
+  },
+  "profilo": {
+    "eyebrow": "Profilo",
+    "ciao": "Ciao, {{nome}}",
+    "clienteDefault": "cliente",
+    "tuoiDati": "I tuoi dati",
+    "tueMisure": "Le tue misure",
+    "aggiornaTesto": "Aggiorna i valori se sono cambiati: la sarta li userà per costruire i tuoi prossimi abiti.",
+    "misureAggiornate": "Misure aggiornate.",
+    "salvaModifiche": "Salva modifiche"
+  },
+  "preventivo": {
+    "eyebrow": "Preventivi",
+    "titolo": "I tuoi ordini",
+    "nessunOrdine": "Non hai ancora nessun ordine.",
+    "selezionaOrdine": "Seleziona un ordine per aprire la chat con la sarta.",
+    "caricamento": "Caricamento..."
   }
 }

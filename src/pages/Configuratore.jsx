@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { calcolaProporzioni } from "../utils/manichino";
 import Manichino3D from "../components/Manichino3D";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +15,7 @@ import {
 } from "../store/configuratoreSlice";
 
 function Configuratore() {
+  const { t } = useTranslation();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const misure = useSelector((state) => state.auth.misure);
   const materialeSelezionato = useSelector(
@@ -41,7 +43,7 @@ function Configuratore() {
       })
       .catch((err) => {
         setErroreOrdine(
-          err.response?.data?.errore || "Errore nella creazione dell'ordine.",
+          err.response?.data?.errore || t("configuratore.erroreOrdine"),
         );
       })
       .finally(() => setCreazioneOrdine(false));
@@ -122,7 +124,7 @@ function Configuratore() {
     return (
       <section className="section">
         <div className="container">
-          <p className="text-muted">Caricamento configuratore...</p>
+          <p className="text-muted">{t("configuratore.caricamento")}</p>
         </div>
       </section>
     );
@@ -135,7 +137,7 @@ function Configuratore() {
     materiale.colori[0];
 
   const prezzoBase = capo ? capo.prezzoDa : 250;
-  const nomeCapo = capo ? capo.nome : "un capo su misura";
+  const nomeCapo = capo ? capo.nome : t("configuratore.unCapoSuMisura");
   const opzioniScelte = Object.values(opzioniSelezionate).filter(Boolean);
   const sovrapprezzoTotale = opzioni
     .filter((o) => opzioniScelte.includes(o.id))
@@ -162,26 +164,39 @@ function Configuratore() {
     (o) => o.id === opzioniSelezionate.RIFINITURA,
   );
 
+  const etichettaTipo = {
+    CHIUSURA: t("configuratore.chiusura"),
+    TASCHE: t("configuratore.tasche"),
+    SPACCHI: t("configuratore.spacco"),
+    FANTASIA: t("configuratore.fantasia"),
+    RIFINITURA: t("configuratore.rifinitura"),
+    VESTIBILITA: t("configuratore.vestibilita"),
+  };
+
   return (
     <section className="section">
       <div className="container">
         <div className="mb-4">
-          <div className="section-title-eyebrow">Costruzione</div>
-          <h2>Crea il tuo capo</h2>
-          <p className="text-muted small mb-4">Stai configurando: {nomeCapo}</p>
+          <div className="section-title-eyebrow">
+            {t("configuratore.eyebrow")}
+          </div>
+          <h2>{t("configuratore.titolo")}</h2>
+          <p className="text-muted small mb-4">
+            {t("configuratore.staiConfigurando", { nome: nomeCapo })}
+          </p>
           <div className="divider-gold"></div>
         </div>
 
         <div className="row g-4">
           <div className="col-lg-5">
             <div className="mb-4">
-              <p className="step-label mb-2">Capo</p>
+              <p className="step-label mb-2">{t("configuratore.capo")}</p>
               <select
                 className="form-select"
                 value={capo?.id || ""}
                 onChange={(e) => handleCambiaCapo(e.target.value)}
               >
-                <option value="">Scegli un capo</option>
+                <option value="">{t("configuratore.scegliCapo")}</option>
                 {capi.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.nome} — {c.genere} · {c.categoria}
@@ -190,7 +205,7 @@ function Configuratore() {
               </select>
             </div>
             <div className="mb-4">
-              <p className="step-label mb-2">Materiale</p>
+              <p className="step-label mb-2">{t("configuratore.materiale")}</p>
               <select
                 className="form-select"
                 value={materialeSelezionato}
@@ -205,7 +220,7 @@ function Configuratore() {
             </div>
 
             <div className="mb-4">
-              <p className="step-label mb-2">Colore</p>
+              <p className="step-label mb-2">{t("configuratore.colore")}</p>
               <div className="d-flex flex-wrap gap-2">
                 {materiale.colori.map((c) => (
                   <button
@@ -243,19 +258,7 @@ function Configuratore() {
 
                   return (
                     <div key={tipo} className="mb-3">
-                      <p className="step-label mb-2">
-                        {tipo === "CHIUSURA"
-                          ? "Chiusura"
-                          : tipo === "TASCHE"
-                            ? "Tasche"
-                            : tipo === "SPACCHI"
-                              ? "Spacco"
-                              : tipo === "FANTASIA"
-                                ? "Fantasia"
-                                : tipo === "RIFINITURA"
-                                  ? "Rifinitura"
-                                  : "Vestibilità"}
-                      </p>
+                      <p className="step-label mb-2">{etichettaTipo[tipo]}</p>
                       <div className="filter-group justify-content-start">
                         {opzioniDelTipo.map((o) => (
                           <button
@@ -276,12 +279,16 @@ function Configuratore() {
             )}
 
             <div className="form-sartoria">
-              <p className="step-label mb-1">Prezzo stimato</p>
+              <p className="step-label mb-1">
+                {t("configuratore.prezzoStimato")}
+              </p>
               <p className="mb-0" style={{ fontSize: "1.4rem" }}>
                 da € {prezzoTotale}
               </p>
               <p className="text-muted small mb-0">
-                Base capo + tessuto {materiale.nome.toLowerCase()}
+                {t("configuratore.baseTessuto", {
+                  tessuto: materiale.nome.toLowerCase(),
+                })}
               </p>
 
               {capo ? (
@@ -292,7 +299,9 @@ function Configuratore() {
                     onClick={handleCreaOrdine}
                     disabled={creazioneOrdine}
                   >
-                    {creazioneOrdine ? "Invio in corso..." : "Crea ordine"}
+                    {creazioneOrdine
+                      ? t("configuratore.invioInCorso")
+                      : t("configuratore.creaOrdine")}
                   </button>
                   {erroreOrdine && (
                     <p className="text-danger small mt-2 mb-0">
@@ -302,7 +311,7 @@ function Configuratore() {
                 </>
               ) : (
                 <p className="text-muted small mt-3 mb-0">
-                  Scegli un capo dalla Collezione per poter creare un ordine.
+                  {t("configuratore.scegliDallaCollezione")}
                 </p>
               )}
             </div>
@@ -324,9 +333,10 @@ function Configuratore() {
               />
             </div>
             <p className="text-muted small text-center mt-2">
-              Manichino stilizzato (torace {misure.torace || "—"} cm, altezza{" "}
-              {misure.altezza || "—"} cm) — trascina per ruotarlo. Busto e
-              braccia rappresentano il capo, il resto è il corpo.
+              {t("configuratore.manichinoTesto", {
+                torace: misure.torace || "—",
+                altezza: misure.altezza || "—",
+              })}
             </p>
           </div>
         </div>

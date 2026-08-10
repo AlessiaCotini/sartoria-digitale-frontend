@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getMateriali } from "../api/catalogo";
 import { getAccessorio } from "../api/accessori";
 import { getOpzioniAccessorio } from "../api/opzioni";
@@ -10,6 +11,7 @@ import { percorsoAccessorio } from "../utils/percorsoAccessorio";
 import AnteprimaAccessorio from "../components/AnteprimaAccessorio";
 
 function ConfiguratoreAccessorio() {
+  const { t } = useTranslation();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const materialeSelezionato = useSelector(
     (state) => state.configuratore.materiale,
@@ -85,7 +87,7 @@ function ConfiguratoreAccessorio() {
       })
       .catch((err) => {
         setErroreOrdine(
-          err.response?.data?.errore || "Errore nella creazione dell'ordine.",
+          err.response?.data?.errore || t("configuratore.erroreOrdine"),
         );
       })
       .finally(() => setCreazioneOrdine(false));
@@ -99,7 +101,9 @@ function ConfiguratoreAccessorio() {
     return (
       <section className="section">
         <div className="container">
-          <p className="text-muted">Caricamento configuratore...</p>
+          <p className="text-muted">
+            {t("configuratoreAccessorio.caricamento")}
+          </p>
         </div>
       </section>
     );
@@ -132,10 +136,14 @@ function ConfiguratoreAccessorio() {
     <section className="section">
       <div className="container">
         <div className="mb-4">
-          <div className="section-title-eyebrow">Costruzione</div>
-          <h2>Personalizza il tuo accessorio</h2>
+          <div className="section-title-eyebrow">
+            {t("configuratore.eyebrow")}
+          </div>
+          <h2>{t("configuratoreAccessorio.titolo")}</h2>
           <p className="text-muted small mb-4">
-            Stai configurando: {accessorio.nome}
+            {t("configuratoreAccessorio.staiConfigurando", {
+              nome: accessorio.nome,
+            })}
           </p>
           <div className="divider-gold"></div>
         </div>
@@ -143,7 +151,9 @@ function ConfiguratoreAccessorio() {
         <div className="row g-4">
           <div className="col-lg-5">
             <div className="mb-4">
-              <p className="step-label mb-2">Materiale</p>
+              <p className="step-label mb-2">
+                {t("configuratoreAccessorio.materiale")}
+              </p>
               <select
                 className="form-select"
                 value={materialeSelezionato}
@@ -158,7 +168,9 @@ function ConfiguratoreAccessorio() {
             </div>
 
             <div className="mb-4">
-              <p className="step-label mb-2">Colore</p>
+              <p className="step-label mb-2">
+                {t("configuratoreAccessorio.colore")}
+              </p>
               <div className="d-flex flex-wrap gap-2">
                 {materiale.colori.map((c) => (
                   <button
@@ -183,7 +195,9 @@ function ConfiguratoreAccessorio() {
 
             {opzioni.length > 0 && (
               <div className="mb-4">
-                <p className="step-label mb-2">Fantasia</p>
+                <p className="step-label mb-2">
+                  {t("configuratoreAccessorio.fantasia")}
+                </p>
                 <div className="filter-group justify-content-start">
                   {opzioni.map((o) => (
                     <button
@@ -201,12 +215,16 @@ function ConfiguratoreAccessorio() {
             )}
 
             <div className="form-sartoria">
-              <p className="step-label mb-1">Prezzo stimato</p>
+              <p className="step-label mb-1">
+                {t("configuratoreAccessorio.prezzoStimato")}
+              </p>
               <p className="mb-0" style={{ fontSize: "1.4rem" }}>
                 da € {prezzoTotale}
               </p>
               <p className="text-muted small mb-0">
-                Base accessorio + tessuto {materiale.nome.toLowerCase()}
+                {t("configuratoreAccessorio.baseTessuto", {
+                  tessuto: materiale.nome.toLowerCase(),
+                })}
               </p>
               <button
                 type="button"
@@ -214,7 +232,9 @@ function ConfiguratoreAccessorio() {
                 onClick={handleCreaOrdine}
                 disabled={creazioneOrdine}
               >
-                {creazioneOrdine ? "Invio in corso..." : "Crea ordine"}
+                {creazioneOrdine
+                  ? t("configuratoreAccessorio.invioInCorso")
+                  : t("configuratoreAccessorio.creaOrdine")}
               </button>
               {erroreOrdine && (
                 <p className="text-danger small mt-2 mb-0">{erroreOrdine}</p>

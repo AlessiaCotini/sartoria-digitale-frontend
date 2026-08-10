@@ -49,7 +49,39 @@ function NavbarSartoria() {
   return (
     <BsNavbar expand="lg" className="navbar-sartoria" variant="light">
       <Container>
-        <BsNavbar.Brand as={Link} to={ruoloGestionale ? "/gestionale" : "/"}>
+        <BsNavbar.Brand
+          as={Link}
+          to={ruoloGestionale ? "/gestionale" : "/"}
+          className="d-flex align-items-center gap-2"
+        >
+          <span className="monogram">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <ellipse
+                cx="60"
+                cy="30"
+                rx="3.5"
+                ry="6.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+              />
+              <path
+                d="M60,37 L60,55 M60,61 L60,76 M60,82 L60,94 M54,94 L60,104 L66,94"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M25,45 Q50,50 62,58 Q95,60 92,66 Q80,74 60,79 Q35,84 30,95 Q26,100 34,98"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
           Bellariva
         </BsNavbar.Brand>
         <BsNavbar.Toggle aria-controls="offcanvasNavbar" />
@@ -115,7 +147,6 @@ function NavbarSartoria() {
                 title={<FiSettings size={18} />}
                 id="dropdown-impostazioni"
                 align="end"
-                autoClose="outside"
               >
                 <div className="px-3 py-2" style={{ minWidth: "180px" }}>
                   <p className="step-label mb-2">Lingua</p>

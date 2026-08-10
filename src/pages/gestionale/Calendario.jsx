@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import dayjs from "dayjs";
+import "dayjs/locale/it";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import {
   getAppuntamentiTutti,
@@ -9,6 +10,7 @@ import {
 } from "../../api/appuntamenti";
 import { cercaClienti } from "../../api/utenti";
 
+dayjs.locale("it");
 const localizer = dayjsLocalizer(dayjs);
 
 function NuovoAppuntamentoModal({ slot, onChiudi, onCreato }) {

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { getAccessorio } from "../api/accessori";
 import { impostaAccessorio } from "../store/configuratoreSlice";
 import { percorsoAccessorio } from "../utils/percorsoAccessorio";
 
 function DettaglioAccessorio() {
+  const { t } = useTranslation();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,7 +41,7 @@ function DettaglioAccessorio() {
     return (
       <section className="section">
         <div className="container text-center">
-          <p className="text-muted">Caricamento...</p>
+          <p className="text-muted">{t("preventivo.caricamento")}</p>
         </div>
       </section>
     );
@@ -49,9 +51,9 @@ function DettaglioAccessorio() {
     return (
       <section className="section">
         <div className="container text-center">
-          <h2>Accessorio non trovato</h2>
+          <h2>{t("dettaglioAccessorio.nonTrovato")}</h2>
           <Link to="/accessori" className="btn btn-outline-dark-luxury mt-3">
-            Torna agli accessori
+            {t("nav.accessori")}
           </Link>
         </div>
       </section>
@@ -62,7 +64,7 @@ function DettaglioAccessorio() {
     <section className="section">
       <div className="container">
         <Link to="/accessori" className="step-label d-inline-block mb-4">
-          ← Torna agli accessori
+          {t("dettaglioAccessorio.tornaAccessori")}
         </Link>
         <div className="row g-5">
           <div className="col-lg-6">
@@ -85,8 +87,10 @@ function DettaglioAccessorio() {
             </span>
             <h2 className="mt-3 mb-3">{accessorio.nome}</h2>
             <p className="text-muted mb-4">
-              Modello "{accessorio.modello}" realizzato in{" "}
-              {accessorio.tessuto.toLowerCase()}.
+              {t("dettaglioAccessorio.descrizione", {
+                modello: accessorio.modello,
+                tessuto: accessorio.tessuto.toLowerCase(),
+              })}
             </p>
             <div className="preview-price mb-4">da € {accessorio.prezzoDa}</div>
             <button
@@ -94,7 +98,7 @@ function DettaglioAccessorio() {
               className="btn btn-sm btn-gold"
               onClick={() => handleConfigura(accessorio.id)}
             >
-              Configura
+              {t("dettaglioAccessorio.configura")}
             </button>
           </div>
         </div>
