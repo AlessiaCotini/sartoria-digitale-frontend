@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { getAccessori } from "../api/accessori";
 import { impostaAccessorio } from "../store/configuratoreSlice";
 import { percorsoAccessorio } from "../utils/percorsoAccessorio";
 
 function Accessori() {
+  const { t } = useTranslation();
   const [catalogo, setCatalogo] = useState([]);
   const [caricamento, setCaricamento] = useState(true);
   const [genere, setGenere] = useState("Tutti");
@@ -44,11 +46,17 @@ function Accessori() {
     setTipo("Tutti");
   }
 
+  const etichettaGenere = {
+    Tutti: t("catalogo.tutti"),
+    Donna: t("catalogo.donna"),
+    Uomo: t("catalogo.uomo"),
+  };
+
   if (caricamento) {
     return (
       <section className="section">
         <div className="container">
-          <p className="text-muted">Caricamento accessori...</p>
+          <p className="text-muted">{t("accessori.caricamento")}</p>
         </div>
       </section>
     );
@@ -58,13 +66,13 @@ function Accessori() {
     <section className="section">
       <div className="container">
         <div className="mb-4">
-          <div className="section-title-eyebrow">Collezione</div>
-          <h2>Accessori</h2>
+          <div className="section-title-eyebrow">{t("accessori.eyebrow")}</div>
+          <h2>{t("accessori.titolo")}</h2>
           <div className="divider-gold"></div>
         </div>
 
         <div className="mb-3 text-left">
-          <p className="step-label mb-2">Genere</p>
+          <p className="step-label mb-2">{t("catalogo.genere")}</p>
           <div className="filter-group justify-content-start">
             {["Tutti", "Donna", "Uomo"].map((g) => (
               <button
@@ -73,37 +81,37 @@ function Accessori() {
                 className={`filter-tab ${genere === g ? "active" : ""}`}
                 onClick={() => cambiaGenere(g)}
               >
-                {g}
+                {etichettaGenere[g]}
               </button>
             ))}
           </div>
         </div>
 
         <div className="mb-4 text-left">
-          <p className="step-label mb-2">Tipo</p>
+          <p className="step-label mb-2">{t("accessori.tipo")}</p>
           <div className="filter-group justify-content-start">
             <button
               type="button"
               className={`filter-tab ${tipo === "Tutti" ? "active" : ""}`}
               onClick={() => setTipo("Tutti")}
             >
-              Tutti
+              {t("catalogo.tutti")}
             </button>
-            {tipiDisponibili.map((t) => (
+            {tipiDisponibili.map((tp) => (
               <button
-                key={t}
+                key={tp}
                 type="button"
-                className={`filter-tab ${tipo === t ? "active" : ""}`}
-                onClick={() => setTipo(t)}
+                className={`filter-tab ${tipo === tp ? "active" : ""}`}
+                onClick={() => setTipo(tp)}
               >
-                {t}
+                {tp}
               </button>
             ))}
           </div>
         </div>
 
         <p className="text-muted small mb-4">
-          {accessoriFiltrati.length} accessori trovati
+          {accessoriFiltrati.length} {t("accessori.accessoriTrovati")}
         </p>
 
         <div className="row g-3">
@@ -133,7 +141,7 @@ function Accessori() {
                       className="btn btn-sm btn-gold"
                       onClick={() => handleConfigura(a.id)}
                     >
-                      Crea
+                      {t("catalogo.crea")}
                     </button>
                   </div>
                 </div>
@@ -144,7 +152,7 @@ function Accessori() {
 
         {accessoriFiltrati.length === 0 && (
           <p className="text-center text-muted mt-5">
-            Nessun accessorio corrisponde ai filtri scelti.
+            {t("accessori.nessunAccessorio")}
           </p>
         )}
       </div>

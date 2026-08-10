@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getCapi } from "../api/catalogo";
 import { impostaCapo } from "../store/configuratoreSlice";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { percorsoSagoma } from "../utils/sagome";
 
 function Catalogo() {
+  const { t } = useTranslation();
   const [catalogo, setCatalogo] = useState([]);
   const [caricamento, setCaricamento] = useState(true);
   const [genere, setGenere] = useState("Tutti");
@@ -50,11 +52,17 @@ function Catalogo() {
     setCategoria("Tutte");
   }
 
+  const etichettaGenere = {
+    Tutti: t("catalogo.tutti"),
+    Donna: t("catalogo.donna"),
+    Uomo: t("catalogo.uomo"),
+  };
+
   if (caricamento) {
     return (
       <section className="section">
         <div className="container">
-          <p className="text-muted">Caricamento collezione...</p>
+          <p className="text-muted">{t("catalogo.caricamento")}</p>
         </div>
       </section>
     );
@@ -64,13 +72,13 @@ function Catalogo() {
     <section className="section">
       <div className="container">
         <div className="mb-4">
-          <div className="section-title-eyebrow">Collezione</div>
-          <h2>Le nostre bozze</h2>
+          <div className="section-title-eyebrow">{t("catalogo.eyebrow")}</div>
+          <h2>{t("catalogo.titolo")}</h2>
           <div className="divider-gold"></div>
         </div>
 
         <div className="mb-3 text-left">
-          <p className="step-label mb-2">Genere</p>
+          <p className="step-label mb-2">{t("catalogo.genere")}</p>
           <div className="filter-group justify-content-start">
             {["Tutti", "Donna", "Uomo"].map((g) => (
               <button
@@ -79,21 +87,21 @@ function Catalogo() {
                 className={`filter-tab ${genere === g ? "active" : ""}`}
                 onClick={() => cambiaGenere(g)}
               >
-                {g}
+                {etichettaGenere[g]}
               </button>
             ))}
           </div>
         </div>
 
         <div className="mb-4 text-left">
-          <p className="step-label mb-2">Categoria</p>
+          <p className="step-label mb-2">{t("catalogo.categoria")}</p>
           <div className="filter-group justify-content-start">
             <button
               type="button"
               className={`filter-tab ${categoria === "Tutte" ? "active" : ""}`}
               onClick={() => setCategoria("Tutte")}
             >
-              Tutte
+              {t("catalogo.tutte")}
             </button>
             {categorieDisponibili.map((cat) => (
               <button
@@ -109,21 +117,21 @@ function Catalogo() {
         </div>
 
         <div className="mb-4" style={{ maxWidth: "280px" }}>
-          <p className="step-label mb-2">Tessuto</p>
+          <p className="step-label mb-2">{t("catalogo.tessuto")}</p>
           <select
             className="form-select"
             value={tessuto}
             onChange={(e) => setTessuto(e.target.value)}
           >
-            <option>Tutti</option>
-            {tessutiDisponibili.map((t) => (
-              <option key={t}>{t}</option>
+            <option>{t("catalogo.tutti")}</option>
+            {tessutiDisponibili.map((tes) => (
+              <option key={tes}>{tes}</option>
             ))}
           </select>
         </div>
 
         <p className="text-muted small mb-4">
-          {capiFiltrati.length} capi trovati
+          {capiFiltrati.length} {t("catalogo.capiTrovati")}
         </p>
 
         <div className="row g-3">
@@ -156,7 +164,7 @@ function Catalogo() {
                       className="btn btn-sm btn-gold"
                       onClick={() => handleConfigura(capo.id)}
                     >
-                      Crea
+                      {t("catalogo.crea")}
                     </button>
                   </div>
                 </div>
@@ -167,7 +175,7 @@ function Catalogo() {
 
         {capiFiltrati.length === 0 && (
           <p className="text-center text-muted mt-5">
-            Nessun capo corrisponde ai filtri scelti.
+            {t("catalogo.nessunCapo")}
           </p>
         )}
       </div>

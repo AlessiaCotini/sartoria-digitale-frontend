@@ -17,8 +17,7 @@ function disegnaFantasia(ctx, canvas, fantasia) {
   } else if (fantasia === "Pois") {
     ctx.save();
     ctx.globalCompositeOperation = "source-atop";
-    ctx.fillStyle = "#665b45";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(30,25,20,0.3)";
     const passo = canvas.width * 0.1;
     for (let y = canvas.height * 0.08; y < canvas.height * 0.92; y += passo) {
       const riga = Math.round(y / passo);
@@ -37,9 +36,7 @@ function disegnaFantasia(ctx, canvas, fantasia) {
   } else if (fantasia === "Floreale") {
     ctx.save();
     ctx.globalCompositeOperation = "source-atop";
-    ctx.fillStyle = "#988a6d";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+    ctx.fillStyle = "rgba(30,25,20,0.24)";
     const passo = canvas.width * 0.16;
     for (let y = canvas.height * 0.1; y < canvas.height * 0.9; y += passo) {
       for (let x = canvas.width * 0.14; x < canvas.width * 0.86; x += passo) {

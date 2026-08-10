@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { login } from "../store/authSlice";
 import { CAMPI_MISURE } from "../data/misure";
-import { useSelector } from "react-redux";
 import { registraCliente, loginRichiesta, utenteAttuale } from "../api/auth";
 
 function Register() {
+  const { t } = useTranslation();
   const [nome, setNome] = useState("");
   const [cognome, setCognome] = useState("");
   const [email, setEmail] = useState("");
@@ -29,13 +30,13 @@ function Register() {
     e.preventDefault();
 
     if (password !== confermaPassword) {
-      setErrore("Le due password non coincidono.");
+      setErrore(t("register.errorePasswordDiverse"));
       return;
     }
 
     const misureMancanti = CAMPI_MISURE.some((c) => !misure[c.chiave]);
     if (misureMancanti) {
-      setErrore("Inserisci tutte le misure per completare la registrazione.");
+      setErrore(t("register.erroreMisureMancanti"));
       return;
     }
 
@@ -57,9 +58,7 @@ function Register() {
       dispatch(login({ utente, misure: misureNumeriche }));
       navigate(capoId ? "/configuratore" : "/profilo");
     } catch (err) {
-      setErrore(
-        err.response?.data?.errore || "Errore durante la registrazione.",
-      );
+      setErrore(err.response?.data?.errore || t("register.erroreDefault"));
     }
   }
 
@@ -67,18 +66,18 @@ function Register() {
     <section className="section">
       <div className="container" style={{ maxWidth: "640px" }}>
         <div className="mb-4 text-center">
-          <div className="section-title-eyebrow">Registrati</div>
-          <h2>Entra nella sartoria digitale</h2>
+          <div className="section-title-eyebrow">{t("register.eyebrow")}</div>
+          <h2>{t("register.titolo")}</h2>
           <div className="divider-gold mx-auto"></div>
         </div>
 
         <form className="form-sartoria" onSubmit={handleSubmit}>
-          <p className="step-label mb-3">Dati personali</p>
+          <p className="step-label mb-3">{t("register.datiPersonali")}</p>
 
           <div className="row g-3 mb-3">
             <div className="col-6">
               <label className="form-label" htmlFor="regNome">
-                Nome
+                {t("register.nome")}
               </label>
               <input
                 type="text"
@@ -91,7 +90,7 @@ function Register() {
             </div>
             <div className="col-6">
               <label className="form-label" htmlFor="regCognome">
-                Cognome
+                {t("register.cognome")}
               </label>
               <input
                 type="text"
@@ -106,7 +105,7 @@ function Register() {
 
           <div className="mb-3">
             <label className="form-label" htmlFor="regEmail">
-              Email
+              {t("register.email")}
             </label>
             <input
               type="email"
@@ -121,7 +120,7 @@ function Register() {
           <div className="row g-3 mb-4">
             <div className="col-6">
               <label className="form-label" htmlFor="regPassword">
-                Password
+                {t("register.password")}
               </label>
               <input
                 type="password"
@@ -134,7 +133,7 @@ function Register() {
             </div>
             <div className="col-6">
               <label className="form-label" htmlFor="regConfermaPassword">
-                Conferma password
+                {t("register.confermaPassword")}
               </label>
               <input
                 type="password"
@@ -147,11 +146,8 @@ function Register() {
             </div>
           </div>
 
-          <p className="step-label mb-2">Le tue misure</p>
-          <p className="text-muted small mb-3">
-            Servono alla sarta per costruire il tuo abito su misura. Potrai
-            sempre modificarle in seguito dal tuo profilo.
-          </p>
+          <p className="step-label mb-2">{t("register.tueMisure")}</p>
+          <p className="text-muted small mb-3">{t("register.misureTesto")}</p>
 
           <div className="row g-3 mb-4">
             {CAMPI_MISURE.map((campo) => (
@@ -181,13 +177,13 @@ function Register() {
           {errore && <p className="text-danger small mb-3">{errore}</p>}
 
           <button type="submit" className="btn btn-gold w-100 mb-3">
-            Crea account
+            {t("register.creaAccount")}
           </button>
 
           <p className="text-center small text-muted mb-0">
-            Hai già un account?{" "}
+            {t("register.haiAccount")}{" "}
             <Link to="/login" style={{ color: "var(--color-accent)" }}>
-              Accedi
+              {t("register.accedi")}
             </Link>
           </p>
         </form>

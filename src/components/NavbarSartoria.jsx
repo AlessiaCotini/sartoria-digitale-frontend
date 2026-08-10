@@ -1,13 +1,19 @@
+import { useState } from "react";
 import {
   Navbar as BsNavbar,
   Nav,
+  NavDropdown,
   Container,
   Button,
   Offcanvas,
+  Form,
 } from "react-bootstrap";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { FiSettings, FiSun, FiMoon } from "react-icons/fi";
 import { logout } from "../store/authSlice";
+import { useTema } from "../hooks/useTema";
 import BadgeMessaggi from "./BadgeMessaggi";
 
 const RUOLI_GESTIONALE = ["SARTA", "SOTTOPOSTO", "SUPER_ADMIN"];
@@ -18,11 +24,26 @@ function NavbarSartoria() {
   const ruoloGestionale = utente && RUOLI_GESTIONALE.includes(utente.ruolo);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+  const { t, i18n } = useTranslation();
+  const { tema, alterna } = useTema();
 
   function handleLogout() {
     dispatch(logout());
     localStorage.removeItem("token");
     navigate("/");
+  }
+
+  function handleCerca(e) {
+    e.preventDefault();
+    const testo = query.trim();
+    if (!testo) return;
+    navigate(`/ricerca?q=${encodeURIComponent(testo)}`);
+  }
+
+  function cambiaLingua(lingua) {
+    i18n.changeLanguage(lingua);
+    localStorage.setItem("lingua", lingua);
   }
 
   return (
@@ -44,64 +65,121 @@ function NavbarSartoria() {
             <Nav className="flex-column flex-lg-row mx-lg-auto gap-2 gap-lg-0">
               {ruoloGestionale ? (
                 <Nav.Link as={NavLink} to="/gestionale">
-                  Gestionale
+                  {t("nav.gestionale")}
                 </Nav.Link>
               ) : (
                 <>
                   <Nav.Link as={NavLink} to="/" end>
-                    Home
+                    {t("nav.home")}
                   </Nav.Link>
                   <Nav.Link as={NavLink} to="/catalogo">
-                    Collezione
+                    {t("nav.collezione")}
                   </Nav.Link>
                   <Nav.Link as={NavLink} to="/accessori">
-                    Accessori
+                    {t("nav.accessori")}
                   </Nav.Link>
                   <Nav.Link as={NavLink} to="/configuratore">
-                    Costruzione
+                    {t("nav.costruzione")}
                   </Nav.Link>
                   {isLoggedIn && (
                     <>
                       <Nav.Link as={NavLink} to="/preventivo">
-                        Preventivi
+                        {t("nav.preventivi")}
                         <BadgeMessaggi />
                       </Nav.Link>
                       <Nav.Link as={NavLink} to="/profilo">
-                        Profilo &amp; Misure
+                        {t("nav.profilo")}
                       </Nav.Link>
                     </>
                   )}
                 </>
               )}
             </Nav>
-            <div className="d-flex flex-column flex-lg-row gap-2 mt-4 mt-lg-0">
-              {isLoggedIn ? (
-                <Button
-                  type="button"
-                  className="btn-outline-cream btn-sm"
-                  onClick={handleLogout}
-                >
-                  Esci
-                </Button>
-              ) : (
-                <>
+            {!ruoloGestionale && (
+              <Form
+                className="d-flex mt-3 mt-lg-0 mx-lg-3"
+                onSubmit={handleCerca}
+              >
+                <Form.Control
+                  type="search"
+                  placeholder={t("nav.cercaPlaceholder")}
+                  size="sm"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  style={{ minWidth: "200px" }}
+                />
+              </Form>
+            )}
+            <div className="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+              <NavDropdown
+                title={<FiSettings size={18} />}
+                id="dropdown-impostazioni"
+                align="end"
+                autoClose="outside"
+              >
+                <div className="px-3 py-2" style={{ minWidth: "180px" }}>
+                  <p className="step-label mb-2">Lingua</p>
+                  <div className="d-flex gap-2 mb-3">
+                    <button
+                      type="button"
+                      className={`lingua-tab ${i18n.language === "it" ? "active" : ""}`}
+                      onClick={() => cambiaLingua("it")}
+                    >
+                      IT
+                    </button>
+                    <button
+                      type="button"
+                      className={`lingua-tab ${i18n.language === "en" ? "active" : ""}`}
+                      onClick={() => cambiaLingua("en")}
+                    >
+                      EN
+                    </button>
+                  </div>
+                  <p className="step-label mb-2">Tema</p>
                   <Button
-                    as={Link}
-                    to="/login"
-                    className="btn-outline-cream btn-sm"
+                    type="button"
+                    className="btn-outline-cream btn-sm w-100 d-flex align-items-center justify-content-center gap-2"
+                    onClick={alterna}
                   >
-                    Accedi
+                    {tema === "scuro" ? (
+                      <>
+                        <FiSun /> Chiaro
+                      </>
+                    ) : (
+                      <>
+                        <FiMoon /> Scuro
+                      </>
+                    )}
                   </Button>
-                  <Button
-                    as={Link}
-                    to="/register"
-                    className="btn-outline-cream btn-sm"
-                  >
-                    Registrati
-                  </Button>
-                </>
-              )}
+                </div>
+                {isLoggedIn && (
+                  <>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item onClick={handleLogout}>
+                      {t("nav.esci")}
+                    </NavDropdown.Item>
+                  </>
+                )}
+              </NavDropdown>
             </div>
+            {!isLoggedIn && (
+              <div className="d-flex flex-column flex-lg-row gap-2 mt-3 mt-lg-0 ms-lg-2">
+                <Button
+                  as={Link}
+                  to="/login"
+                  className="btn-outline-cream btn-sm"
+                >
+                  {t("nav.accedi")}
+                </Button>
+                <Button
+                  as={Link}
+                  to="/register"
+                  className="btn-outline-cream btn-sm"
+                >
+                  {t("nav.registrati")}
+                </Button>
+              </div>
+            )}
           </Offcanvas.Body>
         </BsNavbar.Offcanvas>
       </Container>

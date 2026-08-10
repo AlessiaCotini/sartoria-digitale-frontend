@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { login } from "../store/authSlice";
 import { loginRichiesta, utenteAttuale } from "../api/auth";
 import { misureMie } from "../api/misure";
 
 function Login() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errore, setErrore] = useState("");
@@ -30,7 +32,7 @@ function Login() {
       dispatch(login({ utente, misure }));
       navigate(capoId ? "/configuratore" : "/profilo");
     } catch (err) {
-      setErrore(err.response?.data?.errore || "Email o password errati.");
+      setErrore(err.response?.data?.errore || t("login.erroreDefault"));
     }
   }
 
@@ -38,15 +40,15 @@ function Login() {
     <section className="section">
       <div className="container" style={{ maxWidth: "440px" }}>
         <div className="mb-4 text-center">
-          <div className="section-title-eyebrow">Accedi</div>
-          <h2>Bentornata in Bellariva</h2>
+          <div className="section-title-eyebrow">{t("login.eyebrow")}</div>
+          <h2>{t("login.titolo")}</h2>
           <div className="divider-gold mx-auto"></div>
         </div>
 
         <form className="form-sartoria" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label" htmlFor="loginEmail">
-              Email
+              {t("login.email")}
             </label>
             <input
               type="email"
@@ -60,7 +62,7 @@ function Login() {
 
           <div className="mb-4">
             <label className="form-label" htmlFor="loginPassword">
-              Password
+              {t("login.password")}
             </label>
             <input
               type="password"
@@ -75,13 +77,13 @@ function Login() {
           {errore && <p className="text-danger small mb-3">{errore}</p>}
 
           <button type="submit" className="btn btn-gold w-100 mb-3">
-            Accedi
+            {t("login.accedi")}
           </button>
 
           <p className="text-center small text-muted mb-0">
-            Non hai un account?{" "}
+            {t("login.nonHaiAccount")}{" "}
             <Link to="/register" style={{ color: "var(--color-accent)" }}>
-              Registrati
+              {t("login.registrati")}
             </Link>
           </p>
         </form>

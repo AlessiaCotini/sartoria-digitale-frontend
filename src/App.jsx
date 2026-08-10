@@ -32,6 +32,7 @@ import TerminiCondizioni from "./pages/TerminiCondizioni";
 import Accessori from "./pages/Accessori";
 import DettaglioAccessorio from "./pages/DettaglioAccessorio";
 import ConfiguratoreAccessorio from "./pages/ConfiguratoreAccessorio";
+import Ricerca from "./pages/Ricerca";
 
 function App() {
   const dispatch = useDispatch();
@@ -99,6 +100,14 @@ function App() {
           element={
             <SoloCliente>
               <Catalogo />
+            </SoloCliente>
+          }
+        />
+        <Route
+          path="/ricerca"
+          element={
+            <SoloCliente>
+              <Ricerca />
             </SoloCliente>
           }
         />
