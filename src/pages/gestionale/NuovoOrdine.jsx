@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { getCapi, getMateriali } from "../../api/catalogo";
+import { getAccessori } from "../../api/accessori";
 import { cercaClienti } from "../../api/utenti";
 import { creaOrdineNegozio } from "../../api/ordini";
 import { CAMPI_MISURE } from "../../data/misure";
 
 const misureVuote = Object.fromEntries(CAMPI_MISURE.map((c) => [c.chiave, ""]));
+const TAGLIE_SCARPE = Array.from({ length: 12 }, (_, i) => 35 + i);
 
 function NuovoOrdine() {
   const [capi, setCapi] = useState([]);
+  const [accessori, setAccessori] = useState([]);
   const [materiali, setMateriali] = useState([]);
   const [caricamento, setCaricamento] = useState(true);
 
@@ -20,17 +23,22 @@ function NuovoOrdine() {
   const [telefonoCliente, setTelefonoCliente] = useState("");
   const [misure, setMisure] = useState(misureVuote);
 
+  const [tipoProdotto, setTipoProdotto] = useState("capo");
   const [capoId, setCapoId] = useState("");
+  const [accessorioId, setAccessorioId] = useState("");
   const [materialeId, setMaterialeId] = useState("");
   const [colore, setColore] = useState("");
 
   const [errore, setErrore] = useState("");
   const [successo, setSuccesso] = useState("");
 
+  const [taglia, setTaglia] = useState("");
+
   useEffect(() => {
-    Promise.all([getCapi(), getMateriali()])
-      .then(([listaCapi, listaMateriali]) => {
+    Promise.all([getCapi(), getAccessori(), getMateriali()])
+      .then(([listaCapi, listaAccessori, listaMateriali]) => {
         setCapi(listaCapi);
+        setAccessori(listaAccessori);
         setMateriali(listaMateriali);
       })
       .finally(() => setCaricamento(false));
@@ -54,9 +62,19 @@ function NuovoOrdine() {
   }, [ricerca, tipoCliente]);
 
   const materialeScelto = materiali.find((m) => m.id === materialeId);
+  const accessorioScelto = accessori.find((a) => a.id === accessorioId);
 
   function handleMisuraChange(chiave, valore) {
     setMisure((prev) => ({ ...prev, [chiave]: valore }));
+  }
+
+  function handleCambiaTipoProdotto(nuovoTipo) {
+    setTipoProdotto(nuovoTipo);
+    setCapoId("");
+    setAccessorioId("");
+    setMaterialeId("");
+    setColore("");
+    setTaglia("");
   }
 
   function handleSubmit(e) {
@@ -64,12 +82,36 @@ function NuovoOrdine() {
     setErrore("");
     setSuccesso("");
 
-    if (!capoId || !materialeId || !colore) {
-      setErrore("Scegli capo, materiale e colore.");
+    if (tipoProdotto === "capo" && !capoId) {
+      setErrore("Scegli un capo.");
+      return;
+    }
+    if (tipoProdotto === "accessorio" && !accessorioId) {
+      setErrore("Scegli un accessorio.");
+      return;
+    }
+    if (
+      tipoProdotto === "accessorio" &&
+      accessorioScelto?.tipoBackend === "SCARPE" &&
+      !taglia
+    ) {
+      setErrore("Seleziona la taglia.");
+      return;
+    }
+    if (!materialeId || !colore) {
+      setErrore("Scegli materiale e colore.");
       return;
     }
 
-    const dati = { capoId, materialeId, colore };
+    const dati =
+      tipoProdotto === "capo"
+        ? { capoId, materialeId, colore }
+        : {
+            accessorioId,
+            materialeId,
+            colore,
+            ...(accessorioScelto?.tipoBackend === "SCARPE" ? { taglia } : {}),
+          };
 
     if (tipoCliente === "registrato") {
       if (!clienteSelezionato) {
@@ -104,8 +146,10 @@ function NuovoOrdine() {
         setTelefonoCliente("");
         setMisure(misureVuote);
         setCapoId("");
+        setAccessorioId("");
         setMaterialeId("");
         setColore("");
+        setTaglia("");
       })
       .catch((err) =>
         setErrore(
@@ -226,19 +270,75 @@ function NuovoOrdine() {
         </div>
       )}
 
-      <p className="step-label mb-2 mt-4">Capo</p>
-      <select
-        className="form-select mb-3"
-        value={capoId}
-        onChange={(e) => setCapoId(e.target.value)}
-      >
-        <option value="">Scegli un capo</option>
-        {capi.map((c) => (
-          <option key={c.id} value={c.id}>
-            {c.nome} — {c.genere} · {c.categoria}
-          </option>
-        ))}
-      </select>
+      <p className="step-label mb-2 mt-4">Prodotto</p>
+      <div className="filter-group mb-3">
+        <button
+          type="button"
+          className={`filter-tab ${tipoProdotto === "capo" ? "active" : ""}`}
+          onClick={() => handleCambiaTipoProdotto("capo")}
+        >
+          Capo
+        </button>
+        <button
+          type="button"
+          className={`filter-tab ${tipoProdotto === "accessorio" ? "active" : ""}`}
+          onClick={() => handleCambiaTipoProdotto("accessorio")}
+        >
+          Accessorio
+        </button>
+      </div>
+
+      {tipoProdotto === "capo" ? (
+        <select
+          className="form-select mb-3"
+          value={capoId}
+          onChange={(e) => setCapoId(e.target.value)}
+        >
+          <option value="">Scegli un capo</option>
+          {capi.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.nome} — {c.genere} · {c.categoria}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <select
+          className="form-select mb-3"
+          value={accessorioId}
+          onChange={(e) => {
+            setAccessorioId(e.target.value);
+            setTaglia("");
+          }}
+        >
+          <option value="">Scegli un accessorio</option>
+          {accessori.map((a) => (
+            <option key={a.id} value={a.id}>
+              {a.nome} — {a.genere} · {a.tipo}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {tipoProdotto === "accessorio" &&
+        accessorioScelto?.tipoBackend === "SCARPE" && (
+          <>
+            <p className="step-label mb-2">Taglia</p>
+            <select
+              className="form-select mb-3"
+              value={taglia}
+              onChange={(e) => setTaglia(e.target.value)}
+            >
+              <option value="">Scegli una taglia</option>
+              {TAGLIE_SCARPE.map((tg) => (
+                <option key={tg} value={tg}>
+                  {tg}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
+
+      <p className="step-label mb-2">Materiale</p>
 
       <p className="step-label mb-2">Materiale</p>
       <select

@@ -29,6 +29,9 @@ function ConfiguratoreAccessorio() {
   const [opzioneFantasiaId, setOpzioneFantasiaId] = useState(null);
   const [caricamento, setCaricamento] = useState(true);
 
+  const TAGLIE_SCARPE = Array.from({ length: 12 }, (_, i) => 35 + i);
+  const [taglia, setTaglia] = useState("");
+
   useEffect(() => {
     let attivo = true;
 
@@ -74,6 +77,10 @@ function ConfiguratoreAccessorio() {
 
   function handleCreaOrdine() {
     setErroreOrdine("");
+    if (accessorio.tipoBackend === "SCARPE" && !taglia) {
+      setErroreOrdine(t("configuratoreAccessorio.erroreTaglia"));
+      return;
+    }
     setCreazioneOrdine(true);
 
     creaOrdine({
@@ -81,6 +88,7 @@ function ConfiguratoreAccessorio() {
       materialeId: materiale.id,
       colore: coloreSelezionato,
       opzioniAccessorioIds: opzioneFantasiaId ? [opzioneFantasiaId] : [],
+      ...(accessorio.tipoBackend === "SCARPE" ? { taglia } : {}),
     })
       .then(() => {
         navigate("/preventivo");
@@ -211,6 +219,27 @@ function ConfiguratoreAccessorio() {
                     </button>
                   ))}
                 </div>
+              </div>
+            )}
+            {accessorio.tipoBackend === "SCARPE" && (
+              <div className="mb-4">
+                <p className="step-label mb-2">
+                  {t("configuratoreAccessorio.taglia")}
+                </p>
+                <select
+                  className="form-select"
+                  value={taglia}
+                  onChange={(e) => setTaglia(e.target.value)}
+                >
+                  <option value="">
+                    {t("configuratoreAccessorio.scegliTaglia")}
+                  </option>
+                  {TAGLIE_SCARPE.map((tg) => (
+                    <option key={tg} value={tg}>
+                      {tg}
+                    </option>
+                  ))}
+                </select>
               </div>
             )}
 

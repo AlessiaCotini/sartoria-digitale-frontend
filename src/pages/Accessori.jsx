@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { getAccessori } from "../api/accessori";
 import { impostaAccessorio } from "../store/configuratoreSlice";
 import { percorsoAccessorio } from "../utils/percorsoAccessorio";
+import ImmagineAccessorio from "../components/ImmagineAccessorio";
 
 function Accessori() {
   const { t } = useTranslation();
@@ -120,7 +121,7 @@ function Accessori() {
               <div className="product-card">
                 <Link to={`/accessori/${a.id}`}>
                   <div className="product-thumb">
-                    <img
+                    <ImmagineAccessorio
                       src={percorsoAccessorio(a.tipo, a.genere, a.modello)}
                       alt={a.nome}
                     />

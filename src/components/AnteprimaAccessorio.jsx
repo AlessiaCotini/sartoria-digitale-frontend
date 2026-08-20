@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { coloraSvg } from "../utils/coloraSvg";
 
 function disegnaFantasia(ctx, canvas, fantasia) {
@@ -60,13 +60,18 @@ function disegnaFantasia(ctx, canvas, fantasia) {
 
 function AnteprimaAccessorio({ percorsoSvg, coloreHex, fantasia }) {
   const canvasRef = useRef(null);
+  const [erroreCaricamento, setErroreCaricamento] = useState(false);
 
   useEffect(() => {
     if (!percorsoSvg || !canvasRef.current) return;
     let annullato = false;
+    setErroreCaricamento(false);
 
     fetch(percorsoSvg)
-      .then((r) => r.text())
+      .then((r) => {
+        if (!r.ok) throw new Error("SVG non trovato");
+        return r.text();
+      })
       .then((testoSvg) => {
         if (annullato) return;
         const { svgColorato } = coloraSvg(testoSvg, coloreHex);
@@ -94,14 +99,26 @@ function AnteprimaAccessorio({ percorsoSvg, coloreHex, fantasia }) {
         immagine.src =
           "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgColorato);
       })
-      .catch((errore) =>
-        console.error("Errore nel caricare l'accessorio:", errore),
-      );
+      .catch((errore) => {
+        console.error("Errore nel caricare l'accessorio:", errore);
+        if (!annullato) setErroreCaricamento(true);
+      });
 
     return () => {
       annullato = true;
     };
   }, [percorsoSvg, coloreHex, fantasia]);
+
+  if (erroreCaricamento) {
+    return (
+      <div
+        className="d-flex align-items-center justify-content-center text-muted small"
+        style={{ width: "100%", height: "480px" }}
+      >
+        Anteprima non disponibile
+      </div>
+    );
+  }
 
   return (
     <canvas

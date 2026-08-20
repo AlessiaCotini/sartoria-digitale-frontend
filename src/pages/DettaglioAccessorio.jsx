@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { getAccessorio } from "../api/accessori";
 import { impostaAccessorio } from "../store/configuratoreSlice";
 import { percorsoAccessorio } from "../utils/percorsoAccessorio";
+import ImmagineAccessorio from "../components/ImmagineAccessorio";
 
 function DettaglioAccessorio() {
   const { t } = useTranslation();
@@ -70,7 +71,7 @@ function DettaglioAccessorio() {
           <div className="col-lg-6">
             <div className="product-card">
               <div className="product-thumb" style={{ aspectRatio: "3/4" }}>
-                <img
+                <ImmagineAccessorio
                   src={percorsoAccessorio(
                     accessorio.tipo,
                     accessorio.genere,

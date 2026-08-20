@@ -158,7 +158,10 @@
     "baseTessuto": "Base accessorio + tessuto {{tessuto}}",
     "invioInCorso": "Invio in corso...",
     "creaOrdine": "Crea ordine",
-    "caricamento": "Caricamento configuratore..."
+    "caricamento": "Caricamento configuratore...",
+    "taglia": "Taglia",
+"scegliTaglia": "Scegli una taglia",
+"erroreTaglia": "Seleziona la taglia."
   },
   "profilo": {
     "eyebrow": "Profilo",
