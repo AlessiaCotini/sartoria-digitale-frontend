@@ -92,8 +92,29 @@
     "accedi": "Sign in",
     "nonHaiAccount": "Don't have an account?",
     "registrati": "Sign up",
-    "erroreDefault": "Wrong email or password."
+    "erroreDefault": "Wrong email or password.",
+    "passwordDimenticata": "Forgot password?"
   },
+  "richiediReset": {
+  "titolo": "Recover your password",
+  "invia": "Send reset link",
+  "invioInCorso": "Sending...",
+  "messaggioInviato": "If that address is registered, you'll receive an email shortly with instructions to reset your password.",
+  "errore": "Something went wrong sending the email. Please try again later."
+},
+"resetPassword": {
+  "titolo": "Reset your password",
+  "nuovaPassword": "New password",
+  "confermaPassword": "Confirm password",
+  "reimposta": "Reset password",
+  "invioInCorso": "Saving...",
+  "passwordNonCombaciano": "Passwords don't match.",
+  "passwordTroppoCorta": "Password must be at least 8 characters long.",
+  "messaggioSuccesso": "Password updated successfully.",
+  "vaiAlLogin": "Go to login",
+  "linkNonValido": "Missing or invalid reset link.",
+  "errore": "Error resetting your password. The link may have expired."
+},
   "register": {
     "eyebrow": "Sign up",
     "titolo": "Join the digital atelier",

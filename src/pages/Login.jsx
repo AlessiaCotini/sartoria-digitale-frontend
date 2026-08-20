@@ -73,6 +73,11 @@ function Login() {
               required
             />
           </div>
+          <p className="text-end small mb-3">
+            <Link to="/richiedi-reset" style={{ color: "var(--color-accent)" }}>
+              {t("login.passwordDimenticata")}
+            </Link>
+          </p>
 
           {errore && <p className="text-danger small mb-3">{errore}</p>}
 

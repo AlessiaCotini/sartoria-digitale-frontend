@@ -11,3 +11,13 @@ export function loginRichiesta(email, password) {
 export function utenteAttuale() {
   return client.get("/utenti/me").then((r) => r.data);
 }
+
+export function richiediReset(email) {
+  return client.post("/auth/richiedi-reset", { email }).then((r) => r.data);
+}
+
+export function resetPassword(token, nuovaPassword) {
+  return client
+    .post("/auth/reset-password", { token, nuovaPassword })
+    .then((r) => r.data);
+}

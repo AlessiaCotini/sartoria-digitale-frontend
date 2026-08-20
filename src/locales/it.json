@@ -92,8 +92,29 @@
     "accedi": "Accedi",
     "nonHaiAccount": "Non hai un account?",
     "registrati": "Registrati",
-    "erroreDefault": "Email o password errati."
+    "erroreDefault": "Email o password errati.",
+    "passwordDimenticata": "Password dimenticata?"
   },
+  "richiediReset": {
+  "titolo": "Recupera la password",
+  "invia": "Invia link di reset",
+  "invioInCorso": "Invio in corso...",
+  "messaggioInviato": "Se l'indirizzo è registrato, riceverai a breve un'email con le istruzioni per reimpostare la password.",
+  "errore": "Errore durante l'invio. Riprova più tardi."
+},
+"resetPassword": {
+  "titolo": "Reimposta la password",
+  "nuovaPassword": "Nuova password",
+  "confermaPassword": "Conferma password",
+  "reimposta": "Reimposta password",
+  "invioInCorso": "Salvataggio...",
+  "passwordNonCombaciano": "Le password non coincidono.",
+  "passwordTroppoCorta": "La password deve avere almeno 8 caratteri.",
+  "messaggioSuccesso": "Password aggiornata con successo.",
+  "vaiAlLogin": "Vai al login",
+  "linkNonValido": "Link di reset mancante o non valido.",
+  "errore": "Errore durante il reset. Il link potrebbe essere scaduto."
+},
   "register": {
     "eyebrow": "Registrati",
     "titolo": "Entra nella sartoria digitale",

@@ -33,6 +33,8 @@ import Accessori from "./pages/Accessori";
 import DettaglioAccessorio from "./pages/DettaglioAccessorio";
 import ConfiguratoreAccessorio from "./pages/ConfiguratoreAccessorio";
 import Ricerca from "./pages/Ricerca";
+import RichiediReset from "./pages/RichiediReset";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   const dispatch = useDispatch();
@@ -73,6 +75,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/richiedi-reset" element={<RichiediReset />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/termini" element={<TerminiCondizioni />} />
