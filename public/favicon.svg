@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <ellipse
+    cx="60"
+    cy="30"
+    rx="3.5"
+    ry="6.5"
+    fill="none"
+    stroke="#c9a15a"
+    stroke-width="4"
+  />
+  <path
+    d="M60,37 L60,55 M60,61 L60,76 M60,82 L60,94 M54,94 L60,104 L66,94"
+    fill="none"
+    stroke="#c9a15a"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M25,45 Q50,50 62,58 Q95,60 92,66 Q80,74 60,79 Q35,84 30,95 Q26,100 34,98"
+    fill="none"
+    stroke="#c9a15a"
+    stroke-width="4"
+    stroke-linecap="round"
+  />
+</svg>
