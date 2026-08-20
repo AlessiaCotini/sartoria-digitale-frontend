@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { creaCapo, creaMateriale } from "../../api/catalogo";
+import { creaAccessorio } from "../../api/accessori";
+
+const TIPI_ACCESSORIO = ["CAPPELLO", "SCARPE", "BORSA"];
 
 const GENERI = ["UOMO", "DONNA"];
 const CATEGORIE = ["TOP_LUNGO", "MAGLIETTE", "ABITI", "GONNE", "PANTALONI"];
@@ -277,12 +280,143 @@ function FormNuovoMateriale() {
     </form>
   );
 }
+function FormNuovoAccessorio() {
+  const [nome, setNome] = useState("");
+  const [tipo, setTipo] = useState(TIPI_ACCESSORIO[0]);
+  const [genere, setGenere] = useState(GENERI[0]);
+  const [modello, setModello] = useState("");
+  const [prezzoDa, setPrezzoDa] = useState("");
+  const [inEvidenza, setInEvidenza] = useState(false);
+  const [errore, setErrore] = useState("");
+  const [successo, setSuccesso] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setErrore("");
+    setSuccesso("");
+
+    creaAccessorio({
+      nome,
+      tipo,
+      genere,
+      modello,
+      prezzoDa: parseFloat(prezzoDa),
+      inEvidenza,
+    })
+      .then(() => {
+        setSuccesso("Accessorio creato con successo.");
+        setNome("");
+        setModello("");
+        setPrezzoDa("");
+        setInEvidenza(false);
+      })
+      .catch((err) =>
+        setErrore(
+          err.response?.data?.errore ||
+            "Errore nella creazione dell'accessorio.",
+        ),
+      );
+  }
+
+  return (
+    <form className="form-sartoria mb-4" onSubmit={handleSubmit}>
+      <h5 className="mb-3">Nuovo accessorio</h5>
+
+      <div className="mb-3">
+        <label className="form-label">Nome</label>
+        <input
+          type="text"
+          className="form-control"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          required
+        />
+      </div>
+
+      <div className="row g-3 mb-3">
+        <div className="col-6">
+          <label className="form-label">Tipo</label>
+          <select
+            className="form-select"
+            value={tipo}
+            onChange={(e) => setTipo(e.target.value)}
+          >
+            {TIPI_ACCESSORIO.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-6">
+          <label className="form-label">Genere</label>
+          <select
+            className="form-select"
+            value={genere}
+            onChange={(e) => setGenere(e.target.value)}
+          >
+            {GENERI.map((g) => (
+              <option key={g} value={g}>
+                {g}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="row g-3 mb-3">
+        <div className="col-6">
+          <label className="form-label">Modello</label>
+          <input
+            type="text"
+            className="form-control"
+            value={modello}
+            onChange={(e) => setModello(e.target.value)}
+          />
+        </div>
+        <div className="col-6">
+          <label className="form-label">Prezzo da (€)</label>
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            className="form-control"
+            value={prezzoDa}
+            onChange={(e) => setPrezzoDa(e.target.value)}
+            required
+          />
+        </div>
+      </div>
+
+      <div className="form-check mb-3">
+        <input
+          type="checkbox"
+          className="form-check-input"
+          id="accessorioInEvidenza"
+          checked={inEvidenza}
+          onChange={(e) => setInEvidenza(e.target.checked)}
+        />
+        <label className="form-check-label" htmlFor="accessorioInEvidenza">
+          In evidenza in Home
+        </label>
+      </div>
+
+      {errore && <p className="text-danger small">{errore}</p>}
+      {successo && <p className="text-success small">{successo}</p>}
+
+      <button type="submit" className="btn btn-gold w-100">
+        Crea accessorio
+      </button>
+    </form>
+  );
+}
 
 function GestioneCatalogo() {
   return (
     <div className="row g-4">
       <div className="col-lg-6">
         <FormNuovoCapo />
+        <FormNuovoAccessorio />
       </div>
       <div className="col-lg-6">
         <FormNuovoMateriale />

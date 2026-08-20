@@ -56,7 +56,7 @@ function Pagamenti() {
                     <span className="badge-soft ms-2">negozio</span>
                   )}
                 </td>
-                <td>{ordine.capoNome}</td>
+                <td>{ordine.capoNome || ordine.accessorioNome}</td>
                 <td>€ {ordine.prezzoTotale}</td>
                 <td>
                   {pagamento?.accontoImporto != null

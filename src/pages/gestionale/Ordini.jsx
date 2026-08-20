@@ -106,7 +106,7 @@ function Ordini() {
                       <span className="badge-soft ms-2">negozio</span>
                     )}
                   </td>
-                  <td>{o.capoNome}</td>
+                  <td>{o.capoNome || o.accessorioNome}</td>
                   <td>
                     {o.materialeNome} — {o.colore}
                   </td>
