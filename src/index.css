@@ -60,6 +60,17 @@
 --bs-body-color: var(--color-ink);
 }
 
+:root[data-theme="dark"] ::-webkit-scrollbar {
+  width: 10px;
+}
+:root[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--color-dark-panel);
+}
+:root[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: var(--radius-sm);
+}
+
 :root[data-theme="dark"] .form-control,
 :root[data-theme="dark"] .form-select {
   background-color: var(--color-page-alt);

@@ -147,6 +147,7 @@ function NavbarSartoria() {
                 title={<FiSettings size={18} />}
                 id="dropdown-impostazioni"
                 align="end"
+                className="px-2"
               >
                 <div className="px-3 py-2" style={{ minWidth: "180px" }}>
                   <p className="step-label mb-2">Lingua</p>
