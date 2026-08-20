@@ -1,18 +1,29 @@
-# React + Vite
+# Bellariva — Sartoria Digitale
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Piattaforma web per una sartoria su misura: i clienti sfogliano la collezione, configurano capi e accessori in un mini-editor 2D/3D usando le proprie misure corporee, inviano la richiesta di preventivo e negoziano in chat con la sarta. Il lato gestionale copre calendario appuntamenti, ordini, pagamenti, catalogo, magazzino e team.
 
-Currently, two official plugins are available:
+Progetto sviluppato come lavoro finale per l'esame di [FULL STACK/ Cotini Alessia].
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Frontend React di [sartoria-digitale-backend](../sartoria-digitale-backend) (Spring Boot).
 
-## React Compiler
+## Funzionalità principali
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- **Autenticazione a ruoli**: cliente (self-registrazione), sottoposto, sarta, super admin, con permessi differenziati
+- **Configuratore 2D/3D**: capi e accessori sovrapposti a un manichino 3D scalato sulle misure del cliente, con scelta di materiale, colore e opzioni
+- **Preventivi e chat**: negoziazione in tempo reale (WebSocket/STOMP) tra cliente e sarta prima della conferma ordine
+- **Gestionale sarta**: calendario appuntamenti, ordini (online + walk-in), pagamenti (acconto/saldo), catalogo capi/materiali/accessori, magazzino, gestione team
+- **Reset password** via email (Mailgun)
+- **i18n** italiano/inglese e tema chiaro/scuro
 
-Note: This will impact Vite dev & build performances.
+## Stack tecnico
 
-## Expanding the ESLint configuration
+React 19, Redux Toolkit, React Router 7, React Bootstrap, react-i18next, Three.js (manichino 3D), @stomp/stompjs (chat real-time), Vite.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Avvio in locale
+
+Prerequisiti: Node.js, backend [sartoria-digitale-backend](../sartoria-digitale-backend) in esecuzione su `localhost:3027`.
+
+```bash
+npm install
+npm run dev
+```
