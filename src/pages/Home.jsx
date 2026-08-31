@@ -3,11 +3,38 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getCapi } from "../api/catalogo";
 import { percorsoSagoma } from "../utils/sagome";
+import { inviaRichiestaContatto } from "../api/contatti";
 
 function Home() {
   const { t } = useTranslation();
   const [capiInEvidenza, setCapiInEvidenza] = useState([]);
+  const [nomeContatto, setNomeContatto] = useState("");
+  const [emailContatto, setEmailContatto] = useState("");
+  const [tipoServizio, setTipoServizio] = useState(t("home.riparazioniTitolo"));
+  const [messaggioContatto, setMessaggioContatto] = useState("");
+  const [invioInCorso, setInvioInCorso] = useState(false);
+  const [esitoContatto, setEsitoContatto] = useState(null);
 
+  function handleInviaContatto(e) {
+    e.preventDefault();
+    setInvioInCorso(true);
+    setEsitoContatto(null);
+
+    inviaRichiestaContatto({
+      nome: nomeContatto,
+      email: emailContatto,
+      tipoServizio,
+      messaggio: messaggioContatto,
+    })
+      .then(() => {
+        setEsitoContatto("successo");
+        setNomeContatto("");
+        setEmailContatto("");
+        setMessaggioContatto("");
+      })
+      .catch(() => setEsitoContatto("errore"))
+      .finally(() => setInvioInCorso(false));
+  }
   useEffect(() => {
     getCapi().then((catalogo) => {
       setCapiInEvidenza(catalogo.filter((capo) => capo.inEvidenza));
@@ -215,7 +242,7 @@ function Home() {
             <p className="text-muted">{t("home.contattaciTesto")}</p>
             <div className="divider-gold mx-auto"></div>
           </div>
-          <form className="form-sartoria">
+          <form className="form-sartoria" onSubmit={handleInviaContatto}>
             <div className="row g-3 mb-3">
               <div className="col-md-6">
                 <label className="form-label">{t("home.formNome")}</label>
@@ -223,6 +250,9 @@ function Home() {
                   type="text"
                   className="form-control"
                   placeholder={t("home.formNomePlaceholder")}
+                  value={nomeContatto}
+                  onChange={(e) => setNomeContatto(e.target.value)}
+                  required
                 />
               </div>
               <div className="col-md-6">
@@ -231,12 +261,19 @@ function Home() {
                   type="email"
                   className="form-control"
                   placeholder={t("home.formEmailPlaceholder")}
+                  value={emailContatto}
+                  onChange={(e) => setEmailContatto(e.target.value)}
+                  required
                 />
               </div>
             </div>
             <div className="mb-3">
               <label className="form-label">{t("home.formTipoServizio")}</label>
-              <select className="form-select">
+              <select
+                className="form-select"
+                value={tipoServizio}
+                onChange={(e) => setTipoServizio(e.target.value)}
+              >
                 <option>{t("home.riparazioniTitolo")}</option>
                 <option>{t("home.orliTitolo")}</option>
                 <option>{t("home.complessiTitolo")}</option>
@@ -248,10 +285,29 @@ function Home() {
                 className="form-control"
                 rows="4"
                 placeholder={t("home.formMessaggioPlaceholder")}
+                value={messaggioContatto}
+                onChange={(e) => setMessaggioContatto(e.target.value)}
+                required
               ></textarea>
             </div>
-            <button type="button" className="btn btn-gold w-100">
-              {t("home.formInvia")}
+
+            {esitoContatto === "successo" && (
+              <p className="text-success small mb-3">
+                Richiesta inviata con successo!
+              </p>
+            )}
+            {esitoContatto === "errore" && (
+              <p className="text-danger small mb-3">
+                Errore nell'invio. Riprova più tardi.
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="btn btn-gold w-100"
+              disabled={invioInCorso}
+            >
+              {invioInCorso ? "Invio in corso..." : t("home.formInvia")}
             </button>
           </form>
         </div>
