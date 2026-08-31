@@ -132,6 +132,8 @@ a {
 
 .navbar-sartoria {
   padding: 1.4rem 0;
+   position: relative;
+  z-index: 1050;
 }
 
 .navbar-sartoria .navbar-brand {
@@ -338,13 +340,13 @@ a {
   z-index: 0;
 }
 .hero::after {
-  content: "";
+   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(23, 20, 15, 0.55) 0%,
-    rgba(23, 20, 15, 0.75) 100%
+    rgba(15, 12, 8, 0.72) 0%,
+    rgba(15, 12, 8, 0.82) 100%
   );
   z-index: 1;
 }
@@ -356,6 +358,7 @@ a {
 .hero h1,
 .hero p.lead {
   color: #f2ede4;
+   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
 }
 .hero h1 em {
   color: var(--color-accent-light);
