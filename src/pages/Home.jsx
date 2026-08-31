@@ -17,6 +17,19 @@ function Home() {
   return (
     <>
       <header className="hero">
+        <div className="img-placeholder">
+          <img
+            src="/immagini/hero-atelier.jpg"
+            alt=""
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </div>
         <div className="container">
           <div className="eyebrow mb-3">{t("home.eyebrow")}</div>
           <h1 className="mb-4">
@@ -66,6 +79,38 @@ function Home() {
                 <h4 className="h5">{t("home.step3Titolo")}</h4>
                 <p className="text-muted mb-0">{t("home.step3Testo")}</p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section pt-0">
+        <div className="container">
+          <div className="row g-5 align-items-center">
+            <div className="col-lg-6">
+              <div className="img-placeholder atelier-photo">
+                <img
+                  src="/immagini/hero-atelier.jpg"
+                  alt=""
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
+            </div>
+            <div className="col-lg-6">
+              <div className="section-title-eyebrow">La nostra storia</div>
+              <h2>Artigianalità, da sempre</h2>
+              <div className="divider-gold mb-3"></div>
+              <p className="text-muted">
+                Bellariva nasce dalla passione per la sartoria su misura: ogni
+                capo viene disegnato, tagliato e cucito a mano nel nostro
+                atelier, seguendo le proporzioni reali di chi lo indosserà.
+              </p>
             </div>
           </div>
         </div>

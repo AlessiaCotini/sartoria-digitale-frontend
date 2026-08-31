@@ -283,6 +283,89 @@ a {
   text-align: center;
 }
 
+.img-placeholder {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      var(--color-page-alt),
+      var(--color-page-alt) 12px,
+      var(--color-line) 12px,
+      var(--color-line) 13px
+    );
+  border: 1.5px dashed var(--color-accent);
+  border-radius: var(--radius);
+  overflow: hidden;
+  color: var(--color-ink-soft);
+  text-align: center;
+}
+
+.img-placeholder__label {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 0.6rem 1rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  line-height: 1.5;
+}
+.img-placeholder__label b {
+  display: block;
+  color: var(--color-accent);
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1rem;
+  font-style: italic;
+  margin-bottom: 0.15rem;
+}
+
+/* Hero con foto di sfondo full-bleed */
+.hero {
+  position: relative;
+  padding: var(--space-6) 0 var(--space-5);
+  text-align: center;
+  overflow: hidden;
+}
+.hero .img-placeholder {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+  border: none;
+  z-index: 0;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(23, 20, 15, 0.55) 0%,
+    rgba(23, 20, 15, 0.75) 100%
+  );
+  z-index: 1;
+}
+.hero .container {
+  position: relative;
+  z-index: 2;
+}
+.hero .eyebrow,
+.hero h1,
+.hero p.lead {
+  color: #f2ede4;
+}
+.hero h1 em {
+  color: var(--color-accent-light);
+}
+
+.atelier-photo {
+  aspect-ratio: 4/5;
+  width: 100%;
+}
+
 .hero .eyebrow {
   color: var(--color-accent);
   text-transform: uppercase;
