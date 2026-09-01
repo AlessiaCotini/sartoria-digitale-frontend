@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { login } from "../store/authSlice";
 import { loginRichiesta, utenteAttuale } from "../api/auth";
 import { misureMie } from "../api/misure";
+import CampoPassword from "../components/CampoPassword";
 
 function Login() {
   const { t } = useTranslation();
@@ -64,13 +65,10 @@ function Login() {
             <label className="form-label" htmlFor="loginPassword">
               {t("login.password")}
             </label>
-            <input
-              type="password"
-              className="form-control"
+            <CampoPassword
               id="loginPassword"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
           </div>
           <p className="text-end small mb-3">

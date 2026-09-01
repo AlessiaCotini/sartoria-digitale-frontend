@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { creaSarta, creaSottoposto } from "../../api/utenti";
+import CampoPassword from "../../components/CampoPassword";
 
 function Team() {
   const utente = useSelector((state) => state.auth.utente);
@@ -80,8 +81,7 @@ function Team() {
 
       <div className="mb-3">
         <label className="form-label">Password</label>
-        <input
-          type="password"
+        <CampoPassword
           className="form-control"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

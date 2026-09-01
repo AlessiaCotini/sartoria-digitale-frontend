@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { resetPassword } from "../api/auth";
+import CampoPassword from "../components/CampoPassword";
 
 function ResetPassword() {
   const { t } = useTranslation();
@@ -77,9 +78,7 @@ function ResetPassword() {
               <label className="form-label" htmlFor="nuovaPassword">
                 {t("resetPassword.nuovaPassword")}
               </label>
-              <input
-                type="password"
-                className="form-control"
+              <CampoPassword
                 id="nuovaPassword"
                 value={nuovaPassword}
                 onChange={(e) => setNuovaPassword(e.target.value)}
@@ -90,9 +89,7 @@ function ResetPassword() {
               <label className="form-label" htmlFor="confermaPassword">
                 {t("resetPassword.confermaPassword")}
               </label>
-              <input
-                type="password"
-                className="form-control"
+              <CampoPassword
                 id="confermaPassword"
                 value={confermaPassword}
                 onChange={(e) => setConfermaPassword(e.target.value)}

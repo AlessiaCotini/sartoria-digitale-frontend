@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { login } from "../store/authSlice";
 import { CAMPI_MISURE } from "../data/misure";
 import { registraCliente, loginRichiesta, utenteAttuale } from "../api/auth";
+import CampoPassword from "../components/CampoPassword";
 
 function Register() {
   const { t } = useTranslation();
@@ -122,9 +123,7 @@ function Register() {
               <label className="form-label" htmlFor="regPassword">
                 {t("register.password")}
               </label>
-              <input
-                type="password"
-                className="form-control"
+              <CampoPassword
                 id="regPassword"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -135,9 +134,7 @@ function Register() {
               <label className="form-label" htmlFor="regConfermaPassword">
                 {t("register.confermaPassword")}
               </label>
-              <input
-                type="password"
-                className="form-control"
+              <CampoPassword
                 id="regConfermaPassword"
                 value={confermaPassword}
                 onChange={(e) => setConfermaPassword(e.target.value)}
