@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { aggiornaMisure } from "../store/authSlice";
 import { CAMPI_MISURE } from "../data/misure";
+import { aggiornaMisureRemote } from "../api/misure";
 
 function Profilo() {
   const { t } = useTranslation();
@@ -23,13 +24,13 @@ function Profilo() {
     setBozza((prev) => ({ ...prev, [chiave]: valore }));
     setSalvato(false);
   }
-
   function handleSalva(e) {
     e.preventDefault();
-    dispatch(aggiornaMisure(bozza));
-    setSalvato(true);
+    aggiornaMisureRemote(bozza).then(() => {
+      dispatch(aggiornaMisure(bozza));
+      setSalvato(true);
+    });
   }
-
   return (
     <section className="section">
       <div className="container" style={{ maxWidth: "720px" }}>
