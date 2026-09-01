@@ -197,7 +197,7 @@ function NavbarSartoria() {
 
             <div className="d-lg-none w-100 mt-3 pt-3 offcanvas-settings">
               <p className="step-label mb-2 text-center ">Lingua</p>
-              <div className="d-flex gap-2 mb-3 justify-content-center mb-3 lingua-toggle">
+              <div className="d-flex gap-2 mb-3 justify-content-center lingua-toggle">
                 <button
                   type="button"
                   className={`lingua-tab ${i18n.language === "it" ? "active" : ""}`}
