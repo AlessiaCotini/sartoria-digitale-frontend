@@ -142,12 +142,12 @@ function NavbarSartoria() {
                 />
               </Form>
             )}
-            <div className="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <div className="d-none d-lg-flex align-items-center gap-2">
               <NavDropdown
                 title={<FiSettings size={18} />}
                 id="dropdown-impostazioni"
                 align="end"
-                className="px-2"
+                autoClose="outside"
               >
                 <div className="px-3 py-2" style={{ minWidth: "180px" }}>
                   <p className="step-label mb-2">Lingua</p>
@@ -193,6 +193,54 @@ function NavbarSartoria() {
                   </>
                 )}
               </NavDropdown>
+            </div>
+
+            <div
+              className="d-lg-none w-100 mt-3 pt-3"
+              style={{ borderTop: "1px solid var(--color-line)" }}
+            >
+              <p className="step-label mb-2 text-center ">Lingua</p>
+              <div className="d-flex gap-2 mb-3 justify-content-center">
+                <button
+                  type="button"
+                  className={`lingua-tab ${i18n.language === "it" ? "active" : ""}`}
+                  onClick={() => cambiaLingua("it")}
+                >
+                  IT
+                </button>
+                <button
+                  type="button"
+                  className={`lingua-tab ${i18n.language === "en" ? "active" : ""}`}
+                  onClick={() => cambiaLingua("en")}
+                >
+                  EN
+                </button>
+              </div>
+              <p className="step-label mb-2 text-center">Tema</p>
+              <Button
+                type="button"
+                className="btn-outline-cream btn-sm w-100 d-flex align-items-center justify-content-center gap-2 mb-2"
+                onClick={alterna}
+              >
+                {tema === "scuro" ? (
+                  <>
+                    <FiSun /> Chiaro
+                  </>
+                ) : (
+                  <>
+                    <FiMoon /> Scuro
+                  </>
+                )}
+              </Button>
+              {isLoggedIn && (
+                <Button
+                  type="button"
+                  className="btn-outline-cream btn-sm w-100"
+                  onClick={handleLogout}
+                >
+                  {t("nav.esci")}
+                </Button>
+              )}
             </div>
             {!isLoggedIn && (
               <div className="d-flex flex-column flex-lg-row gap-2 mt-3 mt-lg-0 ms-lg-2">
