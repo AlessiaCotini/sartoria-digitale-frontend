@@ -94,7 +94,7 @@ function NavbarSartoria() {
             <Offcanvas.Title className="brand-font">Bellariva</Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body className="d-flex flex-column flex-lg-row align-items-lg-center">
-            <Nav className="flex-column flex-lg-row mx-lg-auto gap-2 gap-lg-0">
+            <Nav className="flex-column flex-lg-row mx-lg-auto gap-2 gap-lg-0 offcanvas-nav">
               {ruoloGestionale ? (
                 <Nav.Link as={NavLink} to="/gestionale">
                   {t("nav.gestionale")}
@@ -129,7 +129,7 @@ function NavbarSartoria() {
             </Nav>
             {!ruoloGestionale && (
               <Form
-                className="d-flex mt-3 mt-lg-0 mx-lg-3"
+                className="d-flex mt-3 mt-lg-0 mx-lg-3 offcanvas-search"
                 onSubmit={handleCerca}
               >
                 <Form.Control
@@ -195,12 +195,9 @@ function NavbarSartoria() {
               </NavDropdown>
             </div>
 
-            <div
-              className="d-lg-none w-100 mt-3 pt-3"
-              style={{ borderTop: "1px solid var(--color-line)" }}
-            >
+            <div className="d-lg-none w-100 mt-3 pt-3 offcanvas-settings">
               <p className="step-label mb-2 text-center ">Lingua</p>
-              <div className="d-flex gap-2 mb-3 justify-content-center">
+              <div className="d-flex gap-2 mb-3 justify-content-center mb-3 lingua-toggle">
                 <button
                   type="button"
                   className={`lingua-tab ${i18n.language === "it" ? "active" : ""}`}

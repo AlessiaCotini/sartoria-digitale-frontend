@@ -225,6 +225,51 @@ a {
   text-decoration: underline;
 }
 
+.offcanvas-sartoria .offcanvas-nav .nav-link {
+  padding: 0.85rem 0.25rem;
+  border-bottom: 1px solid var(--color-line);
+}
+.offcanvas-sartoria .offcanvas-nav .nav-link:last-child {
+  border-bottom: none;
+}
+
+.offcanvas-sartoria .offcanvas-search {
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.5rem;
+}
+.offcanvas-sartoria .offcanvas-search .form-control {
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+}
+
+.offcanvas-settings {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+}
+
+.lingua-toggle {
+  display: inline-flex;
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 0.2rem;
+  gap: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+.lingua-toggle .lingua-tab {
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+}
+.lingua-toggle .lingua-tab.active {
+  background: var(--color-accent);
+  color: #fff;
+  text-decoration: none;
+}
+
 .btn-gold,
 .btn-outline-cream,
 .btn-outline-dark-luxury {
