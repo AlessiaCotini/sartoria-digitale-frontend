@@ -82,7 +82,6 @@ function Team() {
       <div className="mb-3">
         <label className="form-label">Password</label>
         <CampoPassword
-          className="form-control"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
