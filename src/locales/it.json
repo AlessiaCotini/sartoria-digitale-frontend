@@ -131,7 +131,10 @@
     "accedi": "Accedi",
     "errorePasswordDiverse": "Le due password non coincidono.",
     "erroreMisureMancanti": "Inserisci tutte le misure per completare la registrazione.",
-    "erroreDefault": "Errore durante la registrazione."
+    "erroreDefault": "Errore durante la registrazione.",
+"successoTitolo": "Registrazione effettuata",
+"successoMessaggio": "Il tuo account è stato creato con successo. Ora puoi iniziare a configurare il tuo capo su misura.",
+"continua": "Continua"
   },
   "dettaglio": {
     "tornaCollezione": "← Torna alla collezione",

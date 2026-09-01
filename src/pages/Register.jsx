@@ -6,6 +6,7 @@ import { login } from "../store/authSlice";
 import { CAMPI_MISURE } from "../data/misure";
 import { registraCliente, loginRichiesta, utenteAttuale } from "../api/auth";
 import CampoPassword from "../components/CampoPassword";
+import ModaleSuccesso from "../components/ModaleSuccesso";
 
 function Register() {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const capoId = useSelector((state) => state.configuratore.capoId);
+  const [registrato, setRegistrato] = useState(false);
 
   function handleMisuraChange(chiave, valore) {
     setMisure((prev) => ({ ...prev, [chiave]: valore }));
@@ -57,14 +59,26 @@ function Register() {
       localStorage.setItem("token", token);
       const utente = await utenteAttuale();
       dispatch(login({ utente, misure: misureNumeriche }));
-      navigate(capoId ? "/configuratore" : "/profilo");
+      setRegistrato(true);
     } catch (err) {
       setErrore(err.response?.data?.errore || t("register.erroreDefault"));
     }
   }
 
+  function handleContinua() {
+    navigate(capoId ? "/configuratore" : "/profilo");
+  }
+
   return (
     <section className="section">
+      {registrato && (
+        <ModaleSuccesso
+          titolo={t("register.successoTitolo")}
+          messaggio={t("register.successoMessaggio")}
+          testoBottone={t("register.continua")}
+          onChiudi={handleContinua}
+        />
+      )}
       <div className="container" style={{ maxWidth: "640px" }}>
         <div className="mb-4 text-center">
           <div className="section-title-eyebrow">{t("register.eyebrow")}</div>

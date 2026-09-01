@@ -131,7 +131,10 @@
     "accedi": "Sign in",
     "errorePasswordDiverse": "The two passwords don't match.",
     "erroreMisureMancanti": "Enter all measurements to complete registration.",
-    "erroreDefault": "Error during registration."
+   "erroreDefault": "Error during registration.",
+"successoTitolo": "Registration successful",
+"successoMessaggio": "Your account has been created. You can now start configuring your made-to-measure garment.",
+"continua": "Continue"
   },
   "dettaglio": {
     "tornaCollezione": "← Back to the collection",
