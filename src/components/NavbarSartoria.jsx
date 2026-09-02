@@ -269,7 +269,10 @@ function NavbarSartoria() {
                 <Button
                   type="button"
                   className="btn-outline-cream btn-sm w-100"
-                  onClick={handleLogout}
+                  onClick={() => {
+                    handleLogout();
+                    setExpanded(false);
+                  }}
                 >
                   {t("nav.esci")}
                 </Button>
@@ -281,6 +284,7 @@ function NavbarSartoria() {
                   as={Link}
                   to="/login"
                   className="btn-outline-cream btn-sm"
+                  onClick={() => setExpanded(false)}
                 >
                   {t("nav.accedi")}
                 </Button>
@@ -288,6 +292,7 @@ function NavbarSartoria() {
                   as={Link}
                   to="/register"
                   className="btn-outline-cream btn-sm"
+                  onClick={() => setExpanded(false)}
                 >
                   {t("nav.registrati")}
                 </Button>

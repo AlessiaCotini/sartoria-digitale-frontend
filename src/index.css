@@ -172,6 +172,17 @@ a {
   color: var(--color-accent) !important;
 }
 
+.offcanvas-sartoria {
+  --bs-offcanvas-width: 300px;
+  --bs-offcanvas-bg: var(--color-bg);
+  --bs-offcanvas-color: var(--color-ink);
+  background-color: var(--color-bg);
+}
+
+:root[data-theme="dark"] .offcanvas-sartoria .btn-close {
+  filter: invert(1) grayscale(1) brightness(1.8);
+}
+
 .offcanvas-sartoria .nav-link {
   color: var(--color-ink) !important;
   font-size: 0.8rem;

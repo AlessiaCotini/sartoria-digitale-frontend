@@ -72,8 +72,8 @@ function Accessori() {
           <div className="divider-gold"></div>
         </div>
 
-        <div className="d-flex flex-column flex-lg-row gap-4 mb-4">
-          <div className="text-left">
+        <div className="filtri-catalogo">
+          <div className="filtro-gruppo">
             <p className="step-label mb-2">{t("catalogo.genere")}</p>
             <div className="filter-group justify-content-start">
               {["Tutti", "Donna", "Uomo"].map((g) => (
@@ -89,7 +89,7 @@ function Accessori() {
             </div>
           </div>
 
-          <div className="text-left">
+          <div className="filtro-gruppo">
             <p className="step-label mb-2">{t("accessori.tipo")}</p>
             <div className="filter-group justify-content-start">
               <button
