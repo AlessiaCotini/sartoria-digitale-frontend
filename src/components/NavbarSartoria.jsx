@@ -185,9 +185,9 @@ function NavbarSartoria() {
                 id="dropdown-impostazioni"
                 align="end"
               >
-                <div className="px-3 py-2" style={{ minWidth: "180px" }}>
+                <div className="dropdown-impostazioni-corpo">
                   <p className="step-label mb-2">Lingua</p>
-                  <div className="d-flex gap-2 mb-3">
+                  <div className="d-flex gap-3 mb-3">
                     <button
                       type="button"
                       className={`lingua-tab ${i18n.language === "it" ? "active" : ""}`}
@@ -204,9 +204,9 @@ function NavbarSartoria() {
                     </button>
                   </div>
                   <p className="step-label mb-2">Tema</p>
-                  <Button
+                  <button
                     type="button"
-                    className="btn-outline-cream btn-sm w-100 d-flex align-items-center justify-content-center gap-2"
+                    className="lingua-tab d-flex align-items-center gap-2"
                     onClick={alterna}
                   >
                     {tema === "scuro" ? (
@@ -218,7 +218,7 @@ function NavbarSartoria() {
                         <FiMoon /> Scuro
                       </>
                     )}
-                  </Button>
+                  </button>
                 </div>
                 {isLoggedIn && (
                   <>

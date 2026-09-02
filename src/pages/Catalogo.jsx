@@ -77,8 +77,8 @@ function Catalogo() {
           <div className="divider-gold"></div>
         </div>
 
-        <div className="d-flex flex-column flex-lg-row gap-4 mb-4">
-          <div className="text-left">
+        <div className="filtri-catalogo">
+          <div className="filtro-gruppo">
             <p className="step-label mb-2">{t("catalogo.genere")}</p>
             <div className="filter-group justify-content-start">
               {["Tutti", "Donna", "Uomo"].map((g) => (
@@ -94,7 +94,7 @@ function Catalogo() {
             </div>
           </div>
 
-          <div className="text-left">
+          <div className="filtro-gruppo">
             <p className="step-label mb-2">{t("catalogo.categoria")}</p>
             <div className="filter-group justify-content-start">
               <button
@@ -117,10 +117,10 @@ function Catalogo() {
             </div>
           </div>
 
-          <div style={{ maxWidth: "280px" }}>
+          <div className="filtro-gruppo filtro-tessuto">
             <p className="step-label mb-2">{t("catalogo.tessuto")}</p>
             <select
-              className="form-select"
+              className="form-select form-select-filtro"
               value={tessuto}
               onChange={(e) => setTessuto(e.target.value)}
             >
