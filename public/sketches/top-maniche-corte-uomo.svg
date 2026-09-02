@@ -1,10 +1,29 @@
-<!-- top-maniche-corte-uomo.svg -->
 <svg viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg">
-  <defs><filter id="j2" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="101" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
-  <g fill="none" stroke="#4a453e" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" filter="url(#j2)">
-    <path d="M42,10 Q60,26 78,10 L92,20 Q86,36 82,54 L88,150 L26,150 L32,54 Q28,36 22,20 Z" />
-    <path d="M46,16 Q60,30 74,16" fill="none" />
-    <path d="M22,20 Q8,26 4,42 Q2,58 8,72 Q14,80 24,76 L34,58 Q30,38 22,20 Z" />
-    <path d="M92,20 Q106,26 110,42 Q112,58 106,72 Q100,80 90,76 L80,58 Q84,38 92,20 Z" />
+  <defs>
+    <filter id="j2" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="101" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/></filter>
+    <radialGradient id="gradCapo" cx="45%" cy="28%" r="80%">
+      <stop offset="0%" stop-color="#9aa376"/>
+      <stop offset="55%" stop-color="#55603a"/>
+      <stop offset="100%" stop-color="#2e341f"/>
+    </radialGradient>
+  </defs>
+  <g stroke="#2b2620" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" filter="url(#j2)">
+    <g fill="url(#gradCapo)">
+      <path d="M42,10 Q60,26 78,10 L92,20 Q86,36 82,54 L88,150 L26,150 L32,54 Q28,36 22,20 Z" />
+      <path d="M22,20 Q8,26 4,42 Q2,58 8,72 Q14,80 24,76 L34,58 Q30,38 22,20 Z" />
+      <path d="M92,20 Q106,26 110,42 Q112,58 106,72 Q100,80 90,76 L80,58 Q84,38 92,20 Z" />
+    </g>
+    <g fill="url(#gradCapo)" stroke-linejoin="miter">
+      <path d="M38,12 L60,32 L48,17 Z" />
+      <path d="M82,12 L60,32 L72,17 Z" />
+    </g>
+    <g fill="none" stroke-width="0.6" opacity="0.5">
+      <path d="M6,68 Q11,74 17,71 M5,74 Q10,80 16,77" />
+      <path d="M114,68 Q109,74 103,71 M115,74 Q110,80 104,77" />
+    </g>
+    <g fill="none" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.65">
+      <path d="M89,22 Q79,38 79,54 L85,148 M25,22 Q35,38 35,54 L29,148" />
+      <path d="M29,148 Q60,152 85,148" />
+    </g>
   </g>
 </svg>

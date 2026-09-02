@@ -12,11 +12,11 @@ export function coloraSvg(testoSvg, coloreHex) {
     const d = percorso.getAttribute("d") || "";
     const eChiuso = d.trim().toLowerCase().endsWith("z");
     if (eChiuso) {
-      percorso.setAttribute("fill", coloreHex);
+      const fillAttuale = percorso.getAttribute("fill") || "";
+      if (!fillAttuale.startsWith("url(")) {
+        percorso.setAttribute("fill", coloreHex);
+      }
 
-      // usiamo solo i percorsi chiusi (corpo/maniche) per calcolare
-      // l'ingombro reale del capo, ignorando il margine vuoto che
-      // nell'illustrazione originale lasciava posto alla testa
       const numeri = d.match(/-?\d+(\.\d+)?/g);
       if (numeri) {
         for (let i = 0; i < numeri.length - 1; i += 2) {
@@ -30,6 +30,18 @@ export function coloraSvg(testoSvg, coloreHex) {
       }
     }
   });
+
+  // se il capo usa il gradiente condiviso "gradCapo", aggiorniamo le sue
+  // tre tonalità invece di sovrascrivere il fill piatto: così la sfumatura
+  // sopravvive al cambio colore scelto dal cliente
+  const gradiente = doc.getElementById("gradCapo");
+  if (gradiente) {
+    const { chiaro, medio, scuro } = tonalita(coloreHex);
+    const stops = gradiente.querySelectorAll("stop");
+    if (stops[0]) stops[0].setAttribute("stop-color", chiaro);
+    if (stops[1]) stops[1].setAttribute("stop-color", medio);
+    if (stops[2]) stops[2].setAttribute("stop-color", scuro);
+  }
 
   const radice = doc.querySelector("svg");
 
@@ -55,4 +67,36 @@ export function coloraSvg(testoSvg, coloreHex) {
   const aspetto = larghezzaFinale / altezzaFinale;
 
   return { svgColorato, aspetto };
+}
+
+function tonalita(hex) {
+  const { r, g, b } = hexInRgb(hex);
+  return {
+    chiaro: rgbInHex(mescola(r, g, b, 0.55)),
+    medio: hex,
+    scuro: rgbInHex(mescola(r, g, b, -0.4)),
+  };
+}
+
+function hexInRgb(hex) {
+  const pulito = hex.replace("#", "");
+  const bigint = parseInt(pulito, 16);
+  return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+}
+
+function rgbInHex({ r, g, b }) {
+  const clamp = (v) => Math.max(0, Math.min(255, Math.round(v)));
+  return (
+    "#" + [r, g, b].map((v) => clamp(v).toString(16).padStart(2, "0")).join("")
+  );
+}
+
+function mescola(r, g, b, quantita) {
+  const verso = quantita > 0 ? 255 : 0;
+  const q = Math.abs(quantita);
+  return {
+    r: r + (verso - r) * q,
+    g: g + (verso - g) * q,
+    b: b + (verso - b) * q,
+  };
 }
