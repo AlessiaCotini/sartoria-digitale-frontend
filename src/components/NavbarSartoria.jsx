@@ -11,7 +11,7 @@ import {
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { FiSettings, FiSun, FiMoon } from "react-icons/fi";
+import { FiSun, FiMoon } from "react-icons/fi";
 import { logout } from "../store/authSlice";
 import { useTema } from "../hooks/useTema";
 import BadgeMessaggi from "./BadgeMessaggi";
@@ -27,6 +27,7 @@ function NavbarSartoria() {
   const [query, setQuery] = useState("");
   const { t, i18n } = useTranslation();
   const { tema, alterna } = useTema();
+  const [expanded, setExpanded] = useState(false);
 
   function handleLogout() {
     dispatch(logout());
@@ -47,7 +48,13 @@ function NavbarSartoria() {
   }
 
   return (
-    <BsNavbar expand="lg" className="navbar-sartoria" variant="light">
+    <BsNavbar
+      expand="lg"
+      className="navbar-sartoria"
+      variant="light"
+      expanded={expanded}
+      onToggle={setExpanded}
+    >
       <Container>
         <BsNavbar.Brand
           as={Link}
@@ -89,6 +96,7 @@ function NavbarSartoria() {
           id="offcanvasNavbar"
           placement="end"
           className="offcanvas-sartoria"
+          onHide={() => setExpanded(false)}
         >
           <Offcanvas.Header closeButton>
             <Offcanvas.Title className="brand-font">Bellariva</Offcanvas.Title>
@@ -96,30 +104,59 @@ function NavbarSartoria() {
           <Offcanvas.Body className="d-flex flex-column flex-lg-row align-items-lg-center">
             <Nav className="flex-column flex-lg-row mx-lg-auto gap-2 gap-lg-0 offcanvas-nav">
               {ruoloGestionale ? (
-                <Nav.Link as={NavLink} to="/gestionale">
+                <Nav.Link
+                  as={NavLink}
+                  to="/gestionale"
+                  onClick={() => setExpanded(false)}
+                >
                   {t("nav.gestionale")}
                 </Nav.Link>
               ) : (
                 <>
-                  <Nav.Link as={NavLink} to="/" end>
+                  <Nav.Link
+                    as={NavLink}
+                    to="/"
+                    end
+                    onClick={() => setExpanded(false)}
+                  >
                     {t("nav.home")}
                   </Nav.Link>
-                  <Nav.Link as={NavLink} to="/catalogo">
+                  <Nav.Link
+                    as={NavLink}
+                    to="/catalogo"
+                    onClick={() => setExpanded(false)}
+                  >
                     {t("nav.collezione")}
                   </Nav.Link>
-                  <Nav.Link as={NavLink} to="/accessori">
+                  <Nav.Link
+                    as={NavLink}
+                    to="/accessori"
+                    onClick={() => setExpanded(false)}
+                  >
                     {t("nav.accessori")}
                   </Nav.Link>
-                  <Nav.Link as={NavLink} to="/configuratore">
+                  <Nav.Link
+                    as={NavLink}
+                    to="/configuratore"
+                    onClick={() => setExpanded(false)}
+                  >
                     {t("nav.costruzione")}
                   </Nav.Link>
                   {isLoggedIn && (
                     <>
-                      <Nav.Link as={NavLink} to="/preventivo">
+                      <Nav.Link
+                        as={NavLink}
+                        to="/preventivo"
+                        onClick={() => setExpanded(false)}
+                      >
                         {t("nav.preventivi")}
                         <BadgeMessaggi />
                       </Nav.Link>
-                      <Nav.Link as={NavLink} to="/profilo">
+                      <Nav.Link
+                        as={NavLink}
+                        to="/profilo"
+                        onClick={() => setExpanded(false)}
+                      >
                         {t("nav.profilo")}
                       </Nav.Link>
                     </>
@@ -144,10 +181,9 @@ function NavbarSartoria() {
             )}
             <div className="d-none d-lg-flex align-items-center gap-2">
               <NavDropdown
-                title={<FiSettings size={18} />}
+                title="Impostazioni"
                 id="dropdown-impostazioni"
                 align="end"
-                autoClose="outside"
               >
                 <div className="px-3 py-2" style={{ minWidth: "180px" }}>
                   <p className="step-label mb-2">Lingua</p>

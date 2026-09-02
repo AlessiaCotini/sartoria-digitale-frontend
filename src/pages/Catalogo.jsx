@@ -77,57 +77,59 @@ function Catalogo() {
           <div className="divider-gold"></div>
         </div>
 
-        <div className="mb-3 text-left">
-          <p className="step-label mb-2">{t("catalogo.genere")}</p>
-          <div className="filter-group justify-content-start">
-            {["Tutti", "Donna", "Uomo"].map((g) => (
-              <button
-                key={g}
-                type="button"
-                className={`filter-tab ${genere === g ? "active" : ""}`}
-                onClick={() => cambiaGenere(g)}
-              >
-                {etichettaGenere[g]}
-              </button>
-            ))}
+        <div className="d-flex flex-column flex-lg-row gap-4 mb-4">
+          <div className="text-left">
+            <p className="step-label mb-2">{t("catalogo.genere")}</p>
+            <div className="filter-group justify-content-start">
+              {["Tutti", "Donna", "Uomo"].map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  className={`filter-tab ${genere === g ? "active" : ""}`}
+                  onClick={() => cambiaGenere(g)}
+                >
+                  {etichettaGenere[g]}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="mb-4 text-left">
-          <p className="step-label mb-2">{t("catalogo.categoria")}</p>
-          <div className="filter-group justify-content-start">
-            <button
-              type="button"
-              className={`filter-tab ${categoria === "Tutte" ? "active" : ""}`}
-              onClick={() => setCategoria("Tutte")}
+          <div className="text-left">
+            <p className="step-label mb-2">{t("catalogo.categoria")}</p>
+            <div className="filter-group justify-content-start">
+              <button
+                type="button"
+                className={`filter-tab ${categoria === "Tutte" ? "active" : ""}`}
+                onClick={() => setCategoria("Tutte")}
+              >
+                {t("catalogo.tutte")}
+              </button>
+              {categorieDisponibili.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  className={`filter-tab ${categoria === cat ? "active" : ""}`}
+                  onClick={() => setCategoria(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ maxWidth: "280px" }}>
+            <p className="step-label mb-2">{t("catalogo.tessuto")}</p>
+            <select
+              className="form-select"
+              value={tessuto}
+              onChange={(e) => setTessuto(e.target.value)}
             >
-              {t("catalogo.tutte")}
-            </button>
-            {categorieDisponibili.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                className={`filter-tab ${categoria === cat ? "active" : ""}`}
-                onClick={() => setCategoria(cat)}
-              >
-                {cat}
-              </button>
-            ))}
+              <option>{t("catalogo.tutti")}</option>
+              {tessutiDisponibili.map((tes) => (
+                <option key={tes}>{tes}</option>
+              ))}
+            </select>
           </div>
-        </div>
-
-        <div className="mb-4" style={{ maxWidth: "280px" }}>
-          <p className="step-label mb-2">{t("catalogo.tessuto")}</p>
-          <select
-            className="form-select"
-            value={tessuto}
-            onChange={(e) => setTessuto(e.target.value)}
-          >
-            <option>{t("catalogo.tutti")}</option>
-            {tessutiDisponibili.map((tes) => (
-              <option key={tes}>{tes}</option>
-            ))}
-          </select>
         </div>
 
         <p className="text-muted small mb-4">
@@ -157,7 +159,7 @@ function Catalogo() {
                     <h5 className="mt-2 mb-1">{capo.nome}</h5>
                   </Link>
                   <p className="text-muted small mb-2">{capo.tessuto}</p>
-                  <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-flex flex-column flex-md-row justify-content-md-between align-items-start align-items-md-center gap-2">
                     <div className="product-price">da € {capo.prezzoDa}</div>
                     <button
                       type="button"

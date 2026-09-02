@@ -72,42 +72,44 @@ function Accessori() {
           <div className="divider-gold"></div>
         </div>
 
-        <div className="mb-3 text-left">
-          <p className="step-label mb-2">{t("catalogo.genere")}</p>
-          <div className="filter-group justify-content-start">
-            {["Tutti", "Donna", "Uomo"].map((g) => (
-              <button
-                key={g}
-                type="button"
-                className={`filter-tab ${genere === g ? "active" : ""}`}
-                onClick={() => cambiaGenere(g)}
-              >
-                {etichettaGenere[g]}
-              </button>
-            ))}
+        <div className="d-flex flex-column flex-lg-row gap-4 mb-4">
+          <div className="text-left">
+            <p className="step-label mb-2">{t("catalogo.genere")}</p>
+            <div className="filter-group justify-content-start">
+              {["Tutti", "Donna", "Uomo"].map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  className={`filter-tab ${genere === g ? "active" : ""}`}
+                  onClick={() => cambiaGenere(g)}
+                >
+                  {etichettaGenere[g]}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="mb-4 text-left">
-          <p className="step-label mb-2">{t("accessori.tipo")}</p>
-          <div className="filter-group justify-content-start">
-            <button
-              type="button"
-              className={`filter-tab ${tipo === "Tutti" ? "active" : ""}`}
-              onClick={() => setTipo("Tutti")}
-            >
-              {t("catalogo.tutti")}
-            </button>
-            {tipiDisponibili.map((tp) => (
+          <div className="text-left">
+            <p className="step-label mb-2">{t("accessori.tipo")}</p>
+            <div className="filter-group justify-content-start">
               <button
-                key={tp}
                 type="button"
-                className={`filter-tab ${tipo === tp ? "active" : ""}`}
-                onClick={() => setTipo(tp)}
+                className={`filter-tab ${tipo === "Tutti" ? "active" : ""}`}
+                onClick={() => setTipo("Tutti")}
               >
-                {tp}
+                {t("catalogo.tutti")}
               </button>
-            ))}
+              {tipiDisponibili.map((tp) => (
+                <button
+                  key={tp}
+                  type="button"
+                  className={`filter-tab ${tipo === tp ? "active" : ""}`}
+                  onClick={() => setTipo(tp)}
+                >
+                  {tp}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -135,7 +137,7 @@ function Accessori() {
                     <h5 className="mt-2 mb-1">{a.nome}</h5>
                   </Link>
                   <p className="text-muted small mb-2">{a.tessuto}</p>
-                  <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-flex flex-column flex-md-row justify-content-md-between align-items-start align-items-md-center gap-2">
                     <div className="product-price">da € {a.prezzoDa}</div>
                     <button
                       type="button"
