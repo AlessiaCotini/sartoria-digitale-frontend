@@ -60,54 +60,56 @@ function Magazzino() {
       {ordini.length === 0 && (
         <p className="text-muted">Nessun materiale in coda.</p>
       )}
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Cliente</th>
-            <th>Capo</th>
-            <th>Materiale</th>
-            <th>Fornitore</th>
-            <th>Stato</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ordini.map((o) => (
-            <tr key={o.id}>
-              <td>{o.nomeCliente}</td>
-              <td>{o.capoNome}</td>
-              <td>{o.materialeNome}</td>
-              <td>
-                <input
-                  type="text"
-                  className="form-control form-control-sm"
-                  placeholder="Nome fornitore"
-                  value={fornitori[o.id] || ""}
-                  onChange={(e) =>
-                    setFornitori((prev) => ({
-                      ...prev,
-                      [o.id]: e.target.value,
-                    }))
-                  }
-                  onBlur={() => handleFornitoreBlur(o.id)}
-                />
-              </td>
-              <td>{o.stato === "ACCETTATO" ? "Da ordinare" : "Ordinato"}</td>
-              <td>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-gold"
-                  onClick={() => handleAvanza(o)}
-                >
-                  {o.stato === "ACCETTATO"
-                    ? "Segna ordinato"
-                    : "Segna arrivato"}
-                </button>
-              </td>
+      <div className="table-gestionale-wrap">
+        <table className="table table-gestionale">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Capo</th>
+              <th>Materiale</th>
+              <th>Fornitore</th>
+              <th>Stato</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ordini.map((o) => (
+              <tr key={o.id}>
+                <td>{o.nomeCliente}</td>
+                <td>{o.capoNome}</td>
+                <td>{o.materialeNome}</td>
+                <td>
+                  <input
+                    type="text"
+                    className="form-control form-control-sm"
+                    placeholder="Nome fornitore"
+                    value={fornitori[o.id] || ""}
+                    onChange={(e) =>
+                      setFornitori((prev) => ({
+                        ...prev,
+                        [o.id]: e.target.value,
+                      }))
+                    }
+                    onBlur={() => handleFornitoreBlur(o.id)}
+                  />
+                </td>
+                <td>{o.stato === "ACCETTATO" ? "Da ordinare" : "Ordinato"}</td>
+                <td>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-gold"
+                    onClick={() => handleAvanza(o)}
+                  >
+                    {o.stato === "ACCETTATO"
+                      ? "Segna ordinato"
+                      : "Segna arrivato"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

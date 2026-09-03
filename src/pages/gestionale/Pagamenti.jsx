@@ -34,8 +34,8 @@ function Pagamenti() {
 
   return (
     <>
-      <div className="table-responsive">
-        <table className="table align-middle">
+      <div className="table-gestionale-wrap">
+        <table className="table table-gestionale align-middle">
           <thead>
             <tr>
               <th>Cliente</th>
@@ -57,7 +57,11 @@ function Pagamenti() {
                   )}
                 </td>
                 <td>{ordine.capoNome || ordine.accessorioNome}</td>
-                <td>€ {ordine.prezzoTotale}</td>
+                <td>
+                  <span className="colonna-prezzo">
+                    € {ordine.prezzoTotale}
+                  </span>
+                </td>
                 <td>
                   {pagamento?.accontoImporto != null
                     ? `€ ${pagamento.accontoImporto} (${pagamento.accontoMetodo}, ${pagamento.accontoData})`
@@ -68,7 +72,11 @@ function Pagamenti() {
                     ? `€ ${pagamento.saldoImporto} (${pagamento.saldoMetodo}, ${pagamento.saldoData})`
                     : "—"}
                 </td>
-                <td>{pagamento?.stato || "NON_PAGATO"}</td>
+                <td>
+                  <span className="badge-soft">
+                    {pagamento?.stato || "NON_PAGATO"}
+                  </span>
+                </td>
                 <td>
                   <div className="d-flex gap-2">
                     {pagamento?.accontoImporto == null && (

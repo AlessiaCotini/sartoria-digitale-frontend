@@ -1035,3 +1035,49 @@ a {
 .rbc-date-cell {
   color: var(--color-ink-soft);
 }
+
+.table-gestionale-wrap {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  overflow-x: auto;
+  box-shadow: var(--shadow-card);
+}
+
+.table-gestionale {
+  margin-bottom: 0;
+}
+.table-gestionale thead th {
+  background: transparent;
+  border-bottom: 1px solid var(--color-line);
+  color: var(--color-ink-soft);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  padding: 1rem 1.1rem;
+  white-space: nowrap;
+}
+.table-gestionale tbody td {
+  border-bottom: 1px solid var(--color-line);
+  padding: 0.9rem 1.1rem;
+  font-size: 0.88rem;
+  vertical-align: middle;
+  color: var(--color-ink);
+}
+.table-gestionale tbody tr:last-child td {
+  border-bottom: none;
+}
+.table-gestionale tbody tr:hover td {
+  background: var(--glass-hover);
+}
+
+.colonna-prezzo {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-accent-light);
+}

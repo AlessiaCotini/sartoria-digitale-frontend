@@ -77,8 +77,8 @@ function Ordini() {
   return (
     <>
       {erroreStato && <p className="text-danger small mb-2">{erroreStato}</p>}
-      <div className="table-responsive">
-        <table className="table align-middle">
+      <div className="table-gestionale-wrap">
+        <table className="table align-middle table-gestionale">
           <thead>
             <tr>
               <th>Cliente</th>
@@ -110,7 +110,9 @@ function Ordini() {
                   <td>
                     {o.materialeNome} — {o.colore}
                   </td>
-                  <td>€ {o.prezzoTotale}</td>
+                  <td>
+                    <span className="colonna-prezzo">€ {o.prezzoTotale}</span>
+                  </td>
                   <td>
                     <select
                       className="form-select form-select-sm"
