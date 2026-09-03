@@ -1,3 +1,7 @@
+# LINK DELLA REPOSITORY BACKEND
+
+https://github.com/AlessiaCotini/sartoria-digitale-backend
+
 # Bellariva — Sartoria Digitale
 
 Piattaforma web per una sartoria su misura: i clienti sfogliano la collezione, configurano capi e accessori in un mini-editor 2D/3D usando le proprie misure corporee, inviano la richiesta di preventivo e negoziano in chat con la sarta. Il lato gestionale copre calendario appuntamenti, ordini, pagamenti, catalogo, magazzino e team.
