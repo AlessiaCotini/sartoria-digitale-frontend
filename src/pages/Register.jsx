@@ -9,9 +9,11 @@ import CampoPassword from "../components/CampoPassword";
 import ModaleSuccesso from "../components/ModaleSuccesso";
 import AvvisoAggiornamento from "../components/AvvisoAggiornamento";
 import { SITO_IN_AGGIORNAMENTO } from "../data/avviso";
+import { useBackendOffline } from "../hooks/useBackendOffline";
 
 function Register() {
   const { t } = useTranslation();
+  const backendOffline = useBackendOffline();
   const [nome, setNome] = useState("");
   const [cognome, setCognome] = useState("");
   const [email, setEmail] = useState("");
@@ -88,7 +90,7 @@ function Register() {
           <div className="divider-gold mx-auto"></div>
         </div>
 
-        {SITO_IN_AGGIORNAMENTO && <AvvisoAggiornamento />}
+        {(SITO_IN_AGGIORNAMENTO || backendOffline) && <AvvisoAggiornamento />}
 
         <form
           className="form-sartoria"

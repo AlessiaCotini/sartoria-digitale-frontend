@@ -8,9 +8,11 @@ import { misureMie } from "../api/misure";
 import CampoPassword from "../components/CampoPassword";
 import AvvisoAggiornamento from "../components/AvvisoAggiornamento";
 import { SITO_IN_AGGIORNAMENTO } from "../data/avviso";
+import { useBackendOffline } from "../hooks/useBackendOffline";
 
 function Login() {
   const { t } = useTranslation();
+  const backendOffline = useBackendOffline();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errore, setErrore] = useState("");
@@ -48,7 +50,7 @@ function Login() {
           <div className="divider-gold mx-auto"></div>
         </div>
 
-        {SITO_IN_AGGIORNAMENTO && <AvvisoAggiornamento />}
+        {(SITO_IN_AGGIORNAMENTO || backendOffline) && <AvvisoAggiornamento />}
 
         <form
           className="form-sartoria"
