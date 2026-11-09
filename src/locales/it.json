@@ -209,6 +209,7 @@
   "avviso": {
     "titolo": "ALERT - SITO IN AGGIORNAMENTO",
     "testo": "Accesso e registrazione non sono al momento disponibili. Torna a trovarci tra qualche giorno!",
+    "testoCatalogo": "Stiamo aggiornando il sito con dei nuovi modellini 3D. Passa fra qualche giorno o contattaci a info@bellariva.it per più informazioni.",
     "tornaHome": "Torna alla home"
   }
 }

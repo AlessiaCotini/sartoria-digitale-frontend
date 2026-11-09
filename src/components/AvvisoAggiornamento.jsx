@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-function AvvisoAggiornamento() {
+function AvvisoAggiornamento({ testo }) {
   const { t } = useTranslation();
   return (
     <div
@@ -41,7 +41,7 @@ function AvvisoAggiornamento() {
           {t("avviso.titolo")}
         </h5>
         <p className="mb-4" style={{ color: "#f2ede4" }}>
-          {t("avviso.testo")}
+          {testo || t("avviso.testo")}
         </p>
         <Link to="/" className="btn btn-gold w-100">
           {t("avviso.tornaHome")}

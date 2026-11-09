@@ -209,6 +209,7 @@
   "avviso": {
     "titolo": "ALERT - SITE UNDER MAINTENANCE",
     "testo": "Sign in and registration are temporarily unavailable. Please check back in a few days.",
+    "testoCatalogo": "We're updating the site with new 3D models. Come back in a few days or contact us at info@bellariva.it for more information.",
     "tornaHome": "Back to home"
   }
 }

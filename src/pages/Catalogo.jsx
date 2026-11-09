@@ -6,6 +6,8 @@ import { impostaCapo } from "../store/configuratoreSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { percorsoSagoma } from "../utils/sagome";
+import AvvisoAggiornamento from "../components/AvvisoAggiornamento";
+import { SITO_IN_AGGIORNAMENTO } from "../data/avviso";
 
 function Catalogo() {
   const { t } = useTranslation();
@@ -60,6 +62,31 @@ function Catalogo() {
     Uomo: t("catalogo.uomo"),
   };
 
+  if (SITO_IN_AGGIORNAMENTO || errore) {
+    return (
+      <section className="section">
+        <div className="container">
+          <div className="mb-4">
+            <div className="section-title-eyebrow">{t("catalogo.eyebrow")}</div>
+            <h2>{t("catalogo.titolo")}</h2>
+            <div className="divider-gold"></div>
+          </div>
+          <div className="row g-3">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div className="col-6 col-md-4 col-lg-3" key={i}>
+                <div className="product-card">
+                  <div className="product-thumb"></div>
+                  <div className="product-body" style={{ minHeight: "7rem" }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <AvvisoAggiornamento testo={t("avviso.testoCatalogo")} />
+      </section>
+    );
+  }
+
   if (caricamento) {
     return (
       <section className="section">
@@ -67,31 +94,6 @@ function Catalogo() {
           <p className="text-muted">{t("catalogo.caricamento")}</p>
         </div>
       </section>
-    );
-  }
-
-  if (errore) {
-    return (
-      <header className="hero">
-        <div className="img-placeholder">
-          <img
-            src="/immagini/hero-atelier.jpg"
-            alt=""
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </div>
-        <div className="container">
-          <div className="eyebrow mb-3">{t("catalogo.eyebrow")}</div>
-          <h1 className="mb-4">{t("catalogo.titolo")}</h1>
-          <p className="lead mb-0 mx-auto">{t("catalogo.inAggiornamento")}</p>
-        </div>
-      </header>
     );
   }
 
