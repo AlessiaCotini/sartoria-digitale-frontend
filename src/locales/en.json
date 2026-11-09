@@ -205,5 +205,9 @@
     "nessunOrdine": "You don't have any orders yet.",
     "selezionaOrdine": "Select an order to open the chat with the tailor.",
     "caricamento": "Loading..."
+  },
+  "avviso": {
+    "titolo": "Site under maintenance",
+    "testo": "Sign in and registration are temporarily unavailable. Please check back in a few days."
   }
 }

@@ -7,6 +7,8 @@ import { CAMPI_MISURE } from "../data/misure";
 import { registraCliente, loginRichiesta, utenteAttuale } from "../api/auth";
 import CampoPassword from "../components/CampoPassword";
 import ModaleSuccesso from "../components/ModaleSuccesso";
+import AvvisoAggiornamento from "../components/AvvisoAggiornamento";
+import { SITO_IN_AGGIORNAMENTO } from "../data/avviso";
 
 function Register() {
   const { t } = useTranslation();
@@ -86,7 +88,14 @@ function Register() {
           <div className="divider-gold mx-auto"></div>
         </div>
 
-        <form className="form-sartoria" onSubmit={handleSubmit}>
+        {SITO_IN_AGGIORNAMENTO && <AvvisoAggiornamento />}
+
+        <form
+          className="form-sartoria"
+          onSubmit={handleSubmit}
+          inert={SITO_IN_AGGIORNAMENTO}
+          style={SITO_IN_AGGIORNAMENTO ? { opacity: 0.5 } : undefined}
+        >
           <p className="step-label mb-3">{t("register.datiPersonali")}</p>
 
           <div className="row g-3 mb-3">

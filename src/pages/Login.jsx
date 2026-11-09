@@ -6,6 +6,8 @@ import { login } from "../store/authSlice";
 import { loginRichiesta, utenteAttuale } from "../api/auth";
 import { misureMie } from "../api/misure";
 import CampoPassword from "../components/CampoPassword";
+import AvvisoAggiornamento from "../components/AvvisoAggiornamento";
+import { SITO_IN_AGGIORNAMENTO } from "../data/avviso";
 
 function Login() {
   const { t } = useTranslation();
@@ -46,7 +48,14 @@ function Login() {
           <div className="divider-gold mx-auto"></div>
         </div>
 
-        <form className="form-sartoria" onSubmit={handleSubmit}>
+        {SITO_IN_AGGIORNAMENTO && <AvvisoAggiornamento />}
+
+        <form
+          className="form-sartoria"
+          onSubmit={handleSubmit}
+          inert={SITO_IN_AGGIORNAMENTO}
+          style={SITO_IN_AGGIORNAMENTO ? { opacity: 0.5 } : undefined}
+        >
           <div className="mb-3">
             <label className="form-label" htmlFor="loginEmail">
               {t("login.email")}

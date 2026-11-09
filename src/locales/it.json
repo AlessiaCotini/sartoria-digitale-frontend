@@ -205,5 +205,9 @@
     "nessunOrdine": "Non hai ancora nessun ordine.",
     "selezionaOrdine": "Seleziona un ordine per aprire la chat con la sarta.",
     "caricamento": "Caricamento..."
+  },
+  "avviso": {
+    "titolo": "Sito in aggiornamento",
+    "testo": "Accesso e registrazione non sono al momento disponibili. Torna a trovarci tra qualche giorno!"
   }
 }
