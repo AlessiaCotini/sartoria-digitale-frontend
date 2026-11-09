@@ -19,7 +19,9 @@ function normalizzaCapo(capo) {
 }
 
 export function getCapi() {
-  return client.get("/capi").then((r) => r.data.map(normalizzaCapo));
+  return client
+    .get("/capi", { timeout: 15000 })
+    .then((r) => r.data.map(normalizzaCapo));
 }
 
 export function getCapo(id) {

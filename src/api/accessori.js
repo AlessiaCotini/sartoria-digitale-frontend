@@ -13,7 +13,9 @@ function normalizzaAccessorio(accessorio) {
 }
 
 export function getAccessori() {
-  return client.get("/accessori").then((r) => r.data.map(normalizzaAccessorio));
+  return client
+    .get("/accessori", { timeout: 15000 })
+    .then((r) => r.data.map(normalizzaAccessorio));
 }
 
 export function getAccessorio(id) {
