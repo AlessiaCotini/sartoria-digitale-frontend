@@ -11,6 +11,7 @@ function Catalogo() {
   const { t } = useTranslation();
   const [catalogo, setCatalogo] = useState([]);
   const [caricamento, setCaricamento] = useState(true);
+  const [errore, setErrore] = useState(false);
   const [genere, setGenere] = useState("Tutti");
   const [categoria, setCategoria] = useState("Tutte");
   const [tessuto, setTessuto] = useState("Tutti");
@@ -21,6 +22,7 @@ function Catalogo() {
   useEffect(() => {
     getCapi()
       .then(setCatalogo)
+      .catch(() => setErrore(true))
       .finally(() => setCaricamento(false));
   }, []);
 
@@ -63,6 +65,19 @@ function Catalogo() {
       <section className="section">
         <div className="container">
           <p className="text-muted">{t("catalogo.caricamento")}</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (errore) {
+    return (
+      <section className="section">
+        <div className="container">
+          <div className="section-title-eyebrow">{t("catalogo.eyebrow")}</div>
+          <h2>{t("catalogo.titolo")}</h2>
+          <div className="divider-gold"></div>
+          <p className="text-muted">{t("catalogo.inAggiornamento")}</p>
         </div>
       </section>
     );

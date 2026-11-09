@@ -74,7 +74,8 @@
     "capiTrovati": "garments found",
     "crea": "Create",
     "nessunCapo": "No garment matches the selected filters.",
-    "caricamento": "Loading collection..."
+    "caricamento": "Loading collection...",
+    "inAggiornamento": "We're updating our collection. Please check back in a few days."
   },
   "accessori": {
     "eyebrow": "Collection",
@@ -82,7 +83,8 @@
     "tipo": "Type",
     "accessoriTrovati": "accessories found",
     "nessunAccessorio": "No accessory matches the selected filters.",
-    "caricamento": "Loading accessories..."
+    "caricamento": "Loading accessories...",
+    "inAggiornamento": "We're updating our collection. Please check back in a few days."
   },
   "login": {
     "eyebrow": "Sign in",

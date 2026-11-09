@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 5173
+    },
+    {
+      "name": "youandme",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "C:/Users/aless/Desktop/YOUANDME/youandme", "run", "dev", "--", "--port", "5180", "--strictPort"],
+      "port": 5180
+    },
+    {
+      "name": "youandme-netlify",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "C:\\Users\\aless\\AppData\\Local\\Temp\\claude\\2fd986dc596b2071\\19a480ae-6019-4f98-9583-b0284636432c\\scratchpad\\netlify-dev.cmd"],
+      "port": 8888
+    }
+  ]
+}

@@ -11,6 +11,7 @@ function Accessori() {
   const { t } = useTranslation();
   const [catalogo, setCatalogo] = useState([]);
   const [caricamento, setCaricamento] = useState(true);
+  const [errore, setErrore] = useState(false);
   const [genere, setGenere] = useState("Tutti");
   const [tipo, setTipo] = useState("Tutti");
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -20,6 +21,7 @@ function Accessori() {
   useEffect(() => {
     getAccessori()
       .then(setCatalogo)
+      .catch(() => setErrore(true))
       .finally(() => setCaricamento(false));
   }, []);
 
@@ -58,6 +60,19 @@ function Accessori() {
       <section className="section">
         <div className="container">
           <p className="text-muted">{t("accessori.caricamento")}</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (errore) {
+    return (
+      <section className="section">
+        <div className="container">
+          <div className="section-title-eyebrow">{t("accessori.eyebrow")}</div>
+          <h2>{t("accessori.titolo")}</h2>
+          <div className="divider-gold"></div>
+          <p className="text-muted">{t("accessori.inAggiornamento")}</p>
         </div>
       </section>
     );

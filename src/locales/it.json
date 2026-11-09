@@ -74,7 +74,8 @@
     "capiTrovati": "capi trovati",
     "crea": "Crea",
     "nessunCapo": "Nessun capo corrisponde ai filtri scelti.",
-    "caricamento": "Caricamento collezione..."
+    "caricamento": "Caricamento collezione...",
+    "inAggiornamento": "Stiamo aggiornando la collezione. Torna a trovarci tra qualche giorno!"
   },
   "accessori": {
     "eyebrow": "Collezione",
@@ -82,7 +83,8 @@
     "tipo": "Tipo",
     "accessoriTrovati": "accessori trovati",
     "nessunAccessorio": "Nessun accessorio corrisponde ai filtri scelti.",
-    "caricamento": "Caricamento accessori..."
+    "caricamento": "Caricamento accessori...",
+    "inAggiornamento": "Stiamo aggiornando la collezione. Torna a trovarci tra qualche giorno!"
   },
   "login": {
     "eyebrow": "Accedi",
