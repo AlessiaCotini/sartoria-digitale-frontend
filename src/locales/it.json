@@ -207,7 +207,8 @@
     "caricamento": "Caricamento..."
   },
   "avviso": {
-    "titolo": "Sito in aggiornamento",
-    "testo": "Accesso e registrazione non sono al momento disponibili. Torna a trovarci tra qualche giorno!"
+    "titolo": "ALERT - SITO IN AGGIORNAMENTO",
+    "testo": "Accesso e registrazione non sono al momento disponibili. Torna a trovarci tra qualche giorno!",
+    "tornaHome": "Torna alla home"
   }
 }

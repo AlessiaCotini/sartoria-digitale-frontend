@@ -53,8 +53,6 @@ function Login() {
         <form
           className="form-sartoria"
           onSubmit={handleSubmit}
-          inert={SITO_IN_AGGIORNAMENTO}
-          style={SITO_IN_AGGIORNAMENTO ? { opacity: 0.5 } : undefined}
         >
           <div className="mb-3">
             <label className="form-label" htmlFor="loginEmail">

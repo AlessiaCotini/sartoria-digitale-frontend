@@ -207,7 +207,8 @@
     "caricamento": "Loading..."
   },
   "avviso": {
-    "titolo": "Site under maintenance",
-    "testo": "Sign in and registration are temporarily unavailable. Please check back in a few days."
+    "titolo": "ALERT - SITE UNDER MAINTENANCE",
+    "testo": "Sign in and registration are temporarily unavailable. Please check back in a few days.",
+    "tornaHome": "Back to home"
   }
 }

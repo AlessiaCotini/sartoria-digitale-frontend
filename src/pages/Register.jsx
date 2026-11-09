@@ -93,8 +93,6 @@ function Register() {
         <form
           className="form-sartoria"
           onSubmit={handleSubmit}
-          inert={SITO_IN_AGGIORNAMENTO}
-          style={SITO_IN_AGGIORNAMENTO ? { opacity: 0.5 } : undefined}
         >
           <p className="step-label mb-3">{t("register.datiPersonali")}</p>
 
