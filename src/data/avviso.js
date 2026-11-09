@@ -1,1 +1,1 @@
-export const SITO_IN_AGGIORNAMENTO = true;
+export const SITO_IN_AGGIORNAMENTO = false;
