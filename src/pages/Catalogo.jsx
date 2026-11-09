@@ -72,14 +72,26 @@ function Catalogo() {
 
   if (errore) {
     return (
-      <section className="section">
-        <div className="container">
-          <div className="section-title-eyebrow">{t("catalogo.eyebrow")}</div>
-          <h2>{t("catalogo.titolo")}</h2>
-          <div className="divider-gold"></div>
-          <p className="text-muted">{t("catalogo.inAggiornamento")}</p>
+      <header className="hero">
+        <div className="img-placeholder">
+          <img
+            src="/immagini/hero-atelier.jpg"
+            alt=""
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
         </div>
-      </section>
+        <div className="container">
+          <div className="eyebrow mb-3">{t("catalogo.eyebrow")}</div>
+          <h1 className="mb-4">{t("catalogo.titolo")}</h1>
+          <p className="lead mb-0 mx-auto">{t("catalogo.inAggiornamento")}</p>
+        </div>
+      </header>
     );
   }
 

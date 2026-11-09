@@ -20,7 +20,7 @@ function normalizzaCapo(capo) {
 
 export function getCapi() {
   return client
-    .get("/capi", { timeout: 15000 })
+    .get("/capi", { timeout: 3000 })
     .then((r) => r.data.map(normalizzaCapo));
 }
 
